@@ -152,17 +152,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114451889682527732, guid: c10877f7cd5764de18d46d7b777d1faa,
-        type: 2}
-      propertyPath: SessionConfig
-      value: 
-      objectReference: {fileID: 11400000, guid: a58341f68f6cc494d83b95855a01eb2d,
-        type: 2}
-    - target: {fileID: 114451889682527732, guid: c10877f7cd5764de18d46d7b777d1faa,
-        type: 2}
-      propertyPath: AugmentedImageSettings
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c10877f7cd5764de18d46d7b777d1faa, type: 2}
   m_IsPrefabAsset: 0
@@ -259,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48628ca96c366e4996ff902344a96eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CubeVisualizerPrefab: {fileID: 114790024918644914, guid: 1747b510a75dd054088526283c1787ae,
+  CubeVisualizerPrefab: {fileID: 114069644691141796, guid: 1747b510a75dd054088526283c1787ae,
     type: 2}
   TextUI: {fileID: 1782389318}
 --- !u!4 &1659006362
