@@ -3,36 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour {
-
-    float speed = 2f;
-    int moveInX = 1;
-    int moveInZ = 0;
-
+    
     Animator animator;
     Rigidbody rb;
 
-    Vector3 toFront;
-    Vector3 toBack;
-    Vector3 toRight;
-    Vector3 toLeft;
-
+    float speed = 2f;
     float angle = 0;
     bool goingRight = false;
-    // Use this for initialization
+
+    
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-
-        toFront = Vector3.forward;
-        toBack = Vector3.back;
-        toRight = Vector3.right;
-        toLeft = Vector3.left;
 	}
 	
-	// Update is called once per frame
+	
 	void Update () {
 
-
+        //Update animations and rotation the instance a button is pressed down
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             animator.SetBool("Run", true);
@@ -48,8 +36,9 @@ public class CharacterController : MonoBehaviour {
                 angle += 90;
                 transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
-        }       
+        }
 
+        //Update animations and rotation the instance a button is released
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
         {
             animator.SetBool("Run", false);
@@ -67,7 +56,7 @@ public class CharacterController : MonoBehaviour {
             }
         }
        
-
+        //Update character position, and rotation around the cube while left arrow button is held down
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             if (transform.position.x > 4.5f && equals(transform.position.z, 4.5f, 0.001f))
@@ -101,6 +90,7 @@ public class CharacterController : MonoBehaviour {
             transform.position += transform.forward * Time.deltaTime * speed;
         }
 
+        //Update character position, and rotation around the cube while right arrow button is held down
         if (Input.GetKey(KeyCode.RightArrow))
         {
             if (transform.position.x < -4.5f && equals(transform.position.z, 4.5f, 0.001f))
@@ -136,35 +126,6 @@ public class CharacterController : MonoBehaviour {
         }
     }
 
-    void FixedUpdate()
-    {
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            //rigidbody.AddForce(new Vector3(0, 0, force), ForceMode.VelocityChange);
-            //rigidbody.rotation = Quaternion.LookRotation(Vector3.forward);
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            //rigidbody.AddForce(new Vector3(0, 0, -force), ForceMode.VelocityChange);
-            //rigidbody.rotation = Quaternion.LookRotation(Vector3.back);
-        }
-       
-
-        /*
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            rigidbody.AddForce(new Vector3(-force * moveInX, 0, -force * moveInZ), ForceMode.VelocityChange);
-            rigidbody.rotation = Quaternion.LookRotation(Vector3.left);
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            rigidbody.AddForce(new Vector3(force * moveInX, 0, force * moveInZ), ForceMode.VelocityChange);
-            rigidbody.rotation = Quaternion.LookRotation(Vector3.right);
-        }
-        */
-    }
 
     private bool equals(float a, float b, float err)
     {
