@@ -15,7 +15,9 @@ public class CharacterController : MonoBehaviour {
     Vector3 toBack;
     Vector3 toRight;
     Vector3 toLeft;
+
     float angle = 0;
+    bool goingRight = false;
     // Use this for initialization
     void Start () {
         animator = GetComponent<Animator>();
@@ -37,11 +39,14 @@ public class CharacterController : MonoBehaviour {
             animator.SetBool("Stop", false);
             if(Input.GetKeyDown(KeyCode.RightArrow))
             {
-                //transform.localEulerAngles = transform.right;//new Vector3(0f, angle, 0f);
+                goingRight = true;
+                angle -= 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
             else
             {
-                //rb.rotation = Quaternion.LookRotation(toLeft);
+                angle += 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
         }       
 
@@ -49,7 +54,17 @@ public class CharacterController : MonoBehaviour {
         {
             animator.SetBool("Run", false);
             animator.SetBool("Stop", true);
-            ////rb.rotation = Quaternion.LookRotation(toFront);
+            if(goingRight)
+            {
+                goingRight = false;
+                angle += 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+            }
+            else
+            {
+                angle -= 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+            }
         }
        
 
