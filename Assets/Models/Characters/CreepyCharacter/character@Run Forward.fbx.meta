@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 231b18f3db83c4f6b8dcde093acf7a0b
+guid: 0bab9e80140804e5995255296183c511
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -59,7 +59,7 @@ ModelImporter:
     400052: mixamorig:Spine2
     2100000: palettemat
     4300000: character
-    7400000: mixamo.com
+    7400000: Run Forward
     9500000: //RootNode
     13700000: character
   externalObjects: {}
@@ -89,7 +89,35 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Run Forward
+      takeName: mixamo.com
+      firstFrame: 0
+      lastFrame: 27
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
