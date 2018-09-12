@@ -9,6 +9,8 @@ public class CharacterController : MonoBehaviour {
 
     float speed = 2f;
     float angle = 0;
+
+    bool climbing = false;
     bool goingRight = false;
 
     
@@ -124,8 +126,42 @@ public class CharacterController : MonoBehaviour {
 
             transform.position += transform.forward * Time.deltaTime * speed;
         }
+
+        if (Input.GetKey(KeyCode.UpArrow) && climbing)
+        {
+            transform.position += transform.up * Time.deltaTime * speed;
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow) && climbing)
+        {
+            transform.position -= transform.up * Time.deltaTime * speed;
+        }
     }
 
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ladder"))
+        {
+            Debug.Log("Ladder enter");
+            rb.useGravity = false;
+            climbing = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ladder"))
+        {
+            Debug.Log("Ladder exit");
+            rb.useGravity = true;
+            climbing = false;
+        }
+    }
+
+    /*********************************\
+        Helper and utility functions
+    \*********************************/ 
 
     private bool equals(float a, float b, float err)
     {
