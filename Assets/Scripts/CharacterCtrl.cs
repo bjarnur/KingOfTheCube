@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour {
+public class CharacterCtrl : MonoBehaviour {
     
     Animator animator;
     Rigidbody rb;
@@ -19,8 +19,8 @@ public class CharacterController : MonoBehaviour {
     const float zBoundsMax = 4.5f;
 
     bool climbing = false;
+    bool goingUpstairs = false;
     bool goingRight = false;
-
     
     void Start () {
         animator = GetComponent<Animator>();
@@ -48,6 +48,12 @@ public class CharacterController : MonoBehaviour {
             rb.useGravity = false;
             climbing = true;
         }
+        else if (other.gameObject.tag == "Stair")
+        {
+            Debug.Log("Stair touched");
+            rb.useGravity = false;
+            goingUpstairs = true;
+        }
     }
 
     void OnTriggerExit(Collider other)
@@ -57,6 +63,12 @@ public class CharacterController : MonoBehaviour {
             Debug.Log("Ladder exit");
             rb.useGravity = true;
             climbing = false;
+        }
+        else if (other.gameObject.tag == "Stair")
+        {
+            Debug.Log("Stair finished");
+            rb.useGravity = true;
+            goingUpstairs = false;
         }
     }
 
@@ -146,21 +158,28 @@ public class CharacterController : MonoBehaviour {
     void triggerAnimations()
     {
         //Update animations and rotation the instance a button is pressed down
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            animator.SetBool("Run", true);
-            animator.SetBool("Stop", false);
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                goingRight = true;
-                angle -= 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+            if (goingUpstairs){
+                Debug.Log("HOLAA");
+                animator.SetBool("Upstairs", true);
+                animator.SetBool("StopUpstairs", false);
             }
-            else
-            {
-                angle += 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+            else{
+                animator.SetBool("Run", true);
+                animator.SetBool("Stop", false);
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    goingRight = true;
+                    angle -= 90;
+                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
+                }
+                else
+                {
+                    angle += 90;
+                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
+                }
             }
+
         }
 
         //Trigger climbing animation the instance up/down arrows are pressed
