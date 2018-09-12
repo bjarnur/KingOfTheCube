@@ -40,6 +40,28 @@ public class CharacterController : MonoBehaviour {
             }
         }
 
+        //Trigger climbing animation the instance up/down arrows are pressed
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (climbing)
+            {
+                transform.localEulerAngles = new Vector3(0f, 180, 0f);
+                animator.SetBool("Climb", true);
+                animator.SetBool("StopClimbing", false);
+            }
+        }
+
+        //Stop climbing animation the instance up/down arrows are released
+        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            //if (climbing)
+            //{
+                transform.localEulerAngles = new Vector3(0f, 180, 0f);
+                animator.SetBool("Climb", false);
+                animator.SetBool("StopClimbing", true);
+            //}
+        }
+
         //Update animations and rotation the instance a button is released
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
         {
