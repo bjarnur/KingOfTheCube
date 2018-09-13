@@ -9,7 +9,7 @@ public class CharacterController : MonoBehaviour {
 
     int side = 0;
 
-    float speed = 2f;
+    float speed = 5f;
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
@@ -70,76 +70,94 @@ public class CharacterController : MonoBehaviour {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, 4.5f);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 4.5f);
                 break;
             case 1:
-                transform.position = new Vector3(4.5f, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(4.5f, transform.localPosition.y, transform.localPosition.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -4.5f);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -4.5f);
                 break;
             case 3:
-                transform.position = new Vector3(-4.5f, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(-4.5f, transform.localPosition.y, transform.localPosition.z);
                 break;
         }
     }
 
+    bool touch = false;
+    bool touchLeft = false;
+
     void updateCharacterPosition()
     {
-        //Update character position, and rotation around the cube while left arrow button is held down
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.touchCount > 0)
         {
-            if (transform.position.x > xBoundsMax && equals(transform.position.z, zBoundsMax, 0.001f))
+            switch (Input.GetTouch(0).phase)
+            {
+                case TouchPhase.Began:
+                    touch = true;
+                    touchLeft = Input.GetTouch(0).position.x < Screen.width / 2;
+                    break;
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    touch = false;
+                    break;
+            }
+        }
+
+        //Update character position, and rotation around the cube while left arrow button is held down
+        if (Input.GetKey(KeyCode.LeftArrow) || (touch && touchLeft))
+        {
+            if (transform.localPosition.x > xBoundsMax && equals(transform.localPosition.z, zBoundsMax, 0.001f))
             {
                 crossAngle(xBoundsMax, zBoundsMax, true);
             }
-            if (equals(transform.position.x, xBoundsMax, 0.001f) && transform.position.z < zBoundsMin)
+            if (equals(transform.localPosition.x, xBoundsMax, 0.001f) && transform.localPosition.z < zBoundsMin)
             {
                 crossAngle(xBoundsMax, zBoundsMin, true);
             }
-            if (equals(transform.position.z, zBoundsMin, 0.001f) && transform.position.x < xBoundsMin)
+            if (equals(transform.localPosition.z, zBoundsMin, 0.001f) && transform.localPosition.x < xBoundsMin)
             {
                 crossAngle(xBoundsMin, zBoundsMin, true);
             }
-            if (equals(transform.position.x, xBoundsMin, 0.001f) && transform.position.z > zBoundsMax)
+            if (equals(transform.localPosition.x, xBoundsMin, 0.001f) && transform.localPosition.z > zBoundsMax)
             {
                 crossAngle(zBoundsMin, zBoundsMax, true);
             }
 
-            transform.position += transform.forward * Time.deltaTime * speed;
+            transform.localPosition += transform.forward * Time.deltaTime * speed;
         }
 
         //Update character position, and rotation around the cube while right arrow button is held down
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || (touch && !touchLeft))
         {
-            if (transform.position.x < xBoundsMin && equals(transform.position.z, zBoundsMax, 0.001f))
+            if (transform.localPosition.x < xBoundsMin && equals(transform.localPosition.z, zBoundsMax, 0.001f))
             {
                 crossAngle(xBoundsMin, zBoundsMax, false);
             }
-            if (equals(transform.position.x, xBoundsMin, 0.001f) && transform.position.z < zBoundsMin)
+            if (equals(transform.localPosition.x, xBoundsMin, 0.001f) && transform.localPosition.z < zBoundsMin)
             {
                 crossAngle(xBoundsMin, zBoundsMin, false);
             }
-            if (equals(transform.position.z, zBoundsMin, 0.001f) && transform.position.x > xBoundsMax)
+            if (equals(transform.localPosition.z, zBoundsMin, 0.001f) && transform.localPosition.x > xBoundsMax)
             {
                 crossAngle(xBoundsMax, zBoundsMin, false);
             }
-            if (equals(transform.position.x, xBoundsMax, 0.001f) && transform.position.z > zBoundsMax)
+            if (equals(transform.localPosition.x, xBoundsMax, 0.001f) && transform.localPosition.z > zBoundsMax)
             {
                 crossAngle(xBoundsMax, zBoundsMax, false);
             }
 
-            transform.position += transform.forward * Time.deltaTime * speed;
+            transform.localPosition += transform.forward * Time.deltaTime * speed;
         }
 
         if (Input.GetKey(KeyCode.UpArrow) && climbing)
         {
-            transform.position += transform.up * Time.deltaTime * speed;
+            transform.localPosition += transform.up * Time.deltaTime * speed;
         }
 
         if (Input.GetKey(KeyCode.DownArrow) && climbing)
         {
-            transform.position -= transform.up * Time.deltaTime * speed;
+            transform.localPosition -= transform.up * Time.deltaTime * speed;
         }
     }
 
@@ -216,7 +234,7 @@ public class CharacterController : MonoBehaviour {
             angle -= 90;
         }
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.position = new Vector3(xPos, transform.position.y, zPos);        
+        transform.localPosition = new Vector3(xPos, transform.localPosition.y, zPos);        
     }
 
     private bool equals(float a, float b, float err)
