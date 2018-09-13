@@ -160,7 +160,6 @@ public class CharacterCtrl : MonoBehaviour {
         //Update animations and rotation the instance a button is pressed down
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
             if (goingUpstairs){
-                Debug.Log("HOLAA");
                 animator.SetBool("Upstairs", true);
                 animator.SetBool("StopUpstairs", false);
             }
@@ -205,20 +204,26 @@ public class CharacterCtrl : MonoBehaviour {
         }
 
         //Update animations and rotation the instance a button is released
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            animator.SetBool("Run", false);
-            animator.SetBool("Stop", true);
-            if (goingRight)
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow)) {
+            if (goingUpstairs)
             {
-                goingRight = false;
-                angle += 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+                animator.SetBool("Upstairs", false);
+                animator.SetBool("StopUpstairs", true);
             }
-            else
-            {
-                angle -= 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
+            else {
+                animator.SetBool("Run", false);
+                animator.SetBool("Stop", true);
+                if (goingRight)
+                {
+                    goingRight = false;
+                    angle += 90;
+                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
+                }
+                else
+                {
+                    angle -= 90;
+                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
+                }
             }
         }
     }
