@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour {
+public class CharacterCtrl : MonoBehaviour {
     
     Animator animator;
     Rigidbody rb;
@@ -13,10 +13,10 @@ public class CharacterController : MonoBehaviour {
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
-    const float xBoundsMin = -4.5f;
-    const float xBoundsMax = 4.5f;
-    const float zBoundsMin = -4.5f;
-    const float zBoundsMax = 4.5f;
+    const float xBoundsMin = -15.5f;
+    const float xBoundsMax = 15.5f;
+    const float zBoundsMin = -15.5f;
+    const float zBoundsMax = 15.5f;
 
     bool climbing = false;
     bool goingRight = false;
@@ -70,16 +70,16 @@ public class CharacterController : MonoBehaviour {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, 4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMax);
                 break;
             case 1:
-                transform.position = new Vector3(4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMax);
                 break;
             case 3:
-                transform.position = new Vector3(-4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
                 break;
         }
     }
