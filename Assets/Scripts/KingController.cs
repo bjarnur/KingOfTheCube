@@ -6,6 +6,8 @@ public class KingController : MonoBehaviour {
 
     public float speed = 1f;
     public GameObject cube;
+    public GameObject rock;
+    public GameObject hand;
 
     Vector3 movement;
     Animator anim;
@@ -108,6 +110,13 @@ public class KingController : MonoBehaviour {
             angle = 0;
             transform.position = new Vector3(transform.position.x, transform.position.y, zBounds);
         }
+    }
+
+    void ThrowObject() // Event that is called during the throwing animation
+    {
+        rock.transform.position = hand.transform.position;
+        rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        rock.SetActive(true);
     }
 
     
