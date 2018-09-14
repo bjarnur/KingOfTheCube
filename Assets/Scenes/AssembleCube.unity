@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 2122926094}
   platform: {fileID: 4998914763938266, guid: 31588cdcda8fcfd4e9cd4ed588471b4f, type: 2}
-  playerOne: {fileID: 400002, guid: 3e14fe9264fbe49c2bb1dbfcb512c1da, type: 3}
+  playerOne: {fileID: 1084817040065256, guid: 46878f5abf9932e4992f0ab914c97ab7, type: 2}
 --- !u!4 &2122926094 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 1a43f7d46268042bda308b369b0971be,

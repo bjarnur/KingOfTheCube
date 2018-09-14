@@ -40,7 +40,6 @@ public class GameController : MonoBehaviour {
         }
 
         GameObject player = Instantiate(playerOne, new Vector3(15.5f, (y + 2f), 15.5f), Quaternion.identity, world);
-        player.AddComponent<CharacterCtrl>();
     }
 	
 	// Update is called once per frame

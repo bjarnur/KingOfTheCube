@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour {
-    
+
+    /**********************\
+        Tunable fields
+    \**********************/
+
+    public float speed = 2f;
+
+
+    /*********************\
+        Private fields
+    \*********************/
+
     Animator animator;
     Rigidbody rb;
 
-    int side = 0;
-
-    float speed = 2f;
+    int side = 0;    
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
@@ -21,14 +30,18 @@ public class CharacterCtrl : MonoBehaviour {
     bool climbing = false;
     bool goingRight = false;
 
-    
+
+    /*********************\
+        Unity functions
+    \*********************/
+
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 	}	
 	
 	void Update () {
-
+        
         //Ensure we only travel in the appropriate dimensions
         ensureConsistentMovement();
 
@@ -76,10 +89,10 @@ public class CharacterCtrl : MonoBehaviour {
                 transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMax);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMin);
                 break;
             case 3:
-                transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMin, transform.position.y, transform.position.z);
                 break;
         }
     }
@@ -107,6 +120,7 @@ public class CharacterCtrl : MonoBehaviour {
             }
 
             transform.position += transform.forward * Time.deltaTime * speed;
+            Debug.Log("new position: " + transform.position);
         }
 
         //Update character position, and rotation around the cube while right arrow button is held down
@@ -216,7 +230,7 @@ public class CharacterCtrl : MonoBehaviour {
             angle -= 90;
         }
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.position = new Vector3(xPos, transform.position.y, zPos);        
+        transform.position = new Vector3(xPos, transform.position.y, zPos);
     }
 
     private bool equals(float a, float b, float err)
