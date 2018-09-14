@@ -3,32 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour {
-    
+
+    /**********************\
+        Tunable fields
+    \**********************/
+
+    public float speed = 2f;
+
+
+    /*********************\
+        Private fields
+    \*********************/
+
     Animator animator;
     Rigidbody rb;
 
-    int side = 0;
-
-    float speed = 2f;
+    int side = 0;    
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
-    const float xBoundsMin = -4.5f;
-    const float xBoundsMax = 4.5f;
-    const float zBoundsMin = -4.5f;
-    const float zBoundsMax = 4.5f;
+    const float xBoundsMin = -15.5f;
+    const float xBoundsMax = 15.5f;
+    const float zBoundsMin = -15.5f;
+    const float zBoundsMax = 15.5f;
 
     bool climbing = false;
-    bool goingUpstairs = false;
     bool goingRight = false;
-    
+
+
+    /*********************\
+        Unity functions
+    \*********************/
+
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 	}	
 	
 	void Update () {
-
+        
         //Ensure we only travel in the appropriate dimensions
         ensureConsistentMovement();
 
@@ -48,12 +61,6 @@ public class CharacterCtrl : MonoBehaviour {
             rb.useGravity = false;
             climbing = true;
         }
-        else if (other.gameObject.tag == "Stair")
-        {
-            Debug.Log("Stair touched");
-            rb.useGravity = false;
-            goingUpstairs = true;
-        }
     }
 
     void OnTriggerExit(Collider other)
@@ -63,12 +70,6 @@ public class CharacterCtrl : MonoBehaviour {
             Debug.Log("Ladder exit");
             rb.useGravity = true;
             climbing = false;
-        }
-        else if (other.gameObject.tag == "Stair")
-        {
-            Debug.Log("Stair finished");
-            rb.useGravity = true;
-            goingUpstairs = false;
         }
     }
 
@@ -82,16 +83,16 @@ public class CharacterCtrl : MonoBehaviour {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, 4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMax);
                 break;
             case 1:
-                transform.position = new Vector3(4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMin);
                 break;
             case 3:
-                transform.position = new Vector3(-4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMin, transform.position.y, transform.position.z);
                 break;
         }
     }
@@ -119,6 +120,7 @@ public class CharacterCtrl : MonoBehaviour {
             }
 
             transform.position += transform.forward * Time.deltaTime * speed;
+            Debug.Log("new position: " + transform.position);
         }
 
         //Update character position, and rotation around the cube while right arrow button is held down
@@ -158,27 +160,21 @@ public class CharacterCtrl : MonoBehaviour {
     void triggerAnimations()
     {
         //Update animations and rotation the instance a button is pressed down
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-            if (goingUpstairs){
-                animator.SetBool("Upstairs", true);
-                animator.SetBool("StopUpstairs", false);
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            animator.SetBool("Run", true);
+            animator.SetBool("Stop", false);
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                goingRight = true;
+                angle -= 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
-            else{
-                animator.SetBool("Run", true);
-                animator.SetBool("Stop", false);
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    goingRight = true;
-                    angle -= 90;
-                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
-                }
-                else
-                {
-                    angle += 90;
-                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
-                }
+            else
+            {
+                angle += 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
-
         }
 
         //Trigger climbing animation the instance up/down arrows are pressed
@@ -204,26 +200,20 @@ public class CharacterCtrl : MonoBehaviour {
         }
 
         //Update animations and rotation the instance a button is released
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow)) {
-            if (goingUpstairs)
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            animator.SetBool("Run", false);
+            animator.SetBool("Stop", true);
+            if (goingRight)
             {
-                animator.SetBool("Upstairs", false);
-                animator.SetBool("StopUpstairs", true);
+                goingRight = false;
+                angle += 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
-            else {
-                animator.SetBool("Run", false);
-                animator.SetBool("Stop", true);
-                if (goingRight)
-                {
-                    goingRight = false;
-                    angle += 90;
-                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
-                }
-                else
-                {
-                    angle -= 90;
-                    transform.localEulerAngles = new Vector3(0f, angle, 0f);
-                }
+            else
+            {
+                angle -= 90;
+                transform.localEulerAngles = new Vector3(0f, angle, 0f);
             }
         }
     }
@@ -240,7 +230,7 @@ public class CharacterCtrl : MonoBehaviour {
             angle -= 90;
         }
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.position = new Vector3(xPos, transform.position.y, zPos);        
+        transform.position = new Vector3(xPos, transform.position.y, zPos);
     }
 
     private bool equals(float a, float b, float err)
