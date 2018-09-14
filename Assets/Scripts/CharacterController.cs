@@ -95,7 +95,7 @@ public class CharacterController : MonoBehaviour {
             {
                 case TouchPhase.Began:
                     touch = true;
-                    touchLeft = Input.GetTouch(0).position.x < Screen.width / 2;
+                    touchLeft = Input.GetTouch(0).position.y < Screen.height / 2;
                     break;
                 case TouchPhase.Ended:
                 case TouchPhase.Canceled:

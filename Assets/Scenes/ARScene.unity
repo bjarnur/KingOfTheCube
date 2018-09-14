@@ -674,7 +674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VirtualCube: {fileID: 1570199778}
-  Character: {fileID: 2051560983}
+  Character: {fileID: 0}
 --- !u!1001 &805583303
 Prefab:
   m_ObjectHideFlags: 0
@@ -1480,7 +1480,7 @@ GameObject:
   - component: {fileID: 1782389321}
   - component: {fileID: 1782389320}
   m_Layer: 5
-  m_Name: Text
+  m_Name: ScanningText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
