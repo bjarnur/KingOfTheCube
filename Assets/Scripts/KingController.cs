@@ -117,6 +117,7 @@ public class KingController : MonoBehaviour {
         rock.transform.position = hand.transform.position;
         rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
         rock.SetActive(true);
+        // TODO: Add a horizontal force to be more realistic
     }
 
     
