@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour {
     int side = 0;
 
     float speed = 2f;
+    float jumpSpeed = 5f;
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
@@ -20,6 +21,8 @@ public class CharacterController : MonoBehaviour {
 
     bool climbing = false;
     bool goingRight = false;
+    bool grounded = false;
+    bool jumping = false;
 
     
     void Start () {
@@ -47,6 +50,11 @@ public class CharacterController : MonoBehaviour {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.useGravity = false;
             climbing = true;
+            if(jumping)
+            {
+                animator.SetBool("Jump", false);
+                animator.SetBool("Climb", true);
+            }
         }
     }
 
@@ -57,6 +65,30 @@ public class CharacterController : MonoBehaviour {
             Debug.Log("Ladder exit");
             rb.useGravity = true;
             climbing = false;
+            animator.SetBool("Climb", false);
+
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = true;
+            if (jumping)
+            {
+                animator.SetBool("Jump", false);
+                jumping = false;
+            }
+
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = false;
         }
     }
 
@@ -132,9 +164,16 @@ public class CharacterController : MonoBehaviour {
             transform.position += transform.forward * Time.deltaTime * speed;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && climbing)
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            transform.position += transform.up * Time.deltaTime * speed;
+            if (climbing)
+            {
+                transform.position += transform.up * Time.deltaTime * speed;
+            }
+            else if (grounded)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
+            }
         }
 
         if (Input.GetKey(KeyCode.DownArrow) && climbing)
@@ -170,19 +209,22 @@ public class CharacterController : MonoBehaviour {
             {
                 transform.localEulerAngles = new Vector3(0f, 180, 0f);
                 animator.SetBool("Climb", true);
-                animator.SetBool("StopClimbing", false);
+            }
+            else if (grounded)
+            {
+                animator.SetBool("Jump", true);
+                jumping = true;
             }
         }
 
         //Stop climbing animation the instance up/down arrows are released
         if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
         {
-            //if (climbing)
-            //{
-            transform.localEulerAngles = new Vector3(0f, 180, 0f);
-            animator.SetBool("Climb", false);
-            animator.SetBool("StopClimbing", true);
-            //}
+            if (climbing)
+            {
+                transform.localEulerAngles = new Vector3(0f, 180, 0f);
+                animator.SetBool("Climb", false);
+            }
         }
 
         //Update animations and rotation the instance a button is released
