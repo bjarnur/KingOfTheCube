@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour {
-    
+public class CharacterCtrl : MonoBehaviour {
+
+    /**********************\
+        Tunable fields
+    \**********************/
+
+    public float speed = 2f;
+    public float jumpSpeed = 5f;
+
+
+    /*********************\
+        Private fields
+    \*********************/
+
     Animator animator;
     Rigidbody rb;
 
-    int side = 0;
-
-    float speed = 2f;
-    float jumpSpeed = 5f;
+    int side = 0;    
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
@@ -24,14 +33,18 @@ public class CharacterController : MonoBehaviour {
     bool grounded = false;
     bool jumping = false;
 
-    
+
+    /*********************\
+        Unity functions
+    \*********************/
+
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 	}	
 	
 	void Update () {
-
+        
         //Ensure we only travel in the appropriate dimensions
         ensureConsistentMovement();
 
@@ -102,16 +115,16 @@ public class CharacterController : MonoBehaviour {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, 4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMax);
                 break;
             case 1:
-                transform.position = new Vector3(4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMax, transform.position.y, transform.position.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -4.5f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, zBoundsMin);
                 break;
             case 3:
-                transform.position = new Vector3(-4.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(xBoundsMin, transform.position.y, transform.position.z);
                 break;
         }
     }
@@ -139,6 +152,7 @@ public class CharacterController : MonoBehaviour {
             }
 
             transform.position += transform.forward * Time.deltaTime * speed;
+            Debug.Log("new position: " + transform.position);
         }
 
         //Update character position, and rotation around the cube while right arrow button is held down
@@ -258,7 +272,7 @@ public class CharacterController : MonoBehaviour {
             angle -= 90;
         }
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.position = new Vector3(xPos, transform.position.y, zPos);        
+        transform.position = new Vector3(xPos, transform.position.y, zPos);
     }
 
     private bool equals(float a, float b, float err)
