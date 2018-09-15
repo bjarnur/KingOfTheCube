@@ -8,7 +8,7 @@ public class KingController : MonoBehaviour {
     public bool isAI;
     public GameObject rock;
     public GameObject hand;
-    //public GameObject player;
+    public GameObject player;
     //public GameObject cube;
 
     Vector3 movement;
