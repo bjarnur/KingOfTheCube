@@ -16,6 +16,14 @@ public static class CubeLevel {
     public const float fifth = 8.5f;
     public const float sixth = 10.5f;
     public const float seventh = 12.5f;
+    public const float eigth = 14.5f;
+    public const float ninth = 16.5f;
+    public const float tenth = 18.5f;
+    public const float eleventh = 20.5f;
+    public const float twelfth = 22.5f;
+    public const float thirteenth = 24.5f;
+    public const float fourtheenth = 26.5f;
+    public const float fifteenth = 28.5f;
 }
 
 public class LevelInstatiator : MonoBehaviour{
@@ -48,7 +56,8 @@ public class LevelInstatiator : MonoBehaviour{
 
         instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.fourth);
         instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.seventh);
-
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.tenth);
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.thirteenth);
     }
 
     // Update is called once per frame
