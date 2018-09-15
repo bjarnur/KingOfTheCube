@@ -5,9 +5,11 @@ using UnityEngine;
 public class KingController : MonoBehaviour {
 
     public float speed = 1f;
-    public GameObject cube;
+    public bool isAI;
     public GameObject rock;
     public GameObject hand;
+    //public GameObject player;
+    //public GameObject cube;
 
     Vector3 movement;
     Animator anim;
@@ -16,16 +18,18 @@ public class KingController : MonoBehaviour {
     float xBounds, zBounds;
     int side = 0;
     float angle = 0;
+    bool throwing = false;
 
-	// Use this for initialization
+    int dir = 1;
+
 	void Start () {
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
-        // TODO: Get the limits of the current cube
-        xBounds = 2.3f;
-        zBounds = 2.3f;
+        // TODO: Get automaticaly the limits of the current cube
+        xBounds = 1.8f;
+        zBounds = 1.8f;
 
         // Move king to initial position
         transform.position = new Vector3(0f, 0f, xBounds); 
@@ -34,10 +38,19 @@ public class KingController : MonoBehaviour {
 	
     private void FixedUpdate()
     {
-        float mov = Input.GetAxisRaw("Horizontal");
+        float mov; 
 
         // Move
-        MoveKing(mov);
+        if(isAI)
+        {
+            mov = AutoMove(); 
+        }
+        else
+        {
+            // Don't move if it's throwing
+            mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+            MoveKing(mov);
+        }
 
         // Animate
         bool running = mov != 0f;
@@ -46,7 +59,6 @@ public class KingController : MonoBehaviour {
         {
             anim.SetTrigger("Throw");
         }
-        // TODO: Don't move the king while he is throwing something
     }
 
     void MoveKing (float mov)
@@ -112,12 +124,67 @@ public class KingController : MonoBehaviour {
         }
     }
 
-    void ThrowObject() // Event that is called during the throwing animation
+    float AutoMove()
+    {
+        // TODO: Get in which side the player is
+        side = 0;
+
+        // Move randomly in that side
+        if(Random.Range(0.0f, 1.0f) < 0.01 || transform.position.x > xBounds || transform.position.x < -xBounds)
+        {
+            //Change direction
+            dir = - dir;
+        }
+        // Don't move if it's throwing
+        int dx = throwing ? 0 : dir;
+
+        movement.Set(dx, 0.0f, 0.0f);
+        movement = movement.normalized * speed * Time.deltaTime;
+        rb.MovePosition(transform.position + movement);
+
+        if (dir != 0)
+        {
+            Quaternion newRotation = Quaternion.LookRotation(movement);
+            rb.MoveRotation(newRotation);
+        }
+        else
+        {
+            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
+        }
+
+        // Throw randomly
+        float th = Random.Range(0.0f, 1.0f);
+        if (th < 0.01 && !throwing)
+        {
+            anim.SetTrigger("Throw");
+        }
+
+        return movement.x;
+    }
+
+    ////////////////////////////////////////////////////////////
+    /// Events that are triggered during the throwing animation
+    ////////////////////////////////////////////////////////////
+
+    void StartThrowing()
+    {
+        throwing = true;
+        Debug.Log("Start throwing");
+    }
+
+    void ThrowObject() 
     {
         rock.transform.position = hand.transform.position;
         rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
         rock.SetActive(true);
+        // TODO: Add a horizontal force to be more realistic
     }
 
-    
+    void EndThrowing()
+    {
+        throwing = false;
+        Debug.Log("End throwing");
+    }
+
+
 }
