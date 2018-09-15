@@ -8,20 +8,29 @@ enum CubeFaces {
     thirdFace = 3,
     fourthFace = 4
 }
+public static class CubeLevel {
+    public const float first = 0.5f;
+    public const float second = 2.5f;
+    public const float third = 4.5f;
+    public const float fourth = 6.5f;
+    public const float fifth = 8.5f;
+    public const float sixth = 10.5f;
+    public const float seventh = 12.5f;
+}
 
 public class LevelInstatiator : MonoBehaviour{
 
-    const float xBoundsMin = -15.5f; // Extra 0.5 for the corners
-    const float xBoundsMax = 15.5f;
-    const float zBoundsMin = -15.5f;
-    const float zBoundsMax = 15.5f;
+    const float xBoundsMin = -15.64f; // Extra 0.5 for the corners
+    const float xBoundsMax = 16.04f;
+    const float zBoundsMin = -15.84f;
+    const float zBoundsMax = 15.84f;
 
-    Vector3 firstFaceVector = new Vector3(15.5f, 0f, -15.5f);
-    Vector3 secondFaceVector = new Vector3(15.5f, 0f, 15.5f);
-    Vector3 thirdFaceVector = new Vector3(-15.5f, 0f, 15.5f);
-    Vector3 fourthFaceVector = new Vector3(-15.5f, 0f, -15.5f);
+    static Vector3 firstFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
+    static Vector3 secondFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMax);
+    static Vector3 thirdFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMax);
+    static Vector3 fourthFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMin);
 
-
+    /* Vars from Editor */
     public Transform world;
     public Transform firstFaceCorner;
     public Transform secondFaceCorner;
@@ -30,10 +39,16 @@ public class LevelInstatiator : MonoBehaviour{
 
     // Use this for initialization
     void Start() {
-        instantiateFaceCorner(inFace: CubeFaces.firstFace, atHeight: 5f);
-        instantiateFaceCorner(inFace: CubeFaces.secondFace, atHeight: 5f);
-        instantiateFaceCorner(inFace: CubeFaces.thirdFace, atHeight: 5f);
-        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atHeight: 5f);
+        instantiateFaceCorner(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first);
+        instantiateFaceCorner(inFace: CubeFaces.secondFace, atLevel: CubeLevel.first);
+        instantiateFaceCorner(inFace: CubeFaces.thirdFace, atLevel: CubeLevel.first);
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.first);
+
+
+
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.fourth);
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.seventh);
+
     }
 
     // Update is called once per frame
@@ -42,7 +57,7 @@ public class LevelInstatiator : MonoBehaviour{
     }
 
     /* This method instantiates a corner in the indicated face and height. The face's corner is always the rightmost one*/
-    private void instantiateFaceCorner(CubeFaces inFace, float atHeight) { // Faces can be 1,2,3 or 4
+    private void instantiateFaceCorner(CubeFaces inFace, float atLevel) { 
         var copyVector = new Vector3(0,0,0);
         var copyCorner = firstFaceCorner;
         switch (inFace) {
@@ -62,7 +77,7 @@ public class LevelInstatiator : MonoBehaviour{
                 copyCorner = fourthFaceCorner;
                 break;
         } 
-        copyVector.y = atHeight;
+        copyVector.y = atLevel;
         Instantiate(copyCorner, copyVector, Quaternion.identity, world);
     }
 

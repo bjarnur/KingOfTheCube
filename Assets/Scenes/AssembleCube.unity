@@ -218,6 +218,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 1a43f7d46268042bda308b369b0971be, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a43f7d46268042bda308b369b0971be, type: 3}
   m_IsPrefabAsset: 0
@@ -344,9 +348,9 @@ MonoBehaviour:
   world: {fileID: 2122926094}
   firstFaceCorner: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0,
     type: 2}
-  secondFaceCorner: {fileID: 4574353576091254, guid: b65d781c0a9ce4c4fb6d2ee9ced796e8,
+  secondFaceCorner: {fileID: 4212062346377050, guid: 9086b87aaf439ab43adc1bc13e1e5541,
     type: 2}
-  thirdFaceCorner: {fileID: 4715803042647796, guid: 87d90218490490545bb9acd3d2b534df,
+  thirdFaceCorner: {fileID: 4574353576091254, guid: b65d781c0a9ce4c4fb6d2ee9ced796e8,
     type: 2}
-  fourthFaceCorner: {fileID: 4212062346377050, guid: 9086b87aaf439ab43adc1bc13e1e5541,
+  fourthFaceCorner: {fileID: 4715803042647796, guid: 87d90218490490545bb9acd3d2b534df,
     type: 2}
