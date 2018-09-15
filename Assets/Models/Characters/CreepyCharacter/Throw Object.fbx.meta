@@ -110,7 +110,7 @@ ModelImporter:
       name: ThrowObject
       takeName: mixamo.com
       firstFrame: 51
-      lastFrame: 146
+      lastFrame: 125
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -130,8 +130,22 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.25390625
+      - time: 0.0078125
+        functionName: StartThrowing
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.328125
         functionName: ThrowObject
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.98480904
+        functionName: EndThrowing
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
