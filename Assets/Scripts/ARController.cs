@@ -79,11 +79,14 @@ public class ARController : MonoBehaviour
                     world.localScale = scale;
                     buildBasePlatform(scale);
                     readyPlayerOne(scale);
+
+                    /*
                     for (int i = -15; i < 15; i += 4)
                     {
                         Transform plat = Instantiate(platformX, world.position, Quaternion.identity, world);
                         plat.position += new Vector3(i * scale.x, 0.5f * scale.y, 17.5f * scale.z);
                     }
+                    */
                 }
 
                 else if (image.TrackingState == TrackingState.Stopped)
@@ -106,7 +109,7 @@ public class ARController : MonoBehaviour
         GameObject player = Instantiate(playerOne, world.position, Quaternion.identity, world);
         CharacterCtrl c = player.GetComponent<CharacterCtrl>();
         c.SetScale(scale);
-
+        //c.SetWorld(world.position);
         player.transform.position += new Vector3(15.5f * scale.x, 2.5f * scale.y, 15.5f * scale.z);
     }
 
@@ -124,19 +127,19 @@ public class ARController : MonoBehaviour
         }
         while (z > -15.5)
         {
-            Transform plat = Instantiate(platformZ, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(xBoundsMax * scale.x, 0.5f * scale.y, z * scale.z);
             z -= 1;
         }
         while (x > -15.5)
         {
-            Transform plat = Instantiate(platformX, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(x * scale.x, 0.5f * scale.y, zBoundsMin * scale.z);
             x -= 1;
         }
         while (z < 15.5)
         {
-            Transform plat = Instantiate(platformZ, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(xBoundsMin * scale.x, 0.5f * scale.y, z * scale.z);
             z += 1;
         }
