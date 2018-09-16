@@ -9,6 +9,12 @@ public class CharacterCtrl : MonoBehaviour {
     \**********************/
 
     public float speed = 2f;
+    private Vector3 scale = new Vector3(1f, 1f, 1f);
+
+    public void SetScale(Vector3 scale)
+    {
+        this.scale = scale;
+    }
 
 
     /*********************\
@@ -22,10 +28,10 @@ public class CharacterCtrl : MonoBehaviour {
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
-    const float xBoundsMin = -15.5f;
-    const float xBoundsMax = 15.5f;
-    const float zBoundsMin = -15.5f;
-    const float zBoundsMax = 15.5f;
+    private float xBoundsMin = -15.5f;
+    private float xBoundsMax = 15.5f;
+    private float zBoundsMin = -15.5f;
+    private float zBoundsMax = 15.5f;
 
     bool climbing = false;
     bool goingRight = false;
@@ -38,6 +44,11 @@ public class CharacterCtrl : MonoBehaviour {
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        xBoundsMax *= scale.x;
+        xBoundsMin *= scale.x;
+        zBoundsMax *= scale.y;
+        zBoundsMin *= scale.y;
 	}	
 	
 	void Update () {
@@ -136,7 +147,7 @@ public class CharacterCtrl : MonoBehaviour {
                 crossAngle(zBoundsMin, zBoundsMax, true);
             }
 
-            transform.localPosition += transform.forward * Time.deltaTime * speed;
+            transform.localPosition += transform.forward * Time.deltaTime * speed * scale.x;
             Debug.Log("new localPosition: " + transform.localPosition);
         }
 
@@ -160,17 +171,17 @@ public class CharacterCtrl : MonoBehaviour {
                 crossAngle(xBoundsMax, zBoundsMax, false);
             }
 
-            transform.localPosition += transform.forward * Time.deltaTime * speed;
+            transform.localPosition += transform.forward * Time.deltaTime * speed * scale.x;
         }
 
         if (Input.GetKey(KeyCode.UpArrow) && climbing)
         {
-            transform.localPosition += transform.up * Time.deltaTime * speed;
+            transform.localPosition += transform.up * Time.deltaTime * speed * scale.y;
         }
 
         if (Input.GetKey(KeyCode.DownArrow) && climbing)
         {
-            transform.localPosition -= transform.up * Time.deltaTime * speed;
+            transform.localPosition -= transform.up * Time.deltaTime * speed * scale.y;
         }
     }
 
