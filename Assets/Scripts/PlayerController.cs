@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour {
     float xBounds, zBounds;
     float angle = 0;
 
+    bool dead = false;
+
+
     void Start ()
     {
         anim = GetComponent<Animator>();
@@ -33,7 +36,9 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        float mov = Input.GetAxisRaw("Horizontal");
+        float mov;
+        //Don't move if it's dead
+        mov = dead ? 0 : Input.GetAxisRaw("Horizontal");
 
         MovePlayer(mov);
 
@@ -104,5 +109,21 @@ public class PlayerController : MonoBehaviour {
             angle = 0;
             transform.position = new Vector3(transform.position.x, transform.position.y, zBounds);
         }
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if(col.gameObject.name == "Rock" && !dead)
+        {
+            anim.SetTrigger("Die");
+            dead = true;
+            StartCoroutine(Dying());
+        }
+    }
+
+    IEnumerator Dying()
+    {
+        yield return new WaitForSeconds(3); // Length of dying animatin
+        dead = false;
     }
 }
