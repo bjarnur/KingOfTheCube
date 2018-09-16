@@ -8,7 +8,7 @@ public class KingController : MonoBehaviour {
     public bool isAI;
     public GameObject rock;
     public GameObject hand;
-    //public GameObject player;
+    public GameObject player;
     //public GameObject cube;
 
     Vector3 movement;
@@ -61,11 +61,55 @@ public class KingController : MonoBehaviour {
         }
     }
 
-    void MoveKing (float mov)
+    float AutoMove()
+    {
+        // Get in which side the player is
+        int playerSide = player.GetComponent<PlayerController>().side;
+
+        // Follow the player, move and throw randomly when in same side
+        dir = FollowPlayer(playerSide);
+
+        // Don't move if it's throwing
+        float dx = throwing ? 0 : dir;
+        MoveKing(dx);
+        
+        return dx;
+    }
+
+    int FollowPlayer(int playerSide)
+    {
+        if (side == playerSide)
+        {
+            // Throw randomly if it's in the same side as the player
+            float th = Random.Range(0.0f, 1.0f);
+            if (th < 0.01 && !throwing)
+            {
+                anim.SetTrigger("Throw");
+            }
+            //Random direction
+            if (Random.Range(0.0f, 1.0f) < 0.01)
+            {
+                //Change direction
+                dir = -dir;
+            }
+        }
+        else if (side == (playerSide + 1) % 4) //Go right
+        {
+            dir = 1;
+        }
+        else //Go left
+        {
+            dir = -1;
+        }
+        return dir;
+    }
+
+    void MoveKing(float mov)
     {
         // Check boundaries and change side if needed
         CheckBounds();
 
+        // Set movement into correct axis
         switch (side)
         {
             case 0:
@@ -84,16 +128,16 @@ public class KingController : MonoBehaviour {
         movement = movement.normalized * speed * Time.deltaTime;
         rb.MovePosition(transform.position + movement);
 
-        if(mov != 0)
+        // Rotation
+        if (mov != 0) // Follow the direction of motion
         {
             Quaternion newRotation = Quaternion.LookRotation(movement);
             rb.MoveRotation(newRotation);
         }
-        else
+        else // Face the edge of the cube
         {
-            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
+            transform.localEulerAngles = new Vector3(0f, angle, 0f);
         }
-
     }
 
     void CheckBounds()
@@ -124,44 +168,6 @@ public class KingController : MonoBehaviour {
         }
     }
 
-    float AutoMove()
-    {
-        // TODO: Get in which side the player is
-        side = 0;
-
-        // Move randomly in that side
-        if(Random.Range(0.0f, 1.0f) < 0.01 || transform.position.x > xBounds || transform.position.x < -xBounds)
-        {
-            //Change direction
-            dir = - dir;
-        }
-        // Don't move if it's throwing
-        int dx = throwing ? 0 : dir;
-
-        movement.Set(dx, 0.0f, 0.0f);
-        movement = movement.normalized * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + movement);
-
-        if (dir != 0)
-        {
-            Quaternion newRotation = Quaternion.LookRotation(movement);
-            rb.MoveRotation(newRotation);
-        }
-        else
-        {
-            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
-        }
-
-        // Throw randomly
-        float th = Random.Range(0.0f, 1.0f);
-        if (th < 0.01 && !throwing)
-        {
-            anim.SetTrigger("Throw");
-        }
-
-        return movement.x;
-    }
-
     ////////////////////////////////////////////////////////////
     /// Events that are triggered during the throwing animation
     ////////////////////////////////////////////////////////////
@@ -185,6 +191,4 @@ public class KingController : MonoBehaviour {
         throwing = false;
         Debug.Log("End throwing");
     }
-
-
 }

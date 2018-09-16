@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7064266c42b1b4c85bdce4a69a45bb9f
+guid: 2e7a1ad626b577745848238cf6a82de7
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -59,7 +59,7 @@ ModelImporter:
     400052: mixamorig:Spine2
     2100000: palettemat
     4300000: character
-    7400000: Death From Right
+    7400000: Dead
     9500000: //RootNode
     13700000: character
   externalObjects: {}
@@ -91,7 +91,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Death From Right
+      name: Dead
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 99
@@ -113,21 +113,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0
-        functionName: StartDying
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9967427
-        functionName: EndDying
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
