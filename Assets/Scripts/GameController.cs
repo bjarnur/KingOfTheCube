@@ -62,8 +62,7 @@ public class GameController : MonoBehaviour {
     }
 
 
-    void buildBasePlatform()
-    {
+    void buildBasePlatform() {
         float x = xBoundsMin;
         float y = 0.5f;
         float z = zBoundsMax;
