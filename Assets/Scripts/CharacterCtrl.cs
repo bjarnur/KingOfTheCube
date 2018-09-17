@@ -16,6 +16,13 @@ public class CharacterCtrl : MonoBehaviour {
         this.scale = scale;
     }
 
+    public void SetWorld(Transform world)
+    {
+        this.world = world;
+    }
+
+
+    public Transform world;
 
     /*********************\
         Private fields
@@ -54,10 +61,10 @@ public class CharacterCtrl : MonoBehaviour {
 	void Update () {
         
         //Ensure we only travel in the appropriate dimensions
-        ensureConsistentMovement();
+        //ensureConsistentMovement();
 
         //Trigger animations based on user input
-        triggerAnimations();
+        //triggerAnimations();
 
         //Update character position and rotation
         updateCharacterPosition();
@@ -130,48 +137,47 @@ public class CharacterCtrl : MonoBehaviour {
         //Update character localPosition, and rotation around the cube while left arrow button is held down
         if (Input.GetKey(KeyCode.LeftArrow) || (touch && touchLeft))
         {
-            if (transform.localPosition.x > xBoundsMax && equals(transform.localPosition.z, zBoundsMax, 0.001f))
+            /*if (transform.localPosition.x > xBoundsMax && equals(transform.localPosition.z, zBoundsMax, 0.001f))
             {
                 crossAngle(xBoundsMax, zBoundsMax, true);
             }
-            if (equals(transform.localPosition.x, xBoundsMax, 0.001f) && transform.localPosition.z < zBoundsMin)
+            if (equals(transform.localPosition.x, xBoundsMax, 0.000001f) && transform.localPosition.z < zBoundsMin)
             {
                 crossAngle(xBoundsMax, zBoundsMin, true);
             }
-            if (equals(transform.localPosition.z, zBoundsMin, 0.001f) && transform.localPosition.x < xBoundsMin)
+            if (equals(transform.localPosition.z, zBoundsMin, 0.000001f) && transform.localPosition.x < xBoundsMin)
             {
                 crossAngle(xBoundsMin, zBoundsMin, true);
             }
-            if (equals(transform.localPosition.x, xBoundsMin, 0.001f) && transform.localPosition.z > zBoundsMax)
+            if (equals(transform.localPosition.x, xBoundsMin, 0.000001f) && transform.localPosition.z > zBoundsMax)
             {
                 crossAngle(zBoundsMin, zBoundsMax, true);
-            }
+            }*/
 
-            transform.localPosition += transform.forward * Time.deltaTime * speed * scale.x;
-            Debug.Log("new localPosition: " + transform.localPosition);
+            transform.localPosition -= world.forward * Time.deltaTime * speed;
         }
 
         //Update character localPosition, and rotation around the cube while right arrow button is held down
         if (Input.GetKey(KeyCode.RightArrow) || (touch && !touchLeft))
         {
-            if (transform.localPosition.x < xBoundsMin && equals(transform.localPosition.z, zBoundsMax, 0.001f))
+            /*if (transform.localPosition.x < xBoundsMin && equals(transform.localPosition.z, zBoundsMax, 0.001f))
             {
                 crossAngle(xBoundsMin, zBoundsMax, false);
             }
-            if (equals(transform.localPosition.x, xBoundsMin, 0.001f) && transform.localPosition.z < zBoundsMin)
+            if (equals(transform.localPosition.x, xBoundsMin, 0.000001f) && transform.localPosition.z < zBoundsMin)
             {
                 crossAngle(xBoundsMin, zBoundsMin, false);
             }
-            if (equals(transform.localPosition.z, zBoundsMin, 0.001f) && transform.localPosition.x > xBoundsMax)
+            if (equals(transform.localPosition.z, zBoundsMin, 0.000001f) && transform.localPosition.x > xBoundsMax)
             {
                 crossAngle(xBoundsMax, zBoundsMin, false);
             }
-            if (equals(transform.localPosition.x, xBoundsMax, 0.001f) && transform.localPosition.z > zBoundsMax)
+            if (equals(transform.localPosition.x, xBoundsMax, 0.000001f) && transform.localPosition.z > zBoundsMax)
             {
                 crossAngle(xBoundsMax, zBoundsMax, false);
-            }
+            }*/
 
-            transform.localPosition += transform.forward * Time.deltaTime * speed * scale.x;
+            transform.localPosition += world.forward * Time.deltaTime * speed;
         }
 
         if (Input.GetKey(KeyCode.UpArrow) && climbing)

@@ -8,10 +8,10 @@ using UnityEngine.UI;
 
 public class ARController : MonoBehaviour
 {
-    // 20 centimeters wide
-    public static float RealCubeSize = 0.2f;
-        
+    public Transform ARCoreDevice;
+
     public GameObject UIScanning;
+
     public GameObject garden;
     public GameObject playerOne;
 
@@ -26,7 +26,6 @@ public class ARController : MonoBehaviour
     public Transform ladderZ;
     public Transform unitCube;
 
-    private BoxCollider virtualCubeCollider;
     private List<AugmentedImage> m_AugmentedImages = new List<AugmentedImage>();
     private AugmentedImage KOTCImage = null;
     private Anchor KOTCAnchor = null;
@@ -64,6 +63,7 @@ public class ARController : MonoBehaviour
             {
                 if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
                 {
+                    Debug.Log("Tracking OK");
                     KOTCImage = image;
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
@@ -72,22 +72,22 @@ public class ARController : MonoBehaviour
                     world.localRotation = Quaternion.identity;
                     world.gameObject.SetActive(true);
 
-                    GameObject gardenObj = Instantiate(garden, world.position, Quaternion.identity, world);
-                    virtualCubeCollider = garden.GetComponent<BoxCollider>();
-                    Vector3 colliderSize = virtualCubeCollider.size;
-                    Vector3 scale = new Vector3(RealCubeSize / colliderSize.x, RealCubeSize / colliderSize.y, RealCubeSize / colliderSize.z) * 2f;
-                    world.localScale = scale;
-                    buildBasePlatform(scale);
-                    readyPlayerOne(scale);
-                    for (int i = -15; i < 15; i += 4)
+                    Transform gardenObj = Instantiate(garden).transform;
+                    gardenObj.parent = world;
+                    gardenObj.localPosition = Vector3.zero;
+                    gardenObj.localRotation = Quaternion.identity;
+
+                    //buildBasePlatform(scale);
+                    readyPlayerOne();
+                    /*for (int i = -15; i < 15; i += 4)
                     {
                         Transform plat = Instantiate(platformX, world.position, Quaternion.identity, world);
                         plat.position += new Vector3(i * scale.x, 0.5f * scale.y, 17.5f * scale.z);
-                    }
+                    }*/
                 }
-
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
+                    Debug.Log("Tracking Stopped");
                     world.parent = null;
                     world.gameObject.SetActive(false);
 
@@ -101,13 +101,24 @@ public class ARController : MonoBehaviour
         UIScanning.SetActive(KOTCImage == null);
     }
 
-    void readyPlayerOne(Vector3 scale)
+    public void ToggleWorldLock()
+    {
+        if(world.parent == null)
+        {
+            world.parent = KOTCAnchor.transform;
+        } else
+        {
+            world.parent = null;
+        }
+    }
+
+    void readyPlayerOne()
     {
         GameObject player = Instantiate(playerOne, world.position, Quaternion.identity, world);
         CharacterCtrl c = player.GetComponent<CharacterCtrl>();
-        c.SetScale(scale);
+        c.SetWorld(world);
 
-        player.transform.position += new Vector3(15.5f * scale.x, 2.5f * scale.y, 15.5f * scale.z);
+        player.transform.position += new Vector3(0f, 3.5f, 0f);
     }
 
     void buildBasePlatform(Vector3 scale)
