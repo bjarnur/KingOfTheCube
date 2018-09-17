@@ -135,19 +135,19 @@ public class ARController : MonoBehaviour
         }
         while (z > -15.5)
         {
-            Transform plat = Instantiate(platformZ, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(xBoundsMax * scale.x, 0.5f * scale.y, z * scale.z);
             z -= 1;
         }
         while (x > -15.5)
         {
-            Transform plat = Instantiate(platformX, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(x * scale.x, 0.5f * scale.y, zBoundsMin * scale.z);
             x -= 1;
         }
         while (z < 15.5)
         {
-            Transform plat = Instantiate(platformZ, world.position, Quaternion.identity, world);
+            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
             plat.position += new Vector3(xBoundsMin * scale.x, 0.5f * scale.y, z * scale.z);
             z += 1;
         }

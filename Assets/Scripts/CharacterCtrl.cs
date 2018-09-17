@@ -9,7 +9,7 @@ public class CharacterCtrl : MonoBehaviour {
     \**********************/
 
     public float speed = 2f;
-    private Vector3 scale = new Vector3(1f, 1f, 1f);
+    public Vector3 scale = new Vector3(1f, 1f, 1f);
 
     public void SetScale(Vector3 scale)
     {
@@ -59,7 +59,7 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
-        
+
         //Ensure we only travel in the appropriate dimensions
         //ensureConsistentMovement();
 
@@ -67,7 +67,10 @@ public class CharacterCtrl : MonoBehaviour {
         //triggerAnimations();
 
         //Update character position and rotation
-        updateCharacterPosition();
+        //updateCharacterPosition();
+
+        //transform.localPosition -= transform.forward * 0.001f;
+        transform.localPosition -= transform.forward * 0.01f;
     }
 
     void OnTriggerEnter(Collider other)
