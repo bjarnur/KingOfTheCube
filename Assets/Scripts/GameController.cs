@@ -25,10 +25,10 @@ public class GameController : MonoBehaviour {
     void Start () {
 
         //Place objects in level
-        constructLevel();
+        //constructLevel();
 
         //Instantiate player
-        readyPlayerOne();
+        //readyPlayerOne();
     }
 	
 	// Update is called once per frame
@@ -62,8 +62,7 @@ public class GameController : MonoBehaviour {
     }
 
 
-    void buildBasePlatform()
-    {
+    void buildBasePlatform() {
         float x = xBoundsMin;
         float y = 0.5f;
         float z = zBoundsMax;
