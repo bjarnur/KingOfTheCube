@@ -173,6 +173,45 @@ public class LevelInstatiator : MonoBehaviour{
         instantiateFacePlatform(inFace: CubeFaces.thirdFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.eighteenth);
 
         instantiateFaceCorner(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth);
+
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.first);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.second);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.third);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.second);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.fourth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.fifth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.sixth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.seventh);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.eigth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.ninth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.tenth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.eleventh);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.twelfth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.thirteenth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.fourtheenth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.fifteenth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.sixteenth);
+        instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.sixth, atColumn: CubeColumn.seventeenth);
+
+        instantiateFaceCorner(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth);
+
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.first);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.second);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.third);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.second);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.fourth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.fifth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.sixth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.seventh);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.tenth, atColumn: CubeColumn.eigth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.ninth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.tenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.eleventh);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.twelfth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.thirteenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.fourtheenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.fifteenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.sixteenth);
     }
 
     /* This method instantiates a corner in the indicated face and height. The face's corner is always the rightmost one*/
