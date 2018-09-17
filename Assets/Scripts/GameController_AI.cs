@@ -45,10 +45,10 @@ public class GameController_AI : MonoBehaviour {
         //Builds a a solid platform around the base of the cube
         buildBasePlatform();
 
-        Instantiate(corner1, new Vector3(15.5f, 5.5f, -15.5f), Quaternion.identity, world);
-        Instantiate(corner2, new Vector3(-15.5f, 5.5f, 15.5f), Quaternion.identity, world);
-        Instantiate(corner3, new Vector3(-15.5f, 15.5f, -15.5f), Quaternion.identity, world);
-        Instantiate(corner4, new Vector3(15.5f, 15.5f, 15.5f), Quaternion.identity, world);
+        //Instantiate(corner1, new Vector3(15.5f, 5.5f, -15.5f), Quaternion.identity, world);
+        //Instantiate(corner2, new Vector3(-15.5f, 5.5f, 15.5f), Quaternion.identity, world);
+        //Instantiate(corner3, new Vector3(-15.5f, 15.5f, -15.5f), Quaternion.identity, world);
+        //Instantiate(corner4, new Vector3(15.5f, 15.5f, 15.5f), Quaternion.identity, world);
 
         Instantiate(corner4, new Vector3(15.5f, 8f, 15.5f), Quaternion.identity, world);
         Instantiate(platformX, new Vector3(11.5f, 8f, 15.5f), Quaternion.identity, world);
