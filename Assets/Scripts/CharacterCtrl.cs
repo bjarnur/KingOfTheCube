@@ -9,7 +9,7 @@ public class CharacterCtrl : MonoBehaviour {
     \**********************/
 
     public float speed = 0.1f;
-    public float jumpSpeed = 5f;
+    public float jumpSpeed = 0.5f;
 
     Transform world;
     public void SetWorld(Transform world)
@@ -26,8 +26,8 @@ public class CharacterCtrl : MonoBehaviour {
 
     // 0 & 2 = Moving along X
     // 1 & 3 = Moving along Z
-    int side = 2;    
-    float angle = 0;
+    int side = 2;
+    float angle = 180;
 
     //TODO: Set these values appropriately with respect to level dimensions
     const float xBounds = 1.55f;
@@ -36,7 +36,7 @@ public class CharacterCtrl : MonoBehaviour {
     bool climbing = false;
     bool moving = false;
     bool goingRight = false;
-    bool grounded = false;
+    bool grounded = true;
     bool jumping = false;
 
 
@@ -61,6 +61,15 @@ public class CharacterCtrl : MonoBehaviour {
 
         //Trigger animations based on user input
         TriggerAnimations();
+    }
+
+    public void Reset()
+    {
+        climbing = false;
+        moving = false;
+        goingRight = false;
+        grounded = true;
+        jumping = false;
     }
 
     void OnTriggerEnter(Collider other)
@@ -96,8 +105,8 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 jumping = false;
             }
-            TriggerAnimations();
         }
+        TriggerAnimations();
     }
 
     void OnCollisionExit(Collision collision)
@@ -151,125 +160,77 @@ public class CharacterCtrl : MonoBehaviour {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, zBounds);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBounds);
                 break;
             case 1:
-                transform.position = new Vector3(xBounds, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, transform.localPosition.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -zBounds);
                 break;
             case 3:
-                transform.position = new Vector3(-xBounds, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, transform.localPosition.z);
                 break;
         }
     }
 
     void ChangeSides()
     {
-        if (transform.position.x > xBounds) // Change to side 1
+        if (transform.localPosition.x > xBounds) // Change to side 1
         {
             side = 1;
             angle = 90;
-            if(transform.position.z > 0) 
+            if(transform.localPosition.z > 0) 
             {
-                transform.position = new Vector3(xBounds, transform.position.y, zBounds - (transform.position.x - xBounds)); 
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, zBounds - (transform.localPosition.x - xBounds)); 
             } else 
             {
-                transform.position = new Vector3(xBounds, transform.position.y, -zBounds + (transform.position.x - xBounds));
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, -zBounds + (transform.localPosition.x - xBounds));
             }
         }
-        else if (transform.position.z < -zBounds) // Change to side 2
+        else if (transform.localPosition.z < -zBounds) // Change to side 2
         {
             side = 2;
             angle = 180;
-            if (transform.position.x > 0) 
+            if (transform.localPosition.x > 0) 
             {
-                transform.position = new Vector3(xBounds + (transform.position.z + zBounds), transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(xBounds + (transform.localPosition.z + zBounds), transform.localPosition.y, -zBounds);
             } else 
             {
-                transform.position = new Vector3(-xBounds - (transform.position.z + zBounds), transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(-xBounds - (transform.localPosition.z + zBounds), transform.localPosition.y, -zBounds);
             }
         }
-        else if (transform.position.x < -xBounds) // Change to side 3
+        else if (transform.localPosition.x < -xBounds) // Change to side 3
         {
             side = 3;
             angle = 270;
-            if(transform.position.z > 0) 
+            if(transform.localPosition.z > 0) 
             {
-                transform.position = new Vector3(-xBounds, transform.position.y, zBounds + (transform.position.x + xBounds));
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, zBounds + (transform.localPosition.x + xBounds));
             } else 
             {
-                transform.position = new Vector3(-xBounds, transform.position.y, -zBounds - (transform.position.x + xBounds));
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, -zBounds - (transform.localPosition.x + xBounds));
             }
         }
-        else if (transform.position.z > zBounds) // Change to side 0
+        else if (transform.localPosition.z > zBounds) // Change to side 0
         {
             side = 0;
             angle = 0;
-            if(transform.position.x > 0)
+            if(transform.localPosition.x > 0)
             {
-                transform.position = new Vector3(xBounds - (transform.position.z - zBounds), transform.position.y, zBounds);
+                transform.localPosition = new Vector3(xBounds - (transform.localPosition.z - zBounds), transform.localPosition.y, zBounds);
             } else 
             {
-                transform.position = new Vector3(-xBounds + (transform.position.z - zBounds), transform.position.y, zBounds);
+                transform.localPosition = new Vector3(-xBounds + (transform.localPosition.z - zBounds), transform.localPosition.y, zBounds);
             }
         }
     }
-
-    /* Kept for AR checks
-    void CheckBounds()
-    {
-        if (transform.localPosition.x > xBoundsMax) // Change to side 1
-        {
-            side = 1;
-            angle = 90;
-            transform.localPosition = new Vector3(xBoundsMax, transform.localPosition.y, transform.localPosition.z);
-        }
-        else if (transform.localPosition.z < zBoundsMin) // Change to side 2
-        {
-            side = 2;
-            angle = 180;
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMin);
-        }
-        else if (transform.localPosition.x < xBoundsMin) // Change to side 3
-        {
-            side = 3;
-            angle = 270;
-            transform.localPosition = new Vector3(xBoundsMin, transform.localPosition.y, transform.localPosition.z);
-        }
-        else if (transform.localPosition.z > zBoundsMax) // Change to side 0
-        {
-            side = 0;
-            angle = 0;
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMax);
-        }
-    }
-
-    void MovePlayer(float mov)
-    {
-        // Check boundaries and change side if needed
-        CheckBounds();
-
-        Vector3 dir = getDirection(true) * mov;
-        transform.localPosition += dir * Time.deltaTime * speed;
-
-        if (mov != 0)
-        {
-            Quaternion newRotation = Quaternion.LookRotation(dir);
-            rb.MoveRotation(newRotation);
-        }
-        else
-        {
-            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
-        }
-    }*/
 
     void UpdateCharacterPosition()
     {
         bool touch = false;
         float firstTouchDir = 0f;
-        bool jump = false;
+        bool bothTouch = false;
 
         if (Input.touchCount > 0)
         {
@@ -285,79 +246,34 @@ public class CharacterCtrl : MonoBehaviour {
 
             if (Input.touchCount > 1)
             {
-                if (Input.GetTouch(0).phase == TouchPhase.Began)
+                switch (Input.GetTouch(1).phase)
                 {
-                    float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
-                    jump = secondTouchDir != firstTouchDir;
+                    case TouchPhase.Began:
+                    case TouchPhase.Stationary:
+                    case TouchPhase.Moved:
+                        float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
+                        bothTouch = secondTouchDir != firstTouchDir;
+                        break;
                 }
             }
         }
 
-        // Works in AR
-        float mov;
-        mov = Input.GetAxisRaw("Horizontal");
-        mov = touch ? firstTouchDir : mov;
+        Vector3 yVelocity = world.up * rb.velocity.y;
+        float hAxis = Input.GetAxisRaw("Horizontal");
+        hAxis = touch ? firstTouchDir : hAxis;
 
-        //MovePlayer(mov);
-
-        if (!jumping && (jump || Input.GetAxisRaw("Vertical") > 0f))
-        {
-            jumping = true;
-            rb.velocity += world.up * 0.5f;
-        }
-
-        // Animate
-        bool running = mov != 0f;
-        animator.SetBool("Run", running);
-        animator.SetBool("Stop", !running);
-
-
-
-        // Works in Unity
-        if (Input.GetKey(KeyCode.LeftArrow)) 
-        {
-            goingRight = false;
-            moving = true;
-            switch (side) 
-            {
-                case 0:
-                    rb.velocity = new Vector3(speed, rb.velocity.y, 0);
-                    break;
-                case 1:
-                    rb.velocity = new Vector3(0, rb.velocity.y, -speed);
-                    break;
-                case 2:
-                    rb.velocity = new Vector3(-speed, rb.velocity.y, 0);
-                    break;
-                case 3:
-                    rb.velocity = new Vector3(0, rb.velocity.y, speed);
-                    break;
-            }
-        } else if (Input.GetKey(KeyCode.RightArrow))
+        if (hAxis != 0f)
         {
             moving = true;
-            goingRight = true;
-            switch (side)
-            {
-                case 0:
-                    rb.velocity = new Vector3(-speed, rb.velocity.y, 0);
-                    break;
-                case 1:
-                    rb.velocity = new Vector3(0, rb.velocity.y, speed);
-                    break;
-                case 2:
-                    rb.velocity = new Vector3(speed, rb.velocity.y, 0);
-                    break;
-                case 3:
-                    rb.velocity = new Vector3(0, rb.velocity.y, -speed);
-                    break;
-            }
-        } else {
+            goingRight = hAxis == 1f;
+            transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;
+        } else
+        {
             moving = false;
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
             if (climbing)
             {

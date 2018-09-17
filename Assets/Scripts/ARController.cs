@@ -124,6 +124,7 @@ public class ARController : MonoBehaviour
     public void ResetPlayer()
     {
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        playerInstance.GetComponent<CharacterCtrl>().Reset();
     }
 
     void buildBasePlatform()
