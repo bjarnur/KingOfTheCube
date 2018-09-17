@@ -10,18 +10,21 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public int side = 0;
 
     Vector3 movement;
-    Animator anim;
+    Animator animator;
     Rigidbody rb;
 
     float xBounds, zBounds;
     float angle = 0;
 
+    bool climbing = false;
+    bool grounded = false;
+    bool jumping = false;
     bool dead = false;
 
 
     void Start ()
     {
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
         // TODO: Get automaticaly the limits of the current cube
@@ -44,7 +47,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
         // Animate
         bool running = mov != 0f;
-        anim.SetBool("Run", running);
+        animator.SetBool("Run", running);
 
     }
 
@@ -111,14 +114,57 @@ public class PlayerController_AssemCube : MonoBehaviour {
         }
     }
 
-    private void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider other)
     {
-        if(col.gameObject.name == "Rock" && !dead)
+        if (other.gameObject.CompareTag("Ladder"))
         {
-            anim.SetTrigger("Die");
+            Debug.Log("Ladder enter");
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.useGravity = false;
+            climbing = true;
+            jumping = false;
+        }
+        TriggerAnimations();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ladder"))
+        {
+            Debug.Log("Ladder exit");
+            rb.useGravity = true;
+            climbing = false;
+        }
+        TriggerAnimations();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = true;
+            if (jumping)
+            {
+                jumping = false;
+            }
+            TriggerAnimations();
+        }
+
+        if (collision.gameObject.name == "Rock" && !dead)
+        {
+            animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
         }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = false;
+        }
+        TriggerAnimations();
     }
 
     IEnumerator Dying()
@@ -126,4 +172,39 @@ public class PlayerController_AssemCube : MonoBehaviour {
         yield return new WaitForSeconds(3); // Length of dying animatin
         dead = false;
     }
+
+
+    void TriggerAnimations()
+    {
+        if (grounded && !jumping)
+        {
+            //animator.SetBool("Fall", false);
+            animator.SetBool("Climb", false);
+            animator.SetBool("Jump", false);
+            //if (moving)
+            //{
+            //    animator.SetBool("Run", true);
+            //}
+            //else
+            //{
+            //    animator.SetBool("Run", false);
+            //}
+        }
+        else if (climbing)
+        {
+            animator.SetBool("Climb", true);
+            animator.SetBool("Jump", false);
+        }
+        else if (jumping)
+        {
+            animator.SetBool("Jump", true);
+        }
+        else if (!climbing)
+        {
+            //animator.SetBool("Fall", true);
+            animator.SetBool("Run", true);
+            animator.SetBool("Climb", false);
+        }
+    }
+
 }
