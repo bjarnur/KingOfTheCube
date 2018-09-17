@@ -30,10 +30,10 @@ public class ARController : MonoBehaviour
     private AugmentedImage KOTCImage = null;
     private Anchor KOTCAnchor = null;
 
-    private const float xBoundsMin = -15.5f;
-    private const float xBoundsMax = 15.5f;
-    private const float zBoundsMin = -15.5f;
-    private const float zBoundsMax = 15.5f;
+    private const float xBoundsMin = -1.55f;
+    private const float xBoundsMax = 1.55f;
+    private const float zBoundsMin = -1.55f;
+    private const float zBoundsMax = 1.55f;
 
     public void Start()
     {
@@ -71,13 +71,8 @@ public class ARController : MonoBehaviour
                     Transform gardenObj = Instantiate(garden).transform;
                     gardenObj.SetParent(world.transform, false);
 
-                    //buildBasePlatform(scale);
+                    buildBasePlatform();
                     readyPlayerOne();
-                    /*for (int i = -15; i < 15; i += 4)
-                    {
-                        Transform plat = Instantiate(platformX, world.position, Quaternion.identity, world);
-                        plat.position += new Vector3(i * scale.x, 0.5f * scale.y, 17.5f * scale.z);
-                    }*/
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
@@ -92,6 +87,13 @@ public class ARController : MonoBehaviour
         }
 
         UIScanning.SetActive(KOTCImage == null);
+        if (world.parent == null)
+        {
+            world.localRotation = Quaternion.Euler(0, world.localRotation.eulerAngles.y, 0);
+        } else
+        {
+            world.localRotation = Quaternion.Euler(-KOTCAnchor.transform.localEulerAngles.x, world.localEulerAngles.y, -KOTCAnchor.transform.localEulerAngles.z);
+        }
     }
 
     public void ToggleWorldLock()
@@ -108,44 +110,52 @@ public class ARController : MonoBehaviour
         }
     }
 
+    GameObject playerInstance;
+    
     void readyPlayerOne()
     {
-        GameObject player = Instantiate(playerOne, world.position, Quaternion.identity, world);
-        CharacterCtrl c = player.GetComponent<CharacterCtrl>();
+        playerInstance = Instantiate(playerOne, world, false);
+        CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
         c.SetWorld(world);
 
-        player.transform.position += new Vector3(0f, 3.5f, 0f);
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
     }
 
-    void buildBasePlatform(Vector3 scale)
+    public void ResetPlayer()
+    {
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+    }
+
+    void buildBasePlatform()
     {
         float x = xBoundsMin;
-        float y = 0.5f;
+        float y = 0.05f;
         float z = zBoundsMax;
+        float increment = 0.1f;
 
-        while (x < 15.5)
+        while (x < xBoundsMax)
         {
-            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
-            plat.position += new Vector3(x * scale.x, 0.5f * scale.y, zBoundsMax * scale.z);
-            x += 1;
+            Transform plat = Instantiate(unitCube, world, false);
+            plat.localPosition += new Vector3(x, y, zBoundsMax);
+            x += increment;
         }
-        while (z > -15.5)
+        while (z > zBoundsMin)
         {
-            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
-            plat.position += new Vector3(xBoundsMax * scale.x, 0.5f * scale.y, z * scale.z);
-            z -= 1;
+            Transform plat = Instantiate(unitCube, world, false);
+            plat.localPosition += new Vector3(xBoundsMax, y, z);
+            z -= increment;
         }
-        while (x > -15.5)
+        while (x > xBoundsMin)
         {
-            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
-            plat.position += new Vector3(x * scale.x, 0.5f * scale.y, zBoundsMin * scale.z);
-            x -= 1;
+            Transform plat = Instantiate(unitCube, world, false);
+            plat.localPosition += new Vector3(x, y, zBoundsMin);
+            x -= increment;
         }
-        while (z < 15.5)
+        while (z < zBoundsMax)
         {
-            Transform plat = Instantiate(unitCube, world.position, Quaternion.identity, world);
-            plat.position += new Vector3(xBoundsMin * scale.x, 0.5f * scale.y, z * scale.z);
-            z += 1;
+            Transform plat = Instantiate(unitCube, world, false);
+            plat.localPosition += new Vector3(xBoundsMin, y, z);
+            z += increment;
         }
     }
 }

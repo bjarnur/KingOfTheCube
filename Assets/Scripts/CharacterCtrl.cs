@@ -8,21 +8,13 @@ public class CharacterCtrl : MonoBehaviour {
         Tunable fields
     \**********************/
 
-    public float speed = 2f;
-    public Vector3 scale = new Vector3(1f, 1f, 1f);
+    public float speed = 0.1f;
 
-    public void SetScale(Vector3 scale)
-    {
-        this.scale = scale;
-    }
-
+    Transform world;
     public void SetWorld(Transform world)
     {
         this.world = world;
     }
-
-
-    public Transform world;
 
     /*********************\
         Private fields
@@ -31,15 +23,18 @@ public class CharacterCtrl : MonoBehaviour {
     Animator animator;
     Rigidbody rb;
 
-    int side = 0;    
+    // 0 & 2 = Moving along X
+    // 1 & 3 = Moving along Z
+    int side = 2;    
     float angle = 0;
 
     //TODO: Set these values appropriately with respect to level dimensions
-    private float xBoundsMin = -15.5f;
-    private float xBoundsMax = 15.5f;
-    private float zBoundsMin = -15.5f;
-    private float zBoundsMax = 15.5f;
+    private float xBoundsMin = -1.55f;
+    private float xBoundsMax = 1.55f;
+    private float zBoundsMin = -1.55f;
+    private float zBoundsMax = 1.55f;
 
+    bool jumping = false;
     bool climbing = false;
     bool goingRight = false;
 
@@ -51,26 +46,56 @@ public class CharacterCtrl : MonoBehaviour {
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-
-        xBoundsMax *= scale.x;
-        xBoundsMin *= scale.x;
-        zBoundsMax *= scale.y;
-        zBoundsMin *= scale.y;
 	}	
 	
 	void Update () {
+        bool touch = false;
+        float firstTouchDir = 0f;
+        bool jump = false;
 
-        //Ensure we only travel in the appropriate dimensions
-        //ensureConsistentMovement();
+        if (Input.touchCount > 0)
+        {
+            switch (Input.GetTouch(0).phase)
+            {
+                case TouchPhase.Began:
+                case TouchPhase.Stationary:
+                case TouchPhase.Moved:
+                    touch = true;
+                    firstTouchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+                    break;
+            }
 
-        //Trigger animations based on user input
-        //triggerAnimations();
+            if (Input.touchCount > 1)
+            {
+                if (Input.GetTouch(0).phase == TouchPhase.Began)
+                {
+                    float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
+                    jump = secondTouchDir != firstTouchDir;
+                }
+            }
+        }
 
-        //Update character position and rotation
-        //updateCharacterPosition();
+        float mov;
+        mov = Input.GetAxisRaw("Horizontal");
+        mov = touch ? firstTouchDir : mov;
 
-        //transform.localPosition -= transform.forward * 0.001f;
-        transform.localPosition -= transform.forward * 0.01f;
+        MovePlayer(mov);
+
+        if (!jumping && (jump || Input.GetAxisRaw("Vertical") > 0f))
+        {
+            jumping = true;
+            rb.velocity += world.up * 0.5f;
+        }
+
+        // Animate
+        bool running = mov != 0f;
+        animator.SetBool("Run", running);
+        animator.SetBool("Stop", !running);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        jumping = false;
     }
 
     void OnTriggerEnter(Collider other)
@@ -94,184 +119,88 @@ public class CharacterCtrl : MonoBehaviour {
         }
     }
 
-
     /*********************************\
         Helper and utility functions
     \*********************************/ 
 
-    void ensureConsistentMovement()
+    Vector3 getDirection(bool local = false)
     {
-        switch (side)
+        if (local)
         {
-            case 0:
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMax);
-                break;
-            case 1:
-                transform.localPosition = new Vector3(xBoundsMax, transform.localPosition.y, transform.localPosition.z);
-                break;
-            case 2:
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMin);
-                break;
-            case 3:
-                transform.localPosition = new Vector3(xBoundsMin, transform.localPosition.y, transform.localPosition.z);
-                break;
+            switch (side)
+            {
+                case 0:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 1:
+                    return world.worldToLocalMatrix.MultiplyVector(world.forward);
+                case 2:
+                    return world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 3:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.forward);
+            }
+        } else
+        {
+            switch (side)
+            {
+                case 0:
+                    return -world.right;
+                case 1:
+                    return world.forward;
+                case 2:
+                    return world.right;
+                case 3:
+                    return -world.forward;
+            }
         }
+        
+        return Vector3.zero;
     }
 
-    bool touch = false;
-    bool touchLeft = false;
-
-    void updateCharacterPosition()
+    void MovePlayer(float mov)
     {
-        if (Input.touchCount > 0)
-        {
-            switch (Input.GetTouch(0).phase)
-            {
-                case TouchPhase.Began:
-                    touch = true;
-                    touchLeft = Input.GetTouch(0).position.y < Screen.height / 2;
-                    break;
-                case TouchPhase.Ended:
-                case TouchPhase.Canceled:
-                    touch = false;
-                    break;
-            }
-        }
-        //Update character localPosition, and rotation around the cube while left arrow button is held down
-        if (Input.GetKey(KeyCode.LeftArrow) || (touch && touchLeft))
-        {
-            /*if (transform.localPosition.x > xBoundsMax && equals(transform.localPosition.z, zBoundsMax, 0.001f))
-            {
-                crossAngle(xBoundsMax, zBoundsMax, true);
-            }
-            if (equals(transform.localPosition.x, xBoundsMax, 0.000001f) && transform.localPosition.z < zBoundsMin)
-            {
-                crossAngle(xBoundsMax, zBoundsMin, true);
-            }
-            if (equals(transform.localPosition.z, zBoundsMin, 0.000001f) && transform.localPosition.x < xBoundsMin)
-            {
-                crossAngle(xBoundsMin, zBoundsMin, true);
-            }
-            if (equals(transform.localPosition.x, xBoundsMin, 0.000001f) && transform.localPosition.z > zBoundsMax)
-            {
-                crossAngle(zBoundsMin, zBoundsMax, true);
-            }*/
+        // Check boundaries and change side if needed
+        CheckBounds();
 
-            transform.localPosition -= world.forward * Time.deltaTime * speed;
+        Vector3 dir = getDirection(true) * mov;
+        transform.localPosition += dir * Time.deltaTime * speed;
+
+        if (mov != 0)
+        {
+            Quaternion newRotation = Quaternion.LookRotation(dir);
+            rb.MoveRotation(newRotation);
+        }
+        else
+        {
+            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
         }
 
-        //Update character localPosition, and rotation around the cube while right arrow button is held down
-        if (Input.GetKey(KeyCode.RightArrow) || (touch && !touchLeft))
-        {
-            /*if (transform.localPosition.x < xBoundsMin && equals(transform.localPosition.z, zBoundsMax, 0.001f))
-            {
-                crossAngle(xBoundsMin, zBoundsMax, false);
-            }
-            if (equals(transform.localPosition.x, xBoundsMin, 0.000001f) && transform.localPosition.z < zBoundsMin)
-            {
-                crossAngle(xBoundsMin, zBoundsMin, false);
-            }
-            if (equals(transform.localPosition.z, zBoundsMin, 0.000001f) && transform.localPosition.x > xBoundsMax)
-            {
-                crossAngle(xBoundsMax, zBoundsMin, false);
-            }
-            if (equals(transform.localPosition.x, xBoundsMax, 0.000001f) && transform.localPosition.z > zBoundsMax)
-            {
-                crossAngle(xBoundsMax, zBoundsMax, false);
-            }*/
-
-            transform.localPosition += world.forward * Time.deltaTime * speed;
-        }
-
-        if (Input.GetKey(KeyCode.UpArrow) && climbing)
-        {
-            transform.localPosition += transform.up * Time.deltaTime * speed * scale.y;
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow) && climbing)
-        {
-            transform.localPosition -= transform.up * Time.deltaTime * speed * scale.y;
-        }
     }
 
-    void triggerAnimations()
+    void CheckBounds()
     {
-        //Update animations and rotation the instance a button is pressed down
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (transform.localPosition.x > xBoundsMax) // Change to side 1
         {
-            animator.SetBool("Run", true);
-            animator.SetBool("Stop", false);
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                goingRight = true;
-                angle -= 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
-            }
-            else
-            {
-                angle += 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
-            }
+            side = 1;
+            angle = 90;
+            transform.localPosition = new Vector3(xBoundsMax, transform.localPosition.y, transform.localPosition.z);
         }
-
-        //Trigger climbing animation the instance up/down arrows are pressed
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+        else if (transform.localPosition.z < zBoundsMin) // Change to side 2
         {
-            if (climbing)
-            {
-                transform.localEulerAngles = new Vector3(0f, 180, 0f);
-                animator.SetBool("Climb", true);
-                animator.SetBool("StopClimbing", false);
-            }
+            side = 2;
+            angle = 180;
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMin);
         }
-
-        //Stop climbing animation the instance up/down arrows are released
-        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
+        else if (transform.localPosition.x < xBoundsMin) // Change to side 3
         {
-            //if (climbing)
-            //{
-            transform.localEulerAngles = new Vector3(0f, 180, 0f);
-            animator.SetBool("Climb", false);
-            animator.SetBool("StopClimbing", true);
-            //}
+            side = 3;
+            angle = 270;
+            transform.localPosition = new Vector3(xBoundsMin, transform.localPosition.y, transform.localPosition.z);
         }
-
-        //Update animations and rotation the instance a button is released
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
+        else if (transform.localPosition.z > zBoundsMax) // Change to side 0
         {
-            animator.SetBool("Run", false);
-            animator.SetBool("Stop", true);
-            if (goingRight)
-            {
-                goingRight = false;
-                angle += 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
-            }
-            else
-            {
-                angle -= 90;
-                transform.localEulerAngles = new Vector3(0f, angle, 0f);
-            }
+            side = 0;
+            angle = 0;
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBoundsMax);
         }
-    }
-    
-
-    private void crossAngle(float xPos, float zPos, bool fromRight)
-    {
-        if(fromRight) {
-            side = (side + 1) % 4;
-            angle += 90;            
-        }
-        else {
-            side = (side - 1) % 4;
-            angle -= 90;
-        }
-        transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.localPosition = new Vector3(xPos, transform.localPosition.y, zPos);
-    }
-
-    private bool equals(float a, float b, float err)
-    {
-        return a < b + err && a > b - err;
     }
 }
