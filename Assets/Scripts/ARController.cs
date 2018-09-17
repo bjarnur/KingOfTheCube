@@ -67,15 +67,9 @@ public class ARController : MonoBehaviour
                     KOTCImage = image;
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
-                    world.parent = KOTCAnchor.transform;
-                    world.localPosition = Vector3.zero;
-                    world.localRotation = Quaternion.identity;
-                    world.gameObject.SetActive(true);
-
+                    world.SetParent(KOTCAnchor.transform, false);
                     Transform gardenObj = Instantiate(garden).transform;
-                    gardenObj.parent = world;
-                    gardenObj.localPosition = Vector3.zero;
-                    gardenObj.localRotation = Quaternion.identity;
+                    gardenObj.SetParent(world.transform, false);
 
                     //buildBasePlatform(scale);
                     readyPlayerOne();
@@ -88,8 +82,7 @@ public class ARController : MonoBehaviour
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
                     Debug.Log("Tracking Stopped");
-                    world.parent = null;
-                    world.gameObject.SetActive(false);
+                    world.SetParent(null, true);
 
                     KOTCImage = null;
                     GameObject.Destroy(KOTCAnchor);
@@ -106,9 +99,12 @@ public class ARController : MonoBehaviour
         if(world.parent == null)
         {
             world.parent = KOTCAnchor.transform;
+            world.localPosition = Vector3.zero;
+            world.localRotation = Quaternion.identity;
+            world.localScale = Vector3.one * 0.1f;
         } else
         {
-            world.parent = null;
+            world.SetParent(null, true);
         }
     }
 
