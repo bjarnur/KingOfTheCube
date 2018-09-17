@@ -28,11 +28,11 @@ public class PlayerController_AssemCube : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         // TODO: Get automaticaly the limits of the current cube
-        xBounds = 15.5f;
-        zBounds = 15.5f;
+        xBounds = 15.67f;
+        zBounds = 15.67f;
 
         // Move player to initial position
-        transform.position = new Vector3(15.5f, 2.5f, xBounds);
+        transform.position = new Vector3(15.6f, 2.5f, zBounds);
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
     }
@@ -53,37 +53,54 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void MovePlayer(float mov)
     {
-        // Check boundaries and change side if needed
-        CheckBounds();
-
-        switch (side)
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            case 0:
-                movement.Set(-mov, 0.0f, 0.0f);
-                break;
-            case 1:
-                movement.Set(0.0f, 0.0f, mov);
-                break;
-            case 2:
-                movement.Set(mov, 0.0f, 0.0f);
-                break;
-            case 3:
-                movement.Set(0.0f, 0.0f, -mov);
-                break;
-        }
-        movement = movement.normalized * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + movement);
-
-        if (mov != 0)
-        {
-            Quaternion newRotation = Quaternion.LookRotation(movement);
-            rb.MoveRotation(newRotation);
-        }
-        else
-        {
-            transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
+            if (climbing)
+            {
+                transform.position += transform.up * Time.deltaTime * speed;
+            }
+            /*else if (grounded)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
+                jumping = true;
+            }*/
         }
 
+        else {
+            
+            
+
+            // Check boundaries and change side if needed
+            CheckBounds();
+
+            switch (side)
+            {
+                case 0:
+                    movement.Set(-mov, 0.0f, 0.0f);
+                    break;
+                case 1:
+                    movement.Set(0.0f, 0.0f, mov);
+                    break;
+                case 2:
+                    movement.Set(mov, 0.0f, 0.0f);
+                    break;
+                case 3:
+                    movement.Set(0.0f, 0.0f, -mov);
+                    break;
+            }
+            movement = movement.normalized * speed * Time.deltaTime;
+            rb.MovePosition(transform.position + movement);
+
+            if (mov != 0)
+            {
+                Quaternion newRotation = Quaternion.LookRotation(movement);
+                rb.MoveRotation(newRotation);
+            }
+            else
+            {
+                transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
+            }
+        }
     }
 
     void CheckBounds()

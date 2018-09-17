@@ -25,7 +25,7 @@ public class GameController_AI : MonoBehaviour {
     void Start () {
 
         //Place objects in level
-        constructLevel();
+        //constructLevel();
 
         //Instantiate player
         readyPlayerOne();
