@@ -28,11 +28,11 @@ public class PlayerController_AssemCube : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         // TODO: Get automaticaly the limits of the current cube
-        xBounds = 15.67f;
-        zBounds = 15.67f;
+        xBounds = 16f;
+        zBounds = 16f;
 
         // Move player to initial position
-        transform.position = new Vector3(15.6f, 2.5f, zBounds);
+        transform.position = new Vector3(16f, 2.5f, zBounds);
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
     }
@@ -58,6 +58,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
             if (climbing)
             {
                 transform.position += transform.up * Time.deltaTime * speed;
+                transform.localEulerAngles = new Vector3(0f, angle + 180, 0f); // Face the edge of the cube
             }
             /*else if (grounded)
             {
@@ -186,7 +187,11 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     IEnumerator Dying()
     {
-        yield return new WaitForSeconds(3); // Length of dying animatin
+        yield return new WaitForSeconds(3); // Length of dying animation
+        // Move player to initial position
+        transform.position = new Vector3(16f, 2.5f, zBounds);
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        side = 0;
         dead = false;
     }
 
