@@ -49,11 +49,20 @@ public static class CubeColumn {
 
 public class LevelInstatiator : MonoBehaviour{
 
-    const float xBoundsMin = -15.64f; // Extra 0.84 for the corners
-    const float xBoundsMax = 16.04f;
-    const float zBoundsMin = -15.84f;
-    const float zBoundsMax = 15.84f;
+    const float scalingFactor = 0.1f;
 
+    
+    const float xBoundsMin = -15.5f * scalingFactor; // Extra 0.84 for the corners
+    const float xBoundsMax = 15.5f * scalingFactor;
+    const float zBoundsMin = -15.5f * scalingFactor;
+    const float zBoundsMax = 15.5f * scalingFactor;
+    
+    /*
+    const float xBoundsMin = -1.55f * scalingFactor;
+    const float xBoundsMax = 1.55f * scalingFactor;
+    const float zBoundsMin = -1.55f * scalingFactor;
+    const float zBoundsMax = 1.55f * scalingFactor;
+    */
     static Vector3 firstFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
     static Vector3 secondFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMax);
     static Vector3 thirdFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMax);
@@ -69,7 +78,7 @@ public class LevelInstatiator : MonoBehaviour{
 
     // Use this for initialization
     void Start() {
-        buildLevel();
+        //buildLevel();
     }
 
     // Update is called once per frame
@@ -77,28 +86,58 @@ public class LevelInstatiator : MonoBehaviour{
 
     }
 
-    private void buildLevel() {
-        instantiateFaceCorner(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first);
-        instantiateFaceCorner(inFace: CubeFaces.secondFace, atLevel: CubeLevel.first);
-        instantiateFaceCorner(inFace: CubeFaces.thirdFace, atLevel: CubeLevel.first);
-        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.first);
+    public void buildLevel() {
 
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.second);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.third);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.fourth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.fifth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.sixth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.seventh);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.eigth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.ninth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.tenth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.eleventh);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.twelfth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.thirteenth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.fourtheenth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.fifteenth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.sixteenth);
-        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first, atColumn: CubeColumn.seventeenth);
+        instantiateFaceCorner(inFace: CubeFaces.firstFace,  atLevel: CubeLevel.first * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.secondFace, atLevel: CubeLevel.fifth * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.thirdFace,  atLevel: CubeLevel.tenth * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.tenth * scalingFactor);
+
+
+        instantiateFaceCorner(inFace: CubeFaces.firstFace, atLevel: CubeLevel.third * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.secondFace, atLevel: CubeLevel.third * scalingFactor);
+        for (int i = 1; i <= 30; i++)
+        {
+            instantiateFacePlatform(inFace: CubeFaces.secondFace, 
+                                    atLevel: CubeLevel.third * scalingFactor, 
+                                    atColumn: i);
+        }
+
+        instantiateFaceCorner(inFace: CubeFaces.thirdFace, atLevel: CubeLevel.sixth * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.sixth * scalingFactor);
+        for (int i = 1; i <= 30; i++)
+        {
+            instantiateFacePlatform(inFace: CubeFaces.fourthFace,
+                                    atLevel: CubeLevel.sixth * scalingFactor,
+                                    atColumn: i);
+        }
+
+        instantiateFaceCorner(inFace: CubeFaces.fourthFace, atLevel: CubeLevel.ninth * scalingFactor);
+        instantiateFaceCorner(inFace: CubeFaces.firstFace, atLevel: CubeLevel.ninth * scalingFactor);
+        for (int i = 1; i <= 30; i++)
+        {
+            instantiateFacePlatform(inFace: CubeFaces.firstFace,
+                                    atLevel: CubeLevel.ninth * scalingFactor,
+                                    atColumn: i);
+        }
+
+        /*
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.second);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.third);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.fourth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.fifth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.sixth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.seventh);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.eigth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.ninth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.tenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.eleventh);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.twelfth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.thirteenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.fourtheenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.fifteenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.sixteenth);
+        instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.first * scalingFactor, atColumn: CubeColumn.seventeenth);
 
         instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.first, atColumn: CubeColumn.second);
         instantiateFacePlatform(inFace: CubeFaces.secondFace, atLevel: CubeLevel.first, atColumn: CubeColumn.third);
@@ -212,6 +251,7 @@ public class LevelInstatiator : MonoBehaviour{
         instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.fourtheenth);
         instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.fifteenth);
         instantiateFacePlatform(inFace: CubeFaces.firstFace, atLevel: CubeLevel.fourtheenth, atColumn: CubeColumn.sixteenth);
+        */
     }
 
     /* This method instantiates a corner in the indicated face and height. The face's corner is always the rightmost one*/
@@ -236,9 +276,10 @@ public class LevelInstatiator : MonoBehaviour{
                 break;
         } 
         copyVector.y = atLevel;
-        Instantiate(copyCorner, copyVector, Quaternion.identity, world);
+        Transform t = Instantiate(copyCorner, world, false);
+        t.localPosition += copyVector;
     }
-
+    
     private void instantiateFacePlatform(CubeFaces inFace, float atLevel, float atColumn)
     {
         var copyVector = new Vector3(0, 0, 0);
@@ -246,24 +287,27 @@ public class LevelInstatiator : MonoBehaviour{
         {
             case CubeFaces.firstFace:
                 copyVector = firstFaceVector;
-                copyVector.x = xBoundsMax - 1.67f * atColumn;
+                copyVector.x = xBoundsMax - (atColumn  * scalingFactor);
+                copyVector.z = zBoundsMin;
                 break;
             case CubeFaces.secondFace:
                 copyVector = secondFaceVector;
-                copyVector.z = zBoundsMax - 1.67f * atColumn;
+                copyVector.z = zBoundsMax - (atColumn * scalingFactor);
+                copyVector.x = xBoundsMax;
                 break;
             case CubeFaces.thirdFace:
                 copyVector = thirdFaceVector;
-                copyVector.x = xBoundsMin + 1.67f * atColumn;
+                copyVector.x = xBoundsMin + (atColumn * scalingFactor);
+                copyVector.z = zBoundsMax;
                 break;
             case CubeFaces.fourthFace:
                 copyVector = fourthFaceVector;
-                copyVector.z = zBoundsMin + 1.67f * atColumn;
+                copyVector.z = zBoundsMin + (atColumn * scalingFactor);
+                copyVector.x = xBoundsMin;
                 break;
         }
         copyVector.y = atLevel;
-
-        Instantiate(platformUnit, copyVector, Quaternion.identity, world);
+        Transform t = Instantiate(platformUnit, world, false);
+        t.localPosition += copyVector;
     }
-
 }
