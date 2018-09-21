@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 95785406529465820}
   - component: {fileID: 54898871431562154}
   - component: {fileID: 65021630818163370}
-  - component: {fileID: 114074119700629198}
+  - component: {fileID: 114418275220788004}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -636,8 +636,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1084817040065256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.5, y: 2.5, z: 15.5}
-  m_LocalScale: {x: 15, y: 15, z: 15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4662610274884726}
   - {fileID: 4784839603324650}
@@ -807,12 +807,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &65021630818163370
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -843,7 +843,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114074119700629198
+--- !u!114 &114418275220788004
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -851,11 +851,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1084817040065256}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191156a5740d18b42b3337aa933650e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 92422df305e791542960084ab0d44e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
-  side: 0
+  speed: 0.1
 --- !u!137 &137020759006960900
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

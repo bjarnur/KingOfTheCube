@@ -8,9 +8,14 @@ public class CharacterCtrl : MonoBehaviour {
         Tunable fields
     \**********************/
 
-    public float speed = 2f;
-    public float jumpSpeed = 5f;
+    public float speed = 0.1f;
+    public float jumpSpeed = 0.5f;
 
+    Transform world;
+    public void SetWorld(Transform world)
+    {
+        this.world = world;
+    }
 
     /*********************\
         Private fields
@@ -19,17 +24,19 @@ public class CharacterCtrl : MonoBehaviour {
     Animator animator;
     Rigidbody rb;
 
-    int side = 0;    
-    float angle = 0;
+    // 0 & 2 = Moving along X
+    // 1 & 3 = Moving along Z
+    int side = 2;
+    float angle = 180;
 
     //TODO: Set these values appropriately with respect to level dimensions
-    const float xBounds = 4.5f;
-    const float zBounds = 4.5f;
+    const float xBounds = 1.55f;
+    const float zBounds = 1.55f;
 
     bool climbing = false;
     bool moving = false;
     bool goingRight = false;
-    bool grounded = false;
+    bool grounded = true;
     bool jumping = false;
 
 
@@ -43,7 +50,6 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
-        
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
 
@@ -55,6 +61,15 @@ public class CharacterCtrl : MonoBehaviour {
 
         //Trigger animations based on user input
         TriggerAnimations();
+    }
+
+    public void Reset()
+    {
+        climbing = false;
+        moving = false;
+        goingRight = false;
+        grounded = true;
+        jumping = false;
     }
 
     void OnTriggerEnter(Collider other)
@@ -90,8 +105,8 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 jumping = false;
             }
-            TriggerAnimations();
         }
+        TriggerAnimations();
     }
 
     void OnCollisionExit(Collision collision)
@@ -103,129 +118,162 @@ public class CharacterCtrl : MonoBehaviour {
         TriggerAnimations();
     }
 
-
     /*********************************\
         Helper and utility functions
     \*********************************/ 
 
+    Vector3 getDirection(bool local = false)
+    {
+        if (local)
+        {
+            switch (side)
+            {
+                case 0:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 1:
+                    return world.worldToLocalMatrix.MultiplyVector(world.forward);
+                case 2:
+                    return world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 3:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.forward);
+            }
+        } else
+        {
+            switch (side)
+            {
+                case 0:
+                    return -world.right;
+                case 1:
+                    return world.forward;
+                case 2:
+                    return world.right;
+                case 3:
+                    return -world.forward;
+            }
+        }
+        
+        return Vector3.zero;
+    }
 
     void EnsureConsistentMovement()
     {
         switch (side)
         {
             case 0:
-                transform.position = new Vector3(transform.position.x, transform.position.y, zBounds);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBounds);
                 break;
             case 1:
-                transform.position = new Vector3(xBounds, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, transform.localPosition.z);
                 break;
             case 2:
-                transform.position = new Vector3(transform.position.x, transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -zBounds);
                 break;
             case 3:
-                transform.position = new Vector3(-xBounds, transform.position.y, transform.position.z);
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, transform.localPosition.z);
                 break;
         }
     }
 
     void ChangeSides()
     {
-        if (transform.position.x > xBounds) // Change to side 1
+        if (transform.localPosition.x > xBounds) // Change to side 1
         {
             side = 1;
             angle = 90;
-            if(transform.position.z > 0) 
+            if(transform.localPosition.z > 0) 
             {
-                transform.position = new Vector3(xBounds, transform.position.y, zBounds - (transform.position.x - xBounds)); 
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, zBounds - (transform.localPosition.x - xBounds)); 
             } else 
             {
-                transform.position = new Vector3(xBounds, transform.position.y, -zBounds + (transform.position.x - xBounds));
+                transform.localPosition = new Vector3(xBounds, transform.localPosition.y, -zBounds + (transform.localPosition.x - xBounds));
             }
         }
-        else if (transform.position.z < -zBounds) // Change to side 2
+        else if (transform.localPosition.z < -zBounds) // Change to side 2
         {
             side = 2;
             angle = 180;
-            if (transform.position.x > 0) 
+            if (transform.localPosition.x > 0) 
             {
-                transform.position = new Vector3(xBounds + (transform.position.z + zBounds), transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(xBounds + (transform.localPosition.z + zBounds), transform.localPosition.y, -zBounds);
             } else 
             {
-                transform.position = new Vector3(-xBounds - (transform.position.z + zBounds), transform.position.y, -zBounds);
+                transform.localPosition = new Vector3(-xBounds - (transform.localPosition.z + zBounds), transform.localPosition.y, -zBounds);
             }
         }
-        else if (transform.position.x < -xBounds) // Change to side 3
+        else if (transform.localPosition.x < -xBounds) // Change to side 3
         {
             side = 3;
             angle = 270;
-            if(transform.position.z > 0) 
+            if(transform.localPosition.z > 0) 
             {
-                transform.position = new Vector3(-xBounds, transform.position.y, zBounds + (transform.position.x + xBounds));
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, zBounds + (transform.localPosition.x + xBounds));
             } else 
             {
-                transform.position = new Vector3(-xBounds, transform.position.y, -zBounds - (transform.position.x + xBounds));
+                transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, -zBounds - (transform.localPosition.x + xBounds));
             }
         }
-        else if (transform.position.z > zBounds) // Change to side 0
+        else if (transform.localPosition.z > zBounds) // Change to side 0
         {
             side = 0;
             angle = 0;
-            if(transform.position.x > 0)
+            if(transform.localPosition.x > 0)
             {
-                transform.position = new Vector3(xBounds - (transform.position.z - zBounds), transform.position.y, zBounds);
+                transform.localPosition = new Vector3(xBounds - (transform.localPosition.z - zBounds), transform.localPosition.y, zBounds);
             } else 
             {
-                transform.position = new Vector3(-xBounds + (transform.position.z - zBounds), transform.position.y, zBounds);
+                transform.localPosition = new Vector3(-xBounds + (transform.localPosition.z - zBounds), transform.localPosition.y, zBounds);
             }
         }
     }
 
     void UpdateCharacterPosition()
     {
-        if(Input.GetKey(KeyCode.LeftArrow)) 
+        bool touch = false;
+        float firstTouchDir = 0f;
+        bool bothTouch = false;
+
+        if (Input.touchCount > 0)
         {
-            goingRight = false;
-            moving = true;
-            switch (side) 
+            switch (Input.GetTouch(0).phase)
             {
-                case 0:
-                    rb.velocity = new Vector3(speed, rb.velocity.y, 0);
-                    break;
-                case 1:
-                    rb.velocity = new Vector3(0, rb.velocity.y, -speed);
-                    break;
-                case 2:
-                    rb.velocity = new Vector3(-speed, rb.velocity.y, 0);
-                    break;
-                case 3:
-                    rb.velocity = new Vector3(0, rb.velocity.y, speed);
+                case TouchPhase.Began:
+                case TouchPhase.Stationary:
+                case TouchPhase.Moved:
+                    touch = true;
+                    firstTouchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
                     break;
             }
-        } else if (Input.GetKey(KeyCode.RightArrow))
+
+            if (Input.touchCount > 1)
+            {
+                switch (Input.GetTouch(1).phase)
+                {
+                    case TouchPhase.Began:
+                    case TouchPhase.Stationary:
+                    case TouchPhase.Moved:
+                        float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
+                        bothTouch = secondTouchDir != firstTouchDir;
+                        break;
+                }
+            }
+        }
+
+        Vector3 yVelocity = world.up * rb.velocity.y;
+        float hAxis = Input.GetAxisRaw("Horizontal");
+        hAxis = touch ? firstTouchDir : hAxis;
+
+        if (hAxis != 0f)
         {
             moving = true;
-            goingRight = true;
-            switch (side)
-            {
-                case 0:
-                    rb.velocity = new Vector3(-speed, rb.velocity.y, 0);
-                    break;
-                case 1:
-                    rb.velocity = new Vector3(0, rb.velocity.y, speed);
-                    break;
-                case 2:
-                    rb.velocity = new Vector3(speed, rb.velocity.y, 0);
-                    break;
-                case 3:
-                    rb.velocity = new Vector3(0, rb.velocity.y, -speed);
-                    break;
-            }
-        } else {
+            goingRight = hAxis == 1f;
+            transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;
+        } else
+        {
             moving = false;
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
             if (climbing)
             {
@@ -275,25 +323,5 @@ public class CharacterCtrl : MonoBehaviour {
         {
             animator.SetBool("Fall", true);
         }
-    }
-    
-
-    private void crossAngle(float xPos, float zPos, bool fromRight)
-    {
-        if(fromRight) {
-            side = (side + 1) % 4;
-            angle += 90;            
-        }
-        else {
-            side = (side - 1) % 4;
-            angle -= 90;
-        }
-        transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        transform.position = new Vector3(xPos, transform.position.y, zPos);
-    }
-
-    private bool equals(float a, float b, float err)
-    {
-        return a < b + err && a > b - err;
     }
 }
