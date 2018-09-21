@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -576,7 +576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ARCoreDevice: {fileID: 2016045063}
   UIScanning: {fileID: 1782389318}
-  garden: {fileID: 1870889472093866, guid: 305020ded2dc8704094edec5066e4730, type: 2}
+  garden: {fileID: 1541667144648622, guid: 474618c9117ea4046b96628c9f349217, type: 2}
   playerOne: {fileID: 1084817040065256, guid: 46878f5abf9932e4992f0ab914c97ab7, type: 2}
   world: {fileID: 343080613}
   corner1: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0, type: 2}
