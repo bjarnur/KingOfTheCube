@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -782,6 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a6a8d265da64c0ea9c2b20a9b79bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scalingFactor: 1
   world: {fileID: 2122926094}
   firstFaceCorner: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0,
     type: 2}
@@ -791,7 +792,7 @@ MonoBehaviour:
     type: 2}
   fourthFaceCorner: {fileID: 4715803042647796, guid: 87d90218490490545bb9acd3d2b534df,
     type: 2}
-  platformUnit: {fileID: 4998914763938266, guid: 31588cdcda8fcfd4e9cd4ed588471b4f,
+  platformUnit: {fileID: 4107635161414470, guid: 2e6fb3d70a41d3a4eb5a81cf4497ebd5,
     type: 2}
 --- !u!1001 &2124952615
 Prefab:

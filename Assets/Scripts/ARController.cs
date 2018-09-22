@@ -75,7 +75,7 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().buildLevel();
                     //world.GetComponent<LevelInstatiator>().buildLevel();
 
-                    buildBasePlatform();
+                    //buildBasePlatform();
                     readyPlayerOne();
                 }
                 else if (image.TrackingState == TrackingState.Stopped)

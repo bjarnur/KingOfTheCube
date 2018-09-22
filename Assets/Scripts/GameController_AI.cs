@@ -29,10 +29,11 @@ public class GameController_AI : MonoBehaviour {
 
         //Instantiate player
         readyPlayerOne();
+        GetComponent<LevelInstatiator>().buildLevel();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 	    	
 	}
 

@@ -613,16 +613,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a6a8d265da64c0ea9c2b20a9b79bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scalingFactor: 0.1
   world: {fileID: 343080613}
-  firstFaceCorner: {fileID: 4016766132099664, guid: c30a56d70bcf72b48b5a8b4e50dd5a1b,
+  firstFaceCorner: {fileID: 4593167657176460, guid: b0848059794c4c5438f504edd4473803,
     type: 2}
   secondFaceCorner: {fileID: 4016766132099664, guid: c30a56d70bcf72b48b5a8b4e50dd5a1b,
     type: 2}
-  thirdFaceCorner: {fileID: 4574258697312190, guid: dbb6b36faac570e43bfc7526873aa61f,
+  thirdFaceCorner: {fileID: 4039557520408468, guid: 3a5a8b8bf2d0bc443bae0cf18b42433c,
     type: 2}
-  fourthFaceCorner: {fileID: 4039557520408468, guid: 3a5a8b8bf2d0bc443bae0cf18b42433c,
+  fourthFaceCorner: {fileID: 4574258697312190, guid: dbb6b36faac570e43bfc7526873aa61f,
     type: 2}
-  platformUnit: {fileID: 0}
+  platformUnit: {fileID: 4158127887401006, guid: ad8c2d034aeb97c42831d95b464a5f71,
+    type: 2}
 --- !u!1 &1746894878
 GameObject:
   m_ObjectHideFlags: 0
