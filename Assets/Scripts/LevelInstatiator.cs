@@ -36,10 +36,6 @@ public class LevelInstatiator : MonoBehaviour{
 
     public float scalingFactor = 0.1f;
     public Transform world;
-    public Transform firstFaceCorner;
-    public Transform secondFaceCorner;
-    public Transform thirdFaceCorner;
-    public Transform fourthFaceCorner;
     public Transform platformUnit;
     public Transform ladder;
 
