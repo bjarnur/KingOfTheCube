@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -556,6 +556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1659006362}
   - component: {fileID: 1659006361}
+  - component: {fileID: 1659006363}
   m_Layer: 0
   m_Name: ARController
   m_TagString: Untagged
@@ -576,7 +577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ARCoreDevice: {fileID: 2016045063}
   UIScanning: {fileID: 1782389318}
-  garden: {fileID: 1870889472093866, guid: 305020ded2dc8704094edec5066e4730, type: 2}
+  garden: {fileID: 1541667144648622, guid: 474618c9117ea4046b96628c9f349217, type: 2}
   playerOne: {fileID: 1084817040065256, guid: 46878f5abf9932e4992f0ab914c97ab7, type: 2}
   world: {fileID: 343080613}
   corner1: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0, type: 2}
@@ -601,6 +602,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1659006363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1659006360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00a6a8d265da64c0ea9c2b20a9b79bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scalingFactor: 0.1
+  world: {fileID: 343080613}
+  firstFaceCorner: {fileID: 4593167657176460, guid: b0848059794c4c5438f504edd4473803,
+    type: 2}
+  secondFaceCorner: {fileID: 4016766132099664, guid: c30a56d70bcf72b48b5a8b4e50dd5a1b,
+    type: 2}
+  thirdFaceCorner: {fileID: 4039557520408468, guid: 3a5a8b8bf2d0bc443bae0cf18b42433c,
+    type: 2}
+  fourthFaceCorner: {fileID: 4574258697312190, guid: dbb6b36faac570e43bfc7526873aa61f,
+    type: 2}
+  platformUnit: {fileID: 4158127887401006, guid: ad8c2d034aeb97c42831d95b464a5f71,
+    type: 2}
+  ladder: {fileID: 4596539044817740, guid: f76f8e4fa4ce73243b8c722d355411f7, type: 2}
 --- !u!1 &1746894878
 GameObject:
   m_ObjectHideFlags: 0

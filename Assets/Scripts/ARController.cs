@@ -9,21 +9,10 @@ using UnityEngine.UI;
 public class ARController : MonoBehaviour
 {
     public Transform ARCoreDevice;
-
     public GameObject UIScanning;
-
     public GameObject garden;
     public GameObject playerOne;
-
     public Transform world;
-    public Transform corner1;
-    public Transform corner2;
-    public Transform corner3;
-    public Transform corner4;
-    public Transform platformX;
-    public Transform platformZ;
-    public Transform ladderX;
-    public Transform ladderZ;
     public Transform unitCube;
 
     private List<AugmentedImage> m_AugmentedImages = new List<AugmentedImage>();
@@ -34,10 +23,7 @@ public class ARController : MonoBehaviour
     private const float xBoundsMax = 1.55f;
     private const float zBoundsMin = -1.55f;
     private const float zBoundsMax = 1.55f;
-
-    public void Start()
-    {
-    }
+    
 
     public void Update()
     {
@@ -68,10 +54,12 @@ public class ARController : MonoBehaviour
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
                     world.SetParent(KOTCAnchor.transform, false);
-                    Transform gardenObj = Instantiate(garden).transform;
+                    Transform gardenObj = Instantiate(garden).transform;                    
                     gardenObj.SetParent(world.transform, false);
 
-                    buildBasePlatform();
+                    GetComponent<LevelInstatiator>().world = world;
+                    GetComponent<LevelInstatiator>().buildLevel();
+
                     readyPlayerOne();
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
@@ -116,7 +104,7 @@ public class ARController : MonoBehaviour
     {
         playerInstance = Instantiate(playerOne, world, false);
         CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
-        c.SetWorld(world);
+        c.world = world;
 
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
     }
@@ -125,38 +113,5 @@ public class ARController : MonoBehaviour
     {
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
-    }
-
-    void buildBasePlatform()
-    {
-        float x = xBoundsMin;
-        float y = 0.05f;
-        float z = zBoundsMax;
-        float increment = 0.1f;
-
-        while (x < xBoundsMax)
-        {
-            Transform plat = Instantiate(unitCube, world, false);
-            plat.localPosition += new Vector3(x, y, zBoundsMax);
-            x += increment;
-        }
-        while (z > zBoundsMin)
-        {
-            Transform plat = Instantiate(unitCube, world, false);
-            plat.localPosition += new Vector3(xBoundsMax, y, z);
-            z -= increment;
-        }
-        while (x > xBoundsMin)
-        {
-            Transform plat = Instantiate(unitCube, world, false);
-            plat.localPosition += new Vector3(x, y, zBoundsMin);
-            x -= increment;
-        }
-        while (z < zBoundsMax)
-        {
-            Transform plat = Instantiate(unitCube, world, false);
-            plat.localPosition += new Vector3(xBoundsMin, y, z);
-            z += increment;
-        }
     }
 }
