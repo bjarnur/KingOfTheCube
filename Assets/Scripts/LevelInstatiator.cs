@@ -8,6 +8,7 @@ enum CubeFaces {
     thirdFace = 3,
     fourthFace = 4
 }
+
 public static class CubeLevel {
     public const float first = 0.5f;
     public const float second = 2.5f;
@@ -26,26 +27,6 @@ public static class CubeLevel {
     public const float fifteenth = 28.5f;
 }
 
-public static class CubeColumn {
-    public const float first = 1;
-    public const float second = 2;
-    public const float third = 3;
-    public const float fourth = 4;
-    public const float fifth = 5;
-    public const float sixth = 6;
-    public const float seventh = 7;
-    public const float eigth = 8;
-    public const float ninth = 9;
-    public const float tenth = 10;
-    public const float eleventh = 11;
-    public const float twelfth = 12;
-    public const float thirteenth = 13;
-    public const float fourtheenth = 14;
-    public const float fifteenth = 15;
-    public const float sixteenth = 16;
-    public const float seventeenth = 17;
-    public const float eighteenth = 18;
-}
 
 public class LevelInstatiator : MonoBehaviour{
 
@@ -79,9 +60,7 @@ public class LevelInstatiator : MonoBehaviour{
 
 
     void Start() {
-
-        Debug.Log("Configuring Level instantiator");
-
+                
         xBoundsMin *= scalingFactor;
         xBoundsMax *= scalingFactor;
         zBoundsMin *= scalingFactor;
@@ -92,13 +71,19 @@ public class LevelInstatiator : MonoBehaviour{
         thirdFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMax);
         fourthFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMin);
     }
-
-    //private void instantiateFacePlatform(CubeFaces inFace, float atLevel, float atColumn, float distanceFromCube)
-
-   
+    
 
     public void buildLevel() {
 
+        /*
+        //Can be used to easilly see what face you are looking at
+        buildLadder(CubeFaces.firstFace, CubeLevel.first, 1, 1);
+        buildLadder(CubeFaces.secondFace, CubeLevel.first, 1, 2);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 1, 3);
+        buildLadder(CubeFaces.fourthFace, CubeLevel.first, 1, 4);
+        */
+
+        buildLadder(CubeFaces.secondFace, CubeLevel.first, 10, 30);
         buildPlatform(CubeFaces.firstFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.secondFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.first, -1, 31);
@@ -106,18 +91,32 @@ public class LevelInstatiator : MonoBehaviour{
 
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 19, 8);
         buildPlatform(CubeFaces.firstFace, CubeLevel.fourth, 20, 31);
-        buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, -1, 10);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.fourth, -1, 10);
+        buildLadder(CubeFaces.fourthFace, CubeLevel.fourth, 3, 25);
+
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.seventh, 15, 31);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
+
+        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, 15, 20);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.tenth, 20, 25);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 25, 31);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 25, 31);
+        buildPlatform(CubeFaces.secondFace, CubeLevel.thirteenth, -1, 5);
 
 
         buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, 15, 24);
         buildPlatform(CubeFaces.secondFace, CubeLevel.seventh, 18, 31);
-        
-        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 19, 2);
-        buildLadder(CubeFaces.fourthFace, CubeLevel.first, 19, 5);
+        buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, -1, 10);
+        buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, 15, 20);
+        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 20, 5);
 
-        
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
+        buildPlatform(CubeFaces.firstFace, CubeLevel.tenth, 20, 31);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.tenth, -1, 10);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 15, 20);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 25, 31);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, -1, 5);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 5, 5);        
     }
 
     private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
