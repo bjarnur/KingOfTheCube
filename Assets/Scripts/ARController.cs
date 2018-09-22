@@ -22,8 +22,6 @@ public class ARController : MonoBehaviour
     public Transform corner4;
     public Transform platformX;
     public Transform platformZ;
-    public Transform ladderX;
-    public Transform ladderZ;
     public Transform unitCube;
 
     private List<AugmentedImage> m_AugmentedImages = new List<AugmentedImage>();
@@ -120,7 +118,7 @@ public class ARController : MonoBehaviour
     {
         playerInstance = Instantiate(playerOne, world, false);
         CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
-        c.SetWorld(world);
+        c.world = world;
 
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
     }

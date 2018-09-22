@@ -10,12 +10,10 @@ public class CharacterCtrl : MonoBehaviour {
 
     public float speed = 0.1f;
     public float jumpSpeed = 0.5f;
-
-    Transform world;
-    public void SetWorld(Transform world)
-    {
-        this.world = world;
-    }
+    public Transform world;
+    
+    public float xBounds = 1.55f;
+    public float zBounds = 1.55f;
 
     /*********************\
         Private fields
@@ -28,10 +26,6 @@ public class CharacterCtrl : MonoBehaviour {
     // 1 & 3 = Moving along Z
     int side = 2;
     float angle = 180;
-
-    //TODO: Set these values appropriately with respect to level dimensions
-    const float xBounds = 1.55f;
-    const float zBounds = 1.55f;
 
     bool climbing = false;
     bool moving = false;
@@ -74,13 +68,13 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ladder"))
+        if (other.gameObject.CompareTag("Ladder") && !jumping)
         {
             Debug.Log("Ladder enter");
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.useGravity = false;
             climbing = true;
-            jumping = false;
+            grounded = false;
         }
         TriggerAnimations();
     }
@@ -261,18 +255,7 @@ public class CharacterCtrl : MonoBehaviour {
         Vector3 yVelocity = world.up * rb.velocity.y;
         float hAxis = Input.GetAxisRaw("Horizontal");
         hAxis = touch ? firstTouchDir : hAxis;
-
-        if (hAxis != 0f)
-        {
-            moving = true;
-            goingRight = hAxis == 1f;
-            transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;
-        } else
-        {
-            moving = false;
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        }
-
+       
         if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
             if (climbing)
@@ -283,7 +266,20 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
+                grounded = false;
             }
+        }
+
+        if (hAxis != 0f && (!climbing || !bothTouch))
+        {
+            moving = true;
+            goingRight = hAxis == 1f;
+            transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;
+        }
+        else
+        {
+            moving = false;
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
     }
 
