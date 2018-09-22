@@ -104,14 +104,20 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.thirdFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.first, -1, 31);
 
-
+        buildLadder(CubeFaces.firstFace, CubeLevel.first, 19, 8);
         buildPlatform(CubeFaces.firstFace, CubeLevel.fourth, 20, 31);
         buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, -1, 10);
 
+
         buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, 15, 24);
         buildPlatform(CubeFaces.secondFace, CubeLevel.seventh, 18, 31);
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
+        
+        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 19, 2);
+        buildLadder(CubeFaces.fourthFace, CubeLevel.first, 19, 5);
 
+        
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
     }
 
     private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
@@ -121,8 +127,47 @@ public class LevelInstatiator : MonoBehaviour{
             instantiateFacePlatform(inFace, atLevel, i, 0);
             instantiateFacePlatform(inFace, atLevel, i, 1);
         }
-    }   
-    
+    }
+
+    private void buildLadder(CubeFaces inFace, float atLevel, int column, float height)
+    {
+        Transform t = Instantiate(ladder, world, false); ;
+        Quaternion rotation = Quaternion.identity;
+        Vector3 copyVector = new Vector3(0, 0, 0);
+        switch(inFace)
+        { 
+            case CubeFaces.firstFace:
+                copyVector = firstFaceVector;
+                copyVector.x = xBoundsMax - (column * scalingFactor);
+                copyVector.z = zBoundsMin + (0.5f * scalingFactor);
+                rotation = Quaternion.Euler(0, 180, 0);
+                break;
+            case CubeFaces.secondFace:
+                copyVector = secondFaceVector;
+                copyVector.z = zBoundsMax - (column * scalingFactor);
+                copyVector.x = xBoundsMax - (0.5f * scalingFactor);
+                rotation = Quaternion.Euler(0, 90, 0);
+                break;
+            case CubeFaces.thirdFace:
+                copyVector = thirdFaceVector;
+                copyVector.x = xBoundsMin + (column * scalingFactor);
+                copyVector.z = zBoundsMax - (0.5f * scalingFactor);
+                break;
+            case CubeFaces.fourthFace:
+                copyVector = fourthFaceVector;
+                copyVector.z = zBoundsMin + (column * scalingFactor);                                
+                copyVector.x = xBoundsMin + (0.5f * scalingFactor);
+                rotation = Quaternion.Euler(0, 270, 0);
+                break;
+        }
+
+        copyVector.y = (atLevel * scalingFactor) + ((height / 2) * scalingFactor);
+        t.localScale = new Vector3(t.localScale.x, t.localScale.y * height, t.localScale.z);
+        t.localRotation = rotation;
+        t.localPosition += copyVector;
+    }
+
+
     private void instantiateFacePlatform(CubeFaces inFace, float atLevel, float atColumn, float distanceFromCube)
     {
         var copyVector = new Vector3(0, 0, 0);

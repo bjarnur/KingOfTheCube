@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
 
         //Instantiate player
         //readyPlayerOne();
+
     }
 	
 	// Update is called once per frame

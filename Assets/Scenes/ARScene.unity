@@ -625,6 +625,7 @@ MonoBehaviour:
     type: 2}
   platformUnit: {fileID: 4158127887401006, guid: ad8c2d034aeb97c42831d95b464a5f71,
     type: 2}
+  ladder: {fileID: 4596539044817740, guid: f76f8e4fa4ce73243b8c722d355411f7, type: 2}
 --- !u!1 &1746894878
 GameObject:
   m_ObjectHideFlags: 0
