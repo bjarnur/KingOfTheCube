@@ -62,6 +62,7 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().buildLevel();
 
                     readyPlayerOne();
+                    readyKing();
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
@@ -118,10 +119,7 @@ public class ARController : MonoBehaviour
 
     void readyKing()
     {
-        playerInstance = Instantiate(king, world, false);
-        CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
-        c.world = world;
-
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        GameObject kingInstance = Instantiate(king, world, false);
+        kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 }

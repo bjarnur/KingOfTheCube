@@ -31,7 +31,7 @@ public class KingController_AR : MonoBehaviour {
         zBounds = 1.4f;
 
         // Move king to initial position
-        transform.position = new Vector3(0f, 3.5f, xBounds); 
+        transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
     }
 	
@@ -73,6 +73,7 @@ public class KingController_AR : MonoBehaviour {
 
         // Don't move if it's throwing
         float dx = throwing ? 0 : dir;
+        Debug.Log(dx);
         MoveKing(dx);
         
         return dx;
@@ -128,7 +129,8 @@ public class KingController_AR : MonoBehaviour {
                 break;
         }
         movement = movement.normalized * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + movement);
+        //rb.MovePosition(transform.position + movement);
+        transform.localPosition += movement;
 
         // Rotation
         if (mov != 0) // Follow the direction of motion
