@@ -579,15 +579,8 @@ MonoBehaviour:
   UIScanning: {fileID: 1782389318}
   garden: {fileID: 1541667144648622, guid: 474618c9117ea4046b96628c9f349217, type: 2}
   playerOne: {fileID: 1084817040065256, guid: 46878f5abf9932e4992f0ab914c97ab7, type: 2}
+  king: {fileID: 1711386312576774, guid: db4c630a28ff84e42bf12e8c195fd14d, type: 2}
   world: {fileID: 343080613}
-  corner1: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0, type: 2}
-  corner2: {fileID: 4574353576091254, guid: b65d781c0a9ce4c4fb6d2ee9ced796e8, type: 2}
-  corner3: {fileID: 4715803042647796, guid: 87d90218490490545bb9acd3d2b534df, type: 2}
-  corner4: {fileID: 4212062346377050, guid: 9086b87aaf439ab43adc1bc13e1e5541, type: 2}
-  platformX: {fileID: 4489823058728470, guid: 115e53f5a5624c8458929753f27999d1, type: 2}
-  platformZ: {fileID: 4023439218302192, guid: 7f4952da7f5676d4aa9501b00386c51a, type: 2}
-  ladderX: {fileID: 4360217018361908, guid: 1c0f81ecb4a5e594881a2016b9551eb3, type: 2}
-  ladderZ: {fileID: 4739178388967624, guid: 55bca263061eeaa4b963e8548e8a166e, type: 2}
   unitCube: {fileID: 4107635161414470, guid: 2e6fb3d70a41d3a4eb5a81cf4497ebd5, type: 2}
 --- !u!4 &1659006362
 Transform:
@@ -615,14 +608,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scalingFactor: 0.1
   world: {fileID: 343080613}
-  firstFaceCorner: {fileID: 4593167657176460, guid: b0848059794c4c5438f504edd4473803,
-    type: 2}
-  secondFaceCorner: {fileID: 4016766132099664, guid: c30a56d70bcf72b48b5a8b4e50dd5a1b,
-    type: 2}
-  thirdFaceCorner: {fileID: 4039557520408468, guid: 3a5a8b8bf2d0bc443bae0cf18b42433c,
-    type: 2}
-  fourthFaceCorner: {fileID: 4574258697312190, guid: dbb6b36faac570e43bfc7526873aa61f,
-    type: 2}
   platformUnit: {fileID: 4158127887401006, guid: ad8c2d034aeb97c42831d95b464a5f71,
     type: 2}
   ladder: {fileID: 4596539044817740, guid: f76f8e4fa4ce73243b8c722d355411f7, type: 2}

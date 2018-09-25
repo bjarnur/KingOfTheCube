@@ -15,6 +15,9 @@ public class CharacterCtrl : MonoBehaviour {
     public float xBounds = 1.55f;
     public float zBounds = 1.55f;
 
+    [HideInInspector]
+    public int side = 2;
+
     /*********************\
         Private fields
     \*********************/
@@ -24,7 +27,6 @@ public class CharacterCtrl : MonoBehaviour {
 
     // 0 & 2 = Moving along X
     // 1 & 3 = Moving along Z
-    int side = 2;
     float angle = 180;
 
     bool climbing = false;
