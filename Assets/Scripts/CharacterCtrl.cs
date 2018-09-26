@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -222,41 +222,42 @@ public class CharacterCtrl : MonoBehaviour {
         }
     }
 
+    int firstTouchFingerID = -1;
+    float touchDir = 0f;
+    bool ignoreBothTouch = false;
+
     void UpdateCharacterPosition()
     {
-        bool touch = false;
-        float firstTouchDir = 0f;
         bool bothTouch = false;
 
-        if (Input.touchCount > 0)
+        // Only one touch, we go in that direction
+        if (Input.touchCount == 1)
         {
-            switch (Input.GetTouch(0).phase)
+            touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+            firstTouchFingerID = Input.GetTouch(0).fingerId;
+        }
+        // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
+        else if (Input.touchCount == 2)
+        {
+            foreach (Touch t in Input.touches)
             {
-                case TouchPhase.Began:
-                case TouchPhase.Stationary:
-                case TouchPhase.Moved:
-                    touch = true;
-                    firstTouchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
-                    break;
-            }
-
-            if (Input.touchCount > 1)
-            {
-                switch (Input.GetTouch(1).phase)
+                if (t.fingerId != firstTouchFingerID && !ignoreBothTouch)
                 {
-                    case TouchPhase.Began:
-                    case TouchPhase.Stationary:
-                    case TouchPhase.Moved:
-                        float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
-                        bothTouch = secondTouchDir != firstTouchDir;
-                        break;
+                    bothTouch = (t.position.x < Screen.width / 2 ? -1f : 1f) != touchDir;
                 }
             }
+        }
+        // Anything else = Reset and do nothing
+        else
+        {
+            firstTouchFingerID = -1;
+            touchDir = 0f;
         }
 
         Vector3 yVelocity = world.up * rb.velocity.y;
         float hAxis = Input.GetAxisRaw("Horizontal");
-        hAxis = touch ? firstTouchDir : hAxis;
+        // Ignore xAxis if we touched the screen on mobile
+        hAxis = firstTouchFingerID != -1 ? touchDir : hAxis;
        
         if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
