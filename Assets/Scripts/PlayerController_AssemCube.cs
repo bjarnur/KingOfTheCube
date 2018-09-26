@@ -9,12 +9,13 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     [HideInInspector]
     public int side = 0;
+    public bool win = false;
 
     Vector3 movement;
     Animator animator;
     Rigidbody rb;
 
-    float xBounds, zBounds;
+    float xBounds, zBounds, topCube;
     float angle = 0;
 
     bool climbing = false;
@@ -34,6 +35,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
         // TODO: Get automaticaly the limits of the current cube
         xBounds = 16f;
         zBounds = 16f;
+        topCube = 30f;
 
         // Move player to initial position
         transform.position = new Vector3(16f, 2.5f, zBounds);
@@ -63,6 +65,15 @@ public class PlayerController_AssemCube : MonoBehaviour {
             {
                 transform.position += transform.up * Time.deltaTime * speed;
                 transform.localEulerAngles = new Vector3(0f, angle + 180, 0f); // Face the edge of the cube
+
+                if (transform.position.y > topCube)
+                {
+                    //WIN!!
+                    transform.position = new Vector3(transform.position.x, topCube, transform.position.z);
+                    animator.SetBool("Climb", false);
+                    //animator.SetTrigger("Win");
+                    win = true;
+                }
             }
             else if (grounded)
             {
