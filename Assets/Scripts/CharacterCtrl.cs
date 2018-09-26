@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour {
@@ -35,6 +36,9 @@ public class CharacterCtrl : MonoBehaviour {
     bool grounded = true;
     bool jumping = false;
 
+    float timeBetweenJumps = 0.2f;
+    float groundedTime = 0.0f;
+    bool oneFingerReleased = false;
 
     /*********************\
         Unity functions
@@ -46,6 +50,7 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
 
@@ -70,15 +75,15 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ladder") && !jumping)
+        if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.useGravity = false;
             climbing = true;
+            jumping = false;            
             grounded = false;
         }
-        TriggerAnimations();
     }
 
     void OnTriggerExit(Collider other)
@@ -89,29 +94,12 @@ public class CharacterCtrl : MonoBehaviour {
             rb.useGravity = true;
             climbing = false;
         }
-        TriggerAnimations();
     }
 
-    void OnCollisionEnter(Collision collision)
+    bool IsGrounded()
     {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = true;
-            if (jumping)
-            {
-                jumping = false;
-            }
-        }
-        TriggerAnimations();
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = false;
-        }
-        TriggerAnimations();
+        float distToGround = GetComponent<BoxCollider>().bounds.extents.y;
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround);
     }
 
     /*********************************\
@@ -229,12 +217,20 @@ public class CharacterCtrl : MonoBehaviour {
     void UpdateCharacterPosition()
     {
         bool bothTouch = false;
+        bool movingVertically = Math.Abs(rb.velocity.y) > 0.001f;
+
+        if (IsGrounded())
+        {
+            groundedTime += Time.deltaTime;
+            jumping = false;
+        }            
 
         // Only one touch, we go in that direction
         if (Input.touchCount == 1)
         {
             touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             firstTouchFingerID = Input.GetTouch(0).fingerId;
+            oneFingerReleased = true;
         }
         // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
         else if (Input.touchCount == 2)
@@ -265,11 +261,14 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 transform.position += transform.up * Time.deltaTime * speed;
             }
-            else if (grounded)
+
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded()))
             {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
                 grounded = false;
+                groundedTime = 0.0f;
+                oneFingerReleased = false;
             }
         }
 
@@ -297,7 +296,7 @@ public class CharacterCtrl : MonoBehaviour {
             transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
         }
 
-        if (grounded && !jumping)
+        if (IsGrounded() && !jumping)
         {
             animator.SetBool("Fall", false);
             animator.SetBool("Climb", false);
@@ -318,7 +317,7 @@ public class CharacterCtrl : MonoBehaviour {
         else if (jumping)
         {
             animator.SetBool("Jump", true);
-        } else if (!grounded) 
+        } else if (!IsGrounded()) 
         {
             animator.SetBool("Fall", true);
         }
