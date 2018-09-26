@@ -36,7 +36,7 @@ public class CharacterCtrl : MonoBehaviour {
     bool grounded = true;
     bool jumping = false;
 
-    float timeBetweenJumps = 0.2;
+    float timeBetweenJumps = 0.2f;
     float groundedTime = 0.0f;
     bool oneFingerReleased = false;
 
@@ -75,15 +75,15 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ladder") && !jumping)
+        if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.useGravity = false;
             climbing = true;
+            jumping = false;            
             grounded = false;
         }
-        TriggerAnimations();
     }
 
     void OnTriggerExit(Collider other)
@@ -94,29 +94,12 @@ public class CharacterCtrl : MonoBehaviour {
             rb.useGravity = true;
             climbing = false;
         }
-        TriggerAnimations();
     }
 
-    void OnCollisionEnter(Collision collision)
+    bool IsGrounded()
     {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = true;
-            if (jumping)
-            {
-                jumping = false;
-            }
-        }
-        TriggerAnimations();
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = false;
-        }
-        TriggerAnimations();
+        float distToGround = GetComponent<BoxCollider>().bounds.extents.y;
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround);
     }
 
     /*********************************\
@@ -234,9 +217,13 @@ public class CharacterCtrl : MonoBehaviour {
     void UpdateCharacterPosition()
     {
         bool bothTouch = false;
+        bool movingVertically = Math.Abs(rb.velocity.y) > 0.001f;
 
-        if(grounded)
+        if (IsGrounded())
+        {
             groundedTime += Time.deltaTime;
+            jumping = false;
+        }            
 
         // Only one touch, we go in that direction
         if (Input.touchCount == 1)
@@ -274,7 +261,8 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 transform.position += transform.up * Time.deltaTime * speed;
             }
-            else if ((grounded && groundedTime > timeBetweenJumps) || (oneFingerReleased && Math.Abs(rb.velocity.y) < 0.001f && grounded))
+
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded()))
             {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
@@ -299,7 +287,6 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
-        /*
         if (goingRight) 
         {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
@@ -309,7 +296,7 @@ public class CharacterCtrl : MonoBehaviour {
             transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
         }
 
-        if (grounded && !jumping)
+        if (IsGrounded() && !jumping)
         {
             animator.SetBool("Fall", false);
             animator.SetBool("Climb", false);
@@ -330,10 +317,9 @@ public class CharacterCtrl : MonoBehaviour {
         else if (jumping)
         {
             animator.SetBool("Jump", true);
-        } else if (!grounded) 
+        } else if (!IsGrounded()) 
         {
             animator.SetBool("Fall", true);
         }
-        */
     }
 }
