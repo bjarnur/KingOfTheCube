@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour {
@@ -35,6 +36,9 @@ public class CharacterCtrl : MonoBehaviour {
     bool grounded = true;
     bool jumping = false;
 
+    float timeBetweenJumps = 0.2;
+    float groundedTime = 0.0f;
+    bool oneFingerReleased = false;
 
     /*********************\
         Unity functions
@@ -46,6 +50,7 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
 
@@ -230,11 +235,15 @@ public class CharacterCtrl : MonoBehaviour {
     {
         bool bothTouch = false;
 
+        if(grounded)
+            groundedTime += Time.deltaTime;
+
         // Only one touch, we go in that direction
         if (Input.touchCount == 1)
         {
             touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             firstTouchFingerID = Input.GetTouch(0).fingerId;
+            oneFingerReleased = true;
         }
         // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
         else if (Input.touchCount == 2)
@@ -265,11 +274,13 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 transform.position += transform.up * Time.deltaTime * speed;
             }
-            else if (grounded)
+            else if ((grounded && groundedTime > timeBetweenJumps) || (oneFingerReleased && Math.Abs(rb.velocity.y) < 0.001f && grounded))
             {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
                 grounded = false;
+                groundedTime = 0.0f;
+                oneFingerReleased = false;
             }
         }
 
@@ -288,6 +299,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
+        /*
         if (goingRight) 
         {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
@@ -322,5 +334,6 @@ public class CharacterCtrl : MonoBehaviour {
         {
             animator.SetBool("Fall", true);
         }
+        */
     }
 }
