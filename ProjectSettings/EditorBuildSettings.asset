@@ -8,7 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ARScene.unity
     guid: f2250fa5f86e930449662dfdd1a4fa15
+  - enabled: 1
+    path: Assets/Scenes/Launcher.unity
+    guid: dc3e603fd006c45f5aa2ca53e93a7c98
+  - enabled: 1
+    path: Assets/Scenes/AR_OnlineScene.unity
+    guid: b7362b9ee94ed4ce8bd429d31deeaa69
   m_configObjects: {}

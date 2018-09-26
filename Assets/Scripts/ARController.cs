@@ -102,11 +102,11 @@ public class ARController : MonoBehaviour
     
     void readyPlayerOne()
     {
-        playerInstance = Instantiate(playerOne, world, false);
+        /*playerInstance = Instantiate(playerOne, world, false);
         CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
         c.world = world;
 
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);*/
     }
 
     public void ResetPlayer()
