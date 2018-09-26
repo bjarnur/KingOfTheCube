@@ -8,13 +8,13 @@ public class BombController : MonoBehaviour {
 
     private void Start()
     {
-        Physics.gravity = new Vector3(0, -50.0f, 0);
+        Physics.gravity = new Vector3(0, -1f, 0);
     }
 
     private void OnCollisionEnter(Collision col)
     {
         gameObject.SetActive(false); // hide rock
-        GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        GameObject explosion = Instantiate(explosionPrefab, transform.parent);
         Destroy(explosion, 1.5f);
     }
 }

@@ -856,7 +856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   isAI: 1
-  rock: {fileID: 1317834411581918, guid: 355e5f2a79d99a142bb98f7ad75c6e78, type: 2}
+  rockPrefab: {fileID: 1317834411581918, guid: 355e5f2a79d99a142bb98f7ad75c6e78, type: 2}
   hand: {fileID: 1998948071847084}
 --- !u!137 &137089368439625226
 SkinnedMeshRenderer:

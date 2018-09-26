@@ -6,9 +6,11 @@ public class KingController_AR : MonoBehaviour {
 
     public float speed = 1f;
     public bool isAI;
-    public GameObject rock;
+    public GameObject rockPrefab;
     public GameObject hand;
-    //public GameObject AR_Controller;
+
+    GameObject player;
+    GameObject rockInstance;
 
     Vector3 movement;
     Animator anim;
@@ -33,8 +35,15 @@ public class KingController_AR : MonoBehaviour {
         // Move king to initial position
         transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
+
+        rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
+    public void setPlayer(GameObject player)
+    {
+        this.player = player;
+    }
+
     private void FixedUpdate()
     {
         float mov; 
@@ -62,18 +71,14 @@ public class KingController_AR : MonoBehaviour {
 
     float AutoMove()
     {
-        //GameObject player = AR_Controller.GetComponent<ARController>().playerOne;
-
         // Get in which side the player is
-        //int playerSide = player.GetComponent<CharacterCtrl>().side;
-        int playerSide = 2;
+        int playerSide = player.GetComponent<CharacterCtrl>().side;
 
         // Follow the player, move and throw randomly when in same side
         dir = FollowPlayer(playerSide);
 
         // Don't move if it's throwing
         float dx = throwing ? 0 : dir;
-        Debug.Log(dx);
         MoveKing(dx);
         
         return dx;
@@ -183,9 +188,9 @@ public class KingController_AR : MonoBehaviour {
 
     void ThrowObject() 
     {
-        rock.transform.position = hand.transform.position;
-        rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rock.SetActive(true);
+        rockInstance.transform.position = hand.transform.position;
+        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        rockInstance.SetActive(true);
         // TODO: Add a horizontal force to be more realistic
     }
 
