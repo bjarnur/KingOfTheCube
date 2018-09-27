@@ -10,7 +10,7 @@ public class CharacterCtrl : MonoBehaviour {
     \**********************/
 
     public float speed = 0.17f;
-    public float jumpSpeed = 0.7f;
+    public float jumpSpeed = 0.9f;
     public Transform world;
     public GameObject winText;
 
@@ -373,7 +373,8 @@ public class CharacterCtrl : MonoBehaviour {
         yield return new WaitForSeconds(3); // Length of dying animation
         // Move player to initial position
         //transform.position = new Vector3(16f, 2.5f, zBounds);
-        transform.localPosition = new Vector3(-xBounds + 0.1f, 0.1f, -zBounds);
+        angle = 180;
+        transform.localPosition = new Vector3(-xBounds + 0.1f, 0.1f, -zBounds);        
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
         side = 2;
         dead = false;
