@@ -263,7 +263,8 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 if (t.fingerId != firstTouchFingerID && !ignoreBothTouch)
                 {
-                    bothTouch = (t.position.x < Screen.width / 2 ? -1f : 1f) != touchDir;
+                    float floatScreenWidth = (float)Screen.width;
+                    bothTouch = (t.position.x < floatScreenWidth / 2f ? -1f : 1f) != touchDir;
                 }
             }
         }
@@ -281,8 +282,7 @@ public class CharacterCtrl : MonoBehaviour {
        
         if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
-            if (climbing)
-            {
+            if (climbing) {
                 transform.position += transform.up * Time.deltaTime * speed;
                 if (transform.localPosition.y > topCube)
                 {
@@ -296,8 +296,7 @@ public class CharacterCtrl : MonoBehaviour {
                 }
             }
 
-            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded()))
-            {
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded())) {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
                 grounded = false;
@@ -321,8 +320,12 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
-        if (goingRight) 
-        {
+        Debug.Log("El valor the Jump es: " + jumping);
+        Debug.Log("El valor the Climb es: " + climbing);
+        Debug.Log("El valor the Stop es: " + IsGrounded());
+        Debug.Log("El valor the Run es: " + moving);
+
+        if (goingRight) {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
         }
         else 
@@ -330,8 +333,7 @@ public class CharacterCtrl : MonoBehaviour {
             transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
         }
 
-        if (IsGrounded() && !jumping)
-        {
+        if (IsGrounded()){
             animator.SetBool("Fall", false);
             animator.SetBool("Climb", false);
             animator.SetBool("Jump", false);
@@ -339,21 +341,29 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 animator.SetBool("Run", true);
                 animator.SetBool("Stop", false);
-            } else {
+            }
+            else
+            {
                 animator.SetBool("Run", false);
                 animator.SetBool("Stop", true);
             }
-        } else if (climbing)
-        {
-            animator.SetBool("Climb", true);
-            animator.SetBool("Jump", false);
+
         }
-        else if (jumping)
-        {
-            animator.SetBool("Jump", true);
-        } else if (!IsGrounded()) 
-        {
-            animator.SetBool("Fall", true);
+        else {
+            animator.SetBool("Run", false);
+            animator.SetBool("Stop", false);
+            if (climbing){
+                animator.SetBool("Climb", true);
+                animator.SetBool("Jump", false);
+            }
+            else if (jumping)
+            {
+                animator.SetBool("Run", false);
+                animator.SetBool("Jump", true);
+            }
+            else {
+                animator.SetBool("Fall", true);
+            }
         }
     }
 
