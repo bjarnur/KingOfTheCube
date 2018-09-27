@@ -12,12 +12,16 @@ public class CharacterCtrl : MonoBehaviour {
     public float speed = 0.16f;
     public float jumpSpeed = 0.5f;
     public Transform world;
-    
+    public GameObject winText;
+
     public float xBounds = 1.55f;
     public float zBounds = 1.55f;
+    public float topCube = 3.0f;
 
     [HideInInspector]
     public int side = 2;
+    [HideInInspector]
+    public bool win = false;
 
     /*********************\
         Private fields
@@ -277,6 +281,15 @@ public class CharacterCtrl : MonoBehaviour {
             if (climbing)
             {
                 transform.position += transform.up * Time.deltaTime * speed;
+                if (transform.localPosition.y > topCube)
+                {
+                    //WIN!!
+                    transform.localPosition = new Vector3(transform.localPosition.x, topCube, transform.localPosition.z);
+                    animator.SetBool("Climb", false);
+                    //animator.SetTrigger("Win");
+                    win = true;
+                    winText.SetActive(true);
+                }
             }
 
             else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded()))

@@ -11,6 +11,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     [HideInInspector]
     public int side = 0;
+    [HideInInspector]
     public bool win = false;
 
     Vector3 movement;
