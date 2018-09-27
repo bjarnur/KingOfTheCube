@@ -10,6 +10,7 @@ public class ARController : MonoBehaviour
 {
     public Transform ARCoreDevice;
     public GameObject UIScanning;
+    public GameObject UIWinning;
     public GameObject garden;
     public GameObject playerOne;
     public GameObject king;
@@ -107,6 +108,7 @@ public class ARController : MonoBehaviour
         playerInstance = Instantiate(playerOne, world, false);
         CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
         c.world = world;
+        c.winText = UIWinning;
 
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
     }

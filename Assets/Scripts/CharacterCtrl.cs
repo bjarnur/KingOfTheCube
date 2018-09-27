@@ -9,8 +9,8 @@ public class CharacterCtrl : MonoBehaviour {
         Tunable fields
     \**********************/
 
-    public float speed = 0.16f;
-    public float jumpSpeed = 0.5f;
+    public float speed = 0.17f;
+    public float jumpSpeed = 0.7f;
     public Transform world;
     public GameObject winText;
 
@@ -55,6 +55,9 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
+        if (win)
+            return;
 
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
@@ -289,6 +292,7 @@ public class CharacterCtrl : MonoBehaviour {
                     //animator.SetTrigger("Win");
                     win = true;
                     winText.SetActive(true);
+                    return;
                 }
             }
 
