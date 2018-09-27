@@ -46,9 +46,9 @@ public class ARController : MonoBehaviour
 
         foreach (var image in m_AugmentedImages)
         {
-            // The KOTC Marker
-            if(image.DatabaseIndex == 0)
+            switch (image.DatabaseIndex)
             {
+            case 0: // The old ugly and bad and simple KOTC Marker
                 if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
                 {
                     Debug.Log("Tracking OK");
@@ -74,6 +74,36 @@ public class ARController : MonoBehaviour
                     GameObject.Destroy(KOTCAnchor);
                     KOTCAnchor = null;
                 }
+                break;
+            case 1: // The new wonderful but which could be improved KOTC Marker (but in Black & White)
+            case 2: // The amazing and beautiful (but which could still be improved) KOTC Marker
+                if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
+                {
+                    Debug.Log("Tracking OK");
+                    KOTCImage = image;
+                    KOTCAnchor = image.CreateAnchor(image.CenterPose);
+
+                    world.SetParent(KOTCAnchor.transform, false);
+                    world.localPosition -= Vector3.up * 0.5f;
+                    Transform gardenObj = Instantiate(garden).transform;
+                    gardenObj.SetParent(world.transform, false);
+
+                    GetComponent<LevelInstatiator>().world = world;
+                    GetComponent<LevelInstatiator>().buildLevel();
+
+                    readyPlayerOne();
+                    readyKing();
+                }
+                else if (image.TrackingState == TrackingState.Stopped)
+                {
+                    Debug.Log("Tracking Stopped");
+                    world.SetParent(null, true);
+
+                    KOTCImage = null;
+                    GameObject.Destroy(KOTCAnchor);
+                    KOTCAnchor = null;
+                }
+                break;
             }
         }
 
