@@ -7,7 +7,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     public float speed = 1f;
     public float jumpSpeed = 5f;
-    public Text winText;
+    public GameObject winText;
 
     [HideInInspector]
     public int side = 0;
@@ -75,7 +75,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
                     animator.SetBool("Climb", false);
                     //animator.SetTrigger("Win");
                     win = true;
-                    winText.gameObject.SetActive(true);
+                    winText.SetActive(true);
                 }
             }
             else if (grounded)
