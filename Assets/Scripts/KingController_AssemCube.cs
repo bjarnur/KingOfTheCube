@@ -19,6 +19,7 @@ public class KingController_AssemCube : MonoBehaviour {
     int side = 0;
     float angle = 0;
     bool throwing = false;
+    bool dead = false;
 
     int dir = 1;
 
@@ -38,27 +39,40 @@ public class KingController_AssemCube : MonoBehaviour {
 	
     private void FixedUpdate()
     {
-        float mov; 
-
-        // Move
-        if(isAI)
+        if(player.GetComponent<PlayerController_AssemCube>().win)
         {
-            mov = AutoMove(); 
+            //Something happens... 
+            anim.SetBool("IsRunning", false);
+            if(!dead)
+            {
+                anim.SetTrigger("Die");
+                dead = true;
+            }
         }
         else
         {
-            // Don't move if it's throwing
-            mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-            MoveKing(mov);
-        }
+            float mov;
 
-        // Animate
-        bool running = mov != 0f;
-        anim.SetBool("IsRunning", running);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            anim.SetTrigger("Throw");
-        }
+            // Move
+            if (isAI)
+            {
+                mov = AutoMove();
+            }
+            else
+            {
+                // Don't move if it's throwing
+                mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+                MoveKing(mov);
+            }
+
+            // Animate
+            bool running = mov != 0f;
+            anim.SetBool("IsRunning", running);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                anim.SetTrigger("Throw");
+            }
+        } 
     }
 
     float AutoMove()
