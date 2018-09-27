@@ -9,7 +9,7 @@ public class CharacterCtrl : MonoBehaviour {
         Tunable fields
     \**********************/
 
-    public float speed = 0.1f;
+    public float speed = 0.16f;
     public float jumpSpeed = 0.5f;
     public Transform world;
     
@@ -37,7 +37,7 @@ public class CharacterCtrl : MonoBehaviour {
     bool jumping = false;
     bool dead = false;
 
-    float timeBetweenJumps = 0.2f;
+    float timeBetweenJumps = 0.3f;
     float groundedTime = 0.0f;
     bool oneFingerReleased = false;
 
