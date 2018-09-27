@@ -741,9 +741,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 97e771e8-f91e-4874-a926-f4203d699ef1
-  projectName: KingOfTheCube
-  organizationId: elbjarnacho
+  cloudProjectId: 215d164e-61d0-4c0c-91fa-94c896794059
+  projectName: KingOfTheCube (2)
+  organizationId: alr67
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
