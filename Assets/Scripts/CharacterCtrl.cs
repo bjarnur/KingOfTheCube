@@ -35,6 +35,7 @@ public class CharacterCtrl : MonoBehaviour {
     bool goingRight = false;
     bool grounded = true;
     bool jumping = false;
+    bool dead = false;
 
     float timeBetweenJumps = 0.2f;
     float groundedTime = 0.0f;
@@ -93,6 +94,16 @@ public class CharacterCtrl : MonoBehaviour {
             Debug.Log("Ladder exit");
             rb.useGravity = true;
             climbing = false;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "Rock" && !dead)
+        {
+            animator.SetTrigger("Die");
+            dead = true;
+            StartCoroutine(Dying());
         }
     }
 
@@ -219,6 +230,12 @@ public class CharacterCtrl : MonoBehaviour {
         bool bothTouch = false;
         bool movingVertically = Math.Abs(rb.velocity.y) > 0.001f;
 
+        if(dead)
+        {
+            // Don't update the position if the player has died
+            return;
+        }
+
         if (IsGrounded())
         {
             groundedTime += Time.deltaTime;
@@ -321,5 +338,16 @@ public class CharacterCtrl : MonoBehaviour {
         {
             animator.SetBool("Fall", true);
         }
+    }
+
+    IEnumerator Dying()
+    {
+        yield return new WaitForSeconds(3); // Length of dying animation
+        // Move player to initial position
+        //transform.position = new Vector3(16f, 2.5f, zBounds);
+        transform.localPosition = new Vector3(-xBounds + 0.1f, 0.1f, -zBounds);
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        side = 2;
+        dead = false;
     }
 }
