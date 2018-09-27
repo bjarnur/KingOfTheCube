@@ -106,8 +106,9 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Rock" && !dead)
+        if (collision.gameObject.tag == "Rock" && !dead)
         {
+            Debug.Log("Killing character");
             animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
