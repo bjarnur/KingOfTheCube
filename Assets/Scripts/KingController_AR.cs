@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KingController_AssemCube : MonoBehaviour {
+public class KingController_AR : MonoBehaviour {
 
     public float speed = 1f;
     public bool isAI;
-    public GameObject rock;
+    public GameObject rockPrefab;
     public GameObject hand;
-    public GameObject garden;
-    public GameObject player;
+
+    GameObject player;
+    GameObject rockInstance;
 
     Vector3 movement;
     Animator anim;
@@ -19,7 +20,6 @@ public class KingController_AssemCube : MonoBehaviour {
     int side = 0;
     float angle = 0;
     bool throwing = false;
-    bool dead = false;
 
     int dir = 1;
 
@@ -29,56 +29,50 @@ public class KingController_AssemCube : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         // TODO: Get automaticaly the limits of the current cube
-        xBounds = 13.0f;
-        zBounds = 13.0f;
+        xBounds = 1.4f;
+        zBounds = 1.4f;
 
         // Move king to initial position
-        transform.position = new Vector3(0f, 30f, xBounds); 
+        transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
+
+        rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
+    public void setPlayer(GameObject player)
+    {
+        this.player = player;
+    }
+
     private void FixedUpdate()
     {
-        if(player.GetComponent<PlayerController_AssemCube>().win)
+        float mov; 
+
+        // Move
+        if(isAI)
         {
-            //Something happens... 
-            anim.SetBool("IsRunning", false);
-            if(!dead)
-            {
-                anim.SetTrigger("Die");
-                dead = true;
-            }
+            mov = AutoMove(); 
         }
         else
         {
-            float mov;
+            // Don't move if it's throwing
+            mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+            MoveKing(mov);
+        }
 
-            // Move
-            if (isAI)
-            {
-                mov = AutoMove();
-            }
-            else
-            {
-                // Don't move if it's throwing
-                mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                MoveKing(mov);
-            }
-
-            // Animate
-            bool running = mov != 0f;
-            anim.SetBool("IsRunning", running);
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                anim.SetTrigger("Throw");
-            }
-        } 
+        // Animate
+        bool running = mov != 0f;
+        anim.SetBool("IsRunning", running);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetTrigger("Throw");
+        }
     }
 
     float AutoMove()
     {
         // Get in which side the player is
-        int playerSide = player.GetComponent<PlayerController_AssemCube>().side;
+        int playerSide = player.GetComponent<CharacterCtrl>().side;
 
         // Follow the player, move and throw randomly when in same side
         dir = FollowPlayer(playerSide);
@@ -140,7 +134,8 @@ public class KingController_AssemCube : MonoBehaviour {
                 break;
         }
         movement = movement.normalized * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + movement);
+        //rb.MovePosition(transform.position + movement);
+        transform.localPosition += movement;
 
         // Rotation
         if (mov != 0) // Follow the direction of motion
@@ -156,29 +151,29 @@ public class KingController_AssemCube : MonoBehaviour {
 
     void CheckBounds()
     {
-        if (transform.position.x > xBounds) // Change to side 1
+        if (transform.localPosition.x > xBounds) // Change to side 1
         {
             side = 1;
             angle = 90;
-            transform.position = new Vector3(xBounds, transform.position.y, transform.position.z);
+            transform.localPosition = new Vector3(xBounds, transform.localPosition.y, transform.localPosition.z);
         }
-        else if (transform.position.z < -zBounds) // Change to side 2
+        else if (transform.localPosition.z < -zBounds) // Change to side 2
         {
             side = 2;
             angle = 180;
-            transform.position = new Vector3(transform.position.x, transform.position.y, -zBounds);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -zBounds);
         }
-        else if (transform.position.x < -xBounds) // Change to side 3
+        else if (transform.localPosition.x < -xBounds) // Change to side 3
         {
             side = 3;
             angle = 270;
-            transform.position = new Vector3(-xBounds, transform.position.y, transform.position.z);
+            transform.localPosition = new Vector3(-xBounds, transform.localPosition.y, transform.localPosition.z);
         }
-        else if (transform.position.z > zBounds) // Change to side 0
+        else if (transform.localPosition.z > zBounds) // Change to side 0
         {
             side = 0;
             angle = 0;
-            transform.position = new Vector3(transform.position.x, transform.position.y, zBounds);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, zBounds);
         }
     }
 
@@ -193,9 +188,9 @@ public class KingController_AssemCube : MonoBehaviour {
 
     void ThrowObject() 
     {
-        rock.transform.position = hand.transform.position;
-        rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rock.SetActive(true);
+        rockInstance.transform.position = hand.transform.position;
+        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        rockInstance.SetActive(true);
         // TODO: Add a horizontal force to be more realistic
     }
 

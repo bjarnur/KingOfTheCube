@@ -36,7 +36,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4425977404449924}
-  - component: {fileID: 114443134491208010}
   m_Layer: 0
   m_Name: Garden
   m_TagString: Untagged
@@ -113,25 +112,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1297641617762964}
   m_Mesh: {fileID: 4300000, guid: 1a43f7d46268042bda308b369b0971be, type: 3}
---- !u!114 &114443134491208010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1541667144648622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f0e4fe8fdc0794daa7a613a3a216aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world: {fileID: 4425977404449924}
-  platform: {fileID: 4998914763938266, guid: 31588cdcda8fcfd4e9cd4ed588471b4f, type: 2}
-  corner1: {fileID: 4243685500064040, guid: 7b1a735442b4735489dd4040e4400ad0, type: 2}
-  corner2: {fileID: 4574353576091254, guid: b65d781c0a9ce4c4fb6d2ee9ced796e8, type: 2}
-  corner3: {fileID: 4715803042647796, guid: 87d90218490490545bb9acd3d2b534df, type: 2}
-  corner4: {fileID: 4212062346377050, guid: 9086b87aaf439ab43adc1bc13e1e5541, type: 2}
-  platformX: {fileID: 4489823058728470, guid: 115e53f5a5624c8458929753f27999d1, type: 2}
-  platformZ: {fileID: 4023439218302192, guid: 7f4952da7f5676d4aa9501b00386c51a, type: 2}
-  ladderX: {fileID: 4360217018361908, guid: 1c0f81ecb4a5e594881a2016b9551eb3, type: 2}
-  ladderZ: {fileID: 4739178388967624, guid: 55bca263061eeaa4b963e8548e8a166e, type: 2}
-  playerOne: {fileID: 0}

@@ -12,6 +12,7 @@ public class ARController : MonoBehaviour
     public GameObject UIScanning;
     public GameObject garden;
     public GameObject playerOne;
+    public GameObject king;
     public Transform world;
     public Transform unitCube;
 
@@ -61,6 +62,7 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().buildLevel();
 
                     readyPlayerOne();
+                    readyKing();
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
@@ -113,5 +115,13 @@ public class ARController : MonoBehaviour
     {
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
+    }
+
+    void readyKing()
+    {
+        GameObject kingInstance = Instantiate(king, world, false);
+        KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
+        kCtrl.setPlayer(playerInstance);
+        kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 }
