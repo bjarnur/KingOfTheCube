@@ -17,9 +17,10 @@ public class KingController_AR : MonoBehaviour {
     Rigidbody rb;
 
     float xBounds, zBounds;
-    int side = 0;
+    int side = 2;
     float angle = 0;
     bool throwing = false;
+    bool dead = false;
 
     int dir = 1;
 
@@ -29,8 +30,8 @@ public class KingController_AR : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
 
         // TODO: Get automaticaly the limits of the current cube
-        xBounds = 1.4f;
-        zBounds = 1.4f;
+        xBounds = 1.3f;
+        zBounds = 1.3f;
 
         // Move king to initial position
         transform.localPosition = new Vector3(0f, 3f, xBounds); 
@@ -46,26 +47,39 @@ public class KingController_AR : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        float mov; 
-
-        // Move
-        if(isAI)
+        if (player.GetComponent<CharacterCtrl>().win)
         {
-            mov = AutoMove(); 
+            //Something happens... 
+            anim.SetBool("IsRunning", false);
+            if (!dead)
+            {
+                anim.SetTrigger("Die");
+                dead = true;
+            }
         }
         else
         {
-            // Don't move if it's throwing
-            mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-            MoveKing(mov);
-        }
+            float mov;
 
-        // Animate
-        bool running = mov != 0f;
-        anim.SetBool("IsRunning", running);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            anim.SetTrigger("Throw");
+            // Move
+            if (isAI)
+            {
+                mov = AutoMove();
+            }
+            else
+            {
+                // Don't move if it's throwing
+                mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+                MoveKing(mov);
+            }
+
+            // Animate
+            bool running = mov != 0f;
+            anim.SetBool("IsRunning", running);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                anim.SetTrigger("Throw");
+            }
         }
     }
 

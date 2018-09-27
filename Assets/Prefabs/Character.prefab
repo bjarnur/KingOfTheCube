@@ -855,6 +855,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.1
+  jumpSpeed: 0.5
+  world: {fileID: 0}
+  winText: {fileID: 1408518809937982, guid: 3edaaaebbe8e4b04d917113be0a6ad4a, type: 2}
+  xBounds: 1.55
+  zBounds: 1.55
+  topCube: 3
+  side: 2
+  win: 0
 --- !u!137 &137020759006960900
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
