@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using GoogleARCore;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ARController : MonoBehaviour
 {
@@ -25,14 +26,18 @@ public class ARController : MonoBehaviour
     private const float xBoundsMax = 1.55f;
     private const float zBoundsMin = -1.55f;
     private const float zBoundsMax = 1.55f;
-    
+
+    public void Start()
+    {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
 
     public void Update()
     {
         // Exit the app when the 'back' button is pressed.
         if (Input.GetKey(KeyCode.Escape))
         {
-            Application.Quit();
+            SceneManager.LoadScene(0);
         }
 
         // Check that motion tracking is tracking.
@@ -48,7 +53,7 @@ public class ARController : MonoBehaviour
         {
             switch (image.DatabaseIndex)
             {
-            case 0: // The old ugly and bad and simple KOTC Marker
+            /*case 0: // The old ugly and bad and simple KOTC Marker
                 if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
                 {
                     Debug.Log("Tracking OK");
@@ -74,7 +79,8 @@ public class ARController : MonoBehaviour
                     GameObject.Destroy(KOTCAnchor);
                     KOTCAnchor = null;
                 }
-                break;
+                break;*/
+            case 0:
             case 1: // The new wonderful but which could be improved KOTC Marker (but in Black & White)
             case 2: // The amazing and beautiful (but which could still be improved) KOTC Marker
                 if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
@@ -84,7 +90,7 @@ public class ARController : MonoBehaviour
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
                     world.SetParent(KOTCAnchor.transform, false);
-                    world.localPosition -= Vector3.up * 0.5f;
+                    world.localPosition -= world.up * 0.5f;
                     Transform gardenObj = Instantiate(garden).transform;
                     gardenObj.SetParent(world.transform, false);
 

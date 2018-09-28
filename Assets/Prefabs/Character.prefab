@@ -854,8 +854,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92422df305e791542960084ab0d44e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
-  jumpSpeed: 0.5
+  speed: 0.17
+  jumpSpeed: 0.75
   world: {fileID: 0}
   winText: {fileID: 1408518809937982, guid: 3edaaaebbe8e4b04d917113be0a6ad4a, type: 2}
   xBounds: 1.55
