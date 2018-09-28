@@ -14,8 +14,8 @@ public class CharacterCtrl : MonoBehaviour {
     public Transform world;
     public GameObject winText;
 
-    public float xBounds = 1.55f;
-    public float zBounds = 1.55f;
+    public float xBounds = 1.58f;
+    public float zBounds = 1.58f;
     public float topCube = 3.0f;
 
     [HideInInspector]

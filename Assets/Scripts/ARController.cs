@@ -146,12 +146,12 @@ public class ARController : MonoBehaviour
         c.world = world;
         c.winText = UIWinning;
 
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        ResetPlayer();
     }
 
     public void ResetPlayer()
     {
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.1f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
     }
 
