@@ -159,6 +159,7 @@ public class ARController : MonoBehaviour
         GameObject kingInstance = Instantiate(king, world, false);
         KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
         kCtrl.setPlayer(playerInstance);
+        kCtrl.world = world;
         kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 }

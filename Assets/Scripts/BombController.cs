@@ -14,7 +14,7 @@ public class BombController : MonoBehaviour {
     private void OnCollisionEnter(Collision col)
     {
         gameObject.SetActive(false); // hide rock
-        GameObject explosion = Instantiate(explosionPrefab, transform.parent);
+        GameObject explosion = Instantiate(explosionPrefab, transform.parent, false);
         Destroy(explosion, 1.5f);
     }
 }
