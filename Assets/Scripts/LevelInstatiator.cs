@@ -71,15 +71,15 @@ public class LevelInstatiator : MonoBehaviour{
 
     public void buildLevel() {
 
-        /*
+        
         //Can be used to easilly see what face you are looking at
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 1, 1);
         buildLadder(CubeFaces.secondFace, CubeLevel.first, 1, 2);
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 1, 3);
         buildLadder(CubeFaces.fourthFace, CubeLevel.first, 1, 4);
-        */
+        
 
-        buildLadder(CubeFaces.secondFace, CubeLevel.first, 10, 30);
+        //buildLadder(CubeFaces.secondFace, CubeLevel.first, 10, 25);        
         buildPlatform(CubeFaces.firstFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.secondFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.first, -1, 31);
@@ -88,31 +88,35 @@ public class LevelInstatiator : MonoBehaviour{
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 19, 8);
         buildPlatform(CubeFaces.firstFace, CubeLevel.fourth, 20, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.fourth, -1, 10);
-        buildLadder(CubeFaces.fourthFace, CubeLevel.fourth, 3, 25);
+        //buildLadder(CubeFaces.fourthFace, CubeLevel.fourth, 3, 25);
 
-        buildPlatform(CubeFaces.fourthFace, CubeLevel.seventh, 15, 31);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.fifth, 15, 31);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
 
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, 15, 20);
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.tenth, 20, 25);
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 25, 31);
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 25, 31);
-        buildPlatform(CubeFaces.secondFace, CubeLevel.thirteenth, -1, 5);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.ninth, 20, 25);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.eleventh, 25, 28);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 28, 31);
+        buildPlatform(CubeFaces.secondFace, CubeLevel.thirteenth, -1, 9);
 
 
+        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 12);
+        buildPlatform(CubeFaces.secondFace, CubeLevel.eleventh, 15, 25);
         buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, 15, 24);
         buildPlatform(CubeFaces.secondFace, CubeLevel.seventh, 18, 31);
         buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, -1, 10);
         buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, 15, 20);
-        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 20, 5);
+        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 19, 8);
 
         buildPlatform(CubeFaces.firstFace, CubeLevel.tenth, 20, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.tenth, -1, 10);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 15, 20);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 25, 31);
+        buildPlatform(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, -1, 5);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 5, 5);        
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 6);
+        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 5);
     }
 
     private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)

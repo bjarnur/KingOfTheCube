@@ -1,5 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour {
@@ -8,12 +9,19 @@ public class CharacterCtrl : MonoBehaviour {
         Tunable fields
     \**********************/
 
-    public float speed = 0.1f;
-    public float jumpSpeed = 0.5f;
+    public float speed = 0.17f;
+    public float jumpSpeed = 0.9f;
     public Transform world;
-    
+    public GameObject winText;
+
     public float xBounds = 1.55f;
     public float zBounds = 1.55f;
+    public float topCube = 3.0f;
+
+    [HideInInspector]
+    public int side = 2;
+    [HideInInspector]
+    public bool win = false;
 
     /*********************\
         Private fields
@@ -24,7 +32,6 @@ public class CharacterCtrl : MonoBehaviour {
 
     // 0 & 2 = Moving along X
     // 1 & 3 = Moving along Z
-    int side = 2;
     float angle = 180;
 
     bool climbing = false;
@@ -32,7 +39,11 @@ public class CharacterCtrl : MonoBehaviour {
     bool goingRight = false;
     bool grounded = true;
     bool jumping = false;
+    bool dead = false;
 
+    float timeBetweenJumps = 0.3f;
+    float groundedTime = 0.0f;
+    bool oneFingerReleased = false;
 
     /*********************\
         Unity functions
@@ -44,6 +55,10 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
+        if (win)
+            return;
+
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
 
@@ -68,15 +83,15 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ladder") && !jumping)
+        if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.useGravity = false;
             climbing = true;
+            jumping = false;            
             grounded = false;
         }
-        TriggerAnimations();
     }
 
     void OnTriggerExit(Collider other)
@@ -87,29 +102,23 @@ public class CharacterCtrl : MonoBehaviour {
             rb.useGravity = true;
             climbing = false;
         }
-        TriggerAnimations();
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.tag == "Rock" && !dead)
         {
-            grounded = true;
-            if (jumping)
-            {
-                jumping = false;
-            }
+            Debug.Log("Killing character");
+            animator.SetTrigger("Die");
+            dead = true;
+            StartCoroutine(Dying());
         }
-        TriggerAnimations();
     }
 
-    void OnCollisionExit(Collision collision)
+    bool IsGrounded()
     {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            grounded = false;
-        }
-        TriggerAnimations();
+        float distToGround = GetComponent<BoxCollider>().bounds.extents.y;
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround);
     }
 
     /*********************************\
@@ -220,53 +229,80 @@ public class CharacterCtrl : MonoBehaviour {
         }
     }
 
+    int firstTouchFingerID = -1;
+    float touchDir = 0f;
+    bool ignoreBothTouch = false;
+
     void UpdateCharacterPosition()
     {
-        bool touch = false;
-        float firstTouchDir = 0f;
         bool bothTouch = false;
+        bool movingVertically = Math.Abs(rb.velocity.y) > 0.001f;
 
-        if (Input.touchCount > 0)
+        if(dead)
         {
-            switch (Input.GetTouch(0).phase)
-            {
-                case TouchPhase.Began:
-                case TouchPhase.Stationary:
-                case TouchPhase.Moved:
-                    touch = true;
-                    firstTouchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
-                    break;
-            }
+            // Don't update the position if the player has died
+            return;
+        }
 
-            if (Input.touchCount > 1)
+        if (IsGrounded())
+        {
+            groundedTime += Time.deltaTime;
+            jumping = false;
+        }            
+
+        // Only one touch, we go in that direction
+        if (Input.touchCount == 1)
+        {
+            touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+            firstTouchFingerID = Input.GetTouch(0).fingerId;
+            oneFingerReleased = true;
+        }
+        // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
+        else if (Input.touchCount == 2)
+        {
+            foreach (Touch t in Input.touches)
             {
-                switch (Input.GetTouch(1).phase)
+                if (t.fingerId != firstTouchFingerID && !ignoreBothTouch)
                 {
-                    case TouchPhase.Began:
-                    case TouchPhase.Stationary:
-                    case TouchPhase.Moved:
-                        float secondTouchDir = Input.GetTouch(1).position.x < Screen.width / 2 ? -1f : 1f;
-                        bothTouch = secondTouchDir != firstTouchDir;
-                        break;
+                    float floatScreenWidth = (float)Screen.width;
+                    bothTouch = (t.position.x < floatScreenWidth / 2f ? -1f : 1f) != touchDir;
                 }
             }
+        }
+        // Anything else = Reset and do nothing
+        else
+        {
+            firstTouchFingerID = -1;
+            touchDir = 0f;
         }
 
         Vector3 yVelocity = world.up * rb.velocity.y;
         float hAxis = Input.GetAxisRaw("Horizontal");
-        hAxis = touch ? firstTouchDir : hAxis;
+        // Ignore xAxis if we touched the screen on mobile
+        hAxis = firstTouchFingerID != -1 ? touchDir : hAxis;
        
         if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
         {
-            if (climbing)
-            {
+            if (climbing) {
                 transform.position += transform.up * Time.deltaTime * speed;
+                if (transform.localPosition.y > topCube)
+                {
+                    //WIN!!
+                    transform.localPosition = new Vector3(transform.localPosition.x, topCube, transform.localPosition.z);
+                    animator.SetBool("Climb", false);
+                    //animator.SetTrigger("Win");
+                    win = true;
+                    winText.SetActive(true);
+                    return;
+                }
             }
-            else if (grounded)
-            {
+
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded())) {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
                 grounded = false;
+                groundedTime = 0.0f;
+                oneFingerReleased = false;
             }
         }
 
@@ -285,8 +321,12 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
-        if (goingRight) 
-        {
+        Debug.Log("El valor the Jump es: " + jumping);
+        Debug.Log("El valor the Climb es: " + climbing);
+        Debug.Log("El valor the Stop es: " + IsGrounded());
+        Debug.Log("El valor the Run es: " + moving);
+
+        if (goingRight) {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
         }
         else 
@@ -294,8 +334,7 @@ public class CharacterCtrl : MonoBehaviour {
             transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
         }
 
-        if (grounded && !jumping)
-        {
+        if (IsGrounded()){
             animator.SetBool("Fall", false);
             animator.SetBool("Climb", false);
             animator.SetBool("Jump", false);
@@ -303,21 +342,41 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 animator.SetBool("Run", true);
                 animator.SetBool("Stop", false);
-            } else {
+            }
+            else
+            {
                 animator.SetBool("Run", false);
                 animator.SetBool("Stop", true);
             }
-        } else if (climbing)
-        {
-            animator.SetBool("Climb", true);
-            animator.SetBool("Jump", false);
+
         }
-        else if (jumping)
-        {
-            animator.SetBool("Jump", true);
-        } else if (!grounded) 
-        {
-            animator.SetBool("Fall", true);
+        else {
+            animator.SetBool("Run", false);
+            animator.SetBool("Stop", false);
+            if (climbing){
+                animator.SetBool("Climb", true);
+                animator.SetBool("Jump", false);
+            }
+            else if (jumping)
+            {
+                animator.SetBool("Run", false);
+                animator.SetBool("Jump", true);
+            }
+            else {
+                animator.SetBool("Fall", true);
+            }
         }
+    }
+
+    IEnumerator Dying()
+    {
+        yield return new WaitForSeconds(3); // Length of dying animation
+        // Move player to initial position
+        //transform.position = new Vector3(16f, 2.5f, zBounds);
+        angle = 180;
+        transform.localPosition = new Vector3(-xBounds + 0.1f, 0.1f, -zBounds);        
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        side = 2;
+        dead = false;
     }
 }

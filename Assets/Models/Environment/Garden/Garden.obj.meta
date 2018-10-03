@@ -8,10 +8,16 @@ ModelImporter:
     400000: Garden
     400002: //RootNode
     2100000: palette
+    2100002: GardenMat
     2300000: Garden
     3300000: Garden
     4300000: Garden
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GardenMat
+    second: {fileID: 2100000, guid: 650ad376934c48e4d95c3c984020bce0, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
