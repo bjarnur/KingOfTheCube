@@ -34,4 +34,5 @@ public class NetworkManager : MonoBehaviour {
         //Transform loc = garden.transform.GetChild(PhotonNetwork.playerList.Length);
            
     }
+
 }

@@ -321,10 +321,6 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
-        Debug.Log("El valor the Jump es: " + jumping);
-        Debug.Log("El valor the Climb es: " + climbing);
-        Debug.Log("El valor the Stop es: " + IsGrounded());
-        Debug.Log("El valor the Run es: " + moving);
 
         if (goingRight) {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);

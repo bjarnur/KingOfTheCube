@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         {
             if (this.tag == GameConstants.ARPLAYERTAG)  {
                 GetComponent<CharacterCtrl>().enabled = true;
+                GetComponent<Rigidbody>().useGravity = true;
             }
             else {
                 GetComponent<PlayerController_AssemCube>().enabled = true;
@@ -21,4 +23,15 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 	void Update () {
 		
 	}
+
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        if (stream.isWriting){
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+        }
+        else {
+            transform.localPosition = (Vector3)stream.ReceiveNext();
+            transform.localRotation = (Quaternion)stream.ReceiveNext();
+        }
+    }
 }
