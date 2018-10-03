@@ -5,10 +5,14 @@ using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		if(photonView.isMine)
-        {
+    void Awake()
+    {
+        
+    }
+
+    // Use this for initialization
+    void Start () {
+        if(photonView.isMine){
             if (this.tag == GameConstants.ARPLAYERTAG)  {
                 GetComponent<CharacterCtrl>().enabled = true;
                 GetComponent<Rigidbody>().useGravity = true;
@@ -17,6 +21,10 @@ public class NetworkPlayer : Photon.MonoBehaviour {
                 GetComponent<PlayerController_AssemCube>().enabled = true;
             }
         }
+        else {
+            this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
+        }
+
 	}
 	
 	// Update is called once per frame
