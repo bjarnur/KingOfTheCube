@@ -8,7 +8,12 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 	void Start () {
 		if(photonView.isMine)
         {
-            GetComponent<PlayerController_AssemCube>().enabled = true;
+            if (this.tag == GameConstants.ARPLAYERTAG)  {
+                GetComponent<CharacterCtrl>().enabled = true;
+            }
+            else {
+                GetComponent<PlayerController_AssemCube>().enabled = true;
+            }
         }
 	}
 	

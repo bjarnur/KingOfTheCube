@@ -7,6 +7,8 @@ TagManager:
   - Ladder
   - Floor
   - Rock
+  - ARPlayer
+  - UnityPlayer
   layers:
   - Default
   - TransparentFX
