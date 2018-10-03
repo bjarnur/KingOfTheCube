@@ -32,6 +32,6 @@ public class NetworkManager : MonoBehaviour {
 
         //Debug.Log("player count " + PhotonNetwork.playerList.Length);
         //Transform loc = garden.transform.GetChild(PhotonNetwork.playerList.Length);
-        PhotonNetwork.Instantiate("Player", spawn.position, Quaternion.identity, 0);        
+           
     }
 }

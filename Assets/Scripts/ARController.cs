@@ -13,7 +13,6 @@ public class ARController : MonoBehaviour
     public GameObject UIScanning;
     public GameObject UIWinning;
     public GameObject garden;
-    public GameObject playerOne;
     public GameObject king;
     public Transform world;
     public Transform unitCube;
@@ -22,10 +21,10 @@ public class ARController : MonoBehaviour
     private AugmentedImage KOTCImage = null;
     private Anchor KOTCAnchor = null;
 
-    private const float xBoundsMin = -1.55f;
-    private const float xBoundsMax = 1.55f;
-    private const float zBoundsMin = -1.55f;
-    private const float zBoundsMax = 1.55f;
+    private const float xBoundsMin = -1.6f;
+    private const float xBoundsMax = 1.6f;
+    private const float zBoundsMin = -1.6f;
+    private const float zBoundsMax = 1.6f;
 
     public void Start()
     {
@@ -98,7 +97,7 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().buildLevel();
 
                     readyPlayerOne();
-                    readyKing();
+                    //readyKing();
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
@@ -136,8 +135,6 @@ public class ARController : MonoBehaviour
             world.SetParent(null, true);
         }
     }
-
-    GameObject playerInstance;
     
     void readyPlayerOne()
     {
@@ -147,11 +144,21 @@ public class ARController : MonoBehaviour
         c.winText = UIWinning;
 
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);*/
+
+        var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, Vector3.zero, Quaternion.identity, 0); 
+        CharacterCtrl c = newPlayer.GetComponent<CharacterCtrl>();
+        Debug.Log(c);
+        c.world = world;
+        newPlayer.transform.SetParent(world, false);
+
+        c.winText = UIWinning;
+
+        newPlayer.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
     }
 
-    public void ResetPlayer()
+   /* public void ResetPlayer()
     {
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
     }
 
@@ -161,5 +168,5 @@ public class ARController : MonoBehaviour
         KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
         kCtrl.setPlayer(playerInstance);
         kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
-    }
+    }*/
 }

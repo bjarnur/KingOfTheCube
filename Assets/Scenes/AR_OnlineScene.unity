@@ -553,7 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: elBjarnacho
-  player: {fileID: 0}
+  player: {fileID: 1084817040065256, guid: ef906ce459e904228895c8535034a8ef, type: 2}
   garden: {fileID: 0}
   spawn: {fileID: 0}
 --- !u!4 &1011708845
@@ -742,7 +742,6 @@ MonoBehaviour:
   UIScanning: {fileID: 1782389318}
   UIWinning: {fileID: 2016045061}
   garden: {fileID: 1541667144648622, guid: 474618c9117ea4046b96628c9f349217, type: 2}
-  playerOne: {fileID: 1084817040065256, guid: 46878f5abf9932e4992f0ab914c97ab7, type: 2}
   king: {fileID: 1711386312576774, guid: db4c630a28ff84e42bf12e8c195fd14d, type: 2}
   world: {fileID: 343080613}
   unitCube: {fileID: 4107635161414470, guid: 2e6fb3d70a41d3a4eb5a81cf4497ebd5, type: 2}

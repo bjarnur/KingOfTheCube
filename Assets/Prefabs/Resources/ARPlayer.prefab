@@ -871,8 +871,8 @@ MonoBehaviour:
   jumpSpeed: 0.5
   world: {fileID: 0}
   winText: {fileID: 0}
-  xBounds: 1.55
-  zBounds: 1.55
+  xBounds: 1.6
+  zBounds: 1.6
   topCube: 3
   side: 2
   win: 0
