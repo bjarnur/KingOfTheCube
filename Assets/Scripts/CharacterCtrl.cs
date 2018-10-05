@@ -49,6 +49,11 @@ public class CharacterCtrl : MonoBehaviour {
         Unity functions
     \*********************/
 
+    void Awake()
+    {
+        transform.SetParent(GameObject.Find("WorldWrapper").transform);
+    }
+
     void Start () {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -112,6 +117,13 @@ public class CharacterCtrl : MonoBehaviour {
             animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
+        }
+
+        if (collision.gameObject.tag == GameConstants.ARPLAYERTAG)
+        {
+            var colliderOther = collision.gameObject.GetComponent<Collider>();
+            var colliderThis = GetComponent<Collider>();
+            Physics.IgnoreCollision(colliderOther, colliderThis, true);
         }
     }
 

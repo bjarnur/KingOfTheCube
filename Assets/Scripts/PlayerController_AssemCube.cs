@@ -29,6 +29,10 @@ public class PlayerController_AssemCube : MonoBehaviour {
     bool moving = false;
     bool goingRight = false;
     
+    void Awake()
+    {
+        transform.SetParent(GameObject.Find("Wrapper").transform);
+    }
 
     void Start ()
     {
@@ -197,6 +201,13 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
+        }
+        
+        if(collision.gameObject.tag == GameConstants.UNITYPLAYERTAG)
+        {
+            var colliderOther = collision.gameObject.GetComponent<Collider>();
+            var colliderThis = GetComponent<Collider>();
+            Physics.IgnoreCollision(colliderOther, colliderThis, true);
         }
     }
 
