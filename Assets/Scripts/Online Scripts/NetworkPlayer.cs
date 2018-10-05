@@ -5,34 +5,26 @@ using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
 
-
     bool isAlive = true;
     public Vector3 position;
     public Quaternion rotation;
     public float larpSmoothing = 10f;
     
-	void Start () {
-		if(photonView.isMine)
+    // Use this for initialization
+    void Start () {
+        if(photonView.isMine)
         {
             gameObject.name = "Local Player";
-            if (this.tag == GameConstants.ARPLAYERTAG)  {
-                GetComponent<CharacterCtrl>().enabled = true;
-                GetComponent<Rigidbody>().useGravity = true;
-            }
-            else {
-                GetComponent<PlayerController_AssemCube>().enabled = true;
-            }
+            //GetComponent<CharacterCtrl>().enabled = true;
+            GetComponent<PlayerController_AssemCube>().enabled = true;
+            GetComponent<Rigidbody>().useGravity = true;
         }
         else
         {
             gameObject.name = "Network Player";
             StartCoroutine("Alive");
+            //this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
@@ -46,6 +38,8 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         }
     }
 
+    /*
+     For smooth transistion of networked players */
     IEnumerator Alive()
     {
         while(isAlive)
