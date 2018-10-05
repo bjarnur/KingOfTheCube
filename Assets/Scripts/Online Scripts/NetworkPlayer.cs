@@ -5,10 +5,16 @@ using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
 
-	// Use this for initialization
+
+    bool isAlive = true;
+    public Vector3 position;
+    public Quaternion rotation;
+    public float larpSmoothing = 10f;
+    
 	void Start () {
 		if(photonView.isMine)
         {
+            gameObject.name = "Local Player";
             if (this.tag == GameConstants.ARPLAYERTAG)  {
                 GetComponent<CharacterCtrl>().enabled = true;
                 GetComponent<Rigidbody>().useGravity = true;
@@ -16,6 +22,11 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             else {
                 GetComponent<PlayerController_AssemCube>().enabled = true;
             }
+        }
+        else
+        {
+            gameObject.name = "Network Player";
+            StartCoroutine("Alive");
         }
 	}
 	
@@ -30,8 +41,19 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             stream.SendNext(transform.rotation);
         }
         else {
-            transform.localPosition = (Vector3)stream.ReceiveNext();
-            transform.localRotation = (Quaternion)stream.ReceiveNext();
+            position = (Vector3)stream.ReceiveNext();
+            rotation = (Quaternion)stream.ReceiveNext();
+        }
+    }
+
+    IEnumerator Alive()
+    {
+        while(isAlive)
+        {
+            transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * larpSmoothing);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * larpSmoothing);
+
+            yield return null;
         }
     }
 }

@@ -810,7 +810,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 80
@@ -865,7 +865,7 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 4623687108526630}
+  - {fileID: 114952326556337214}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

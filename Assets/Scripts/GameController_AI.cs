@@ -27,7 +27,7 @@ public class GameController_AI : MonoBehaviour {
     void readyPlayerOne()
     {
         //GameObject player = Instantiate(playerOne, new Vector3(15.5f, 2.5f, 15.5f), Quaternion.identity, world);
-        playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
-        playerOne.SetActive(true);
+        //playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
+        //playerOne.SetActive(true);
     }  
 }
