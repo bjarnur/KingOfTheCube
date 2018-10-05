@@ -13,6 +13,7 @@ public class CharacterCtrl : MonoBehaviour {
     public float jumpSpeed = 0.9f;
     public Transform world;
     public GameObject winText;
+    public GameConstants.AnimationTypes currentAnimation; 
 
     public float xBounds = 1.6f;
     public float zBounds = 1.6f;
@@ -350,11 +351,13 @@ public class CharacterCtrl : MonoBehaviour {
             {
                 animator.SetBool("Run", true);
                 animator.SetBool("Stop", false);
+                currentAnimation = GameConstants.AnimationTypes.running;
             }
             else
             {
                 animator.SetBool("Run", false);
                 animator.SetBool("Stop", true);
+                currentAnimation = GameConstants.AnimationTypes.stopped;
             }
 
         }
@@ -364,14 +367,17 @@ public class CharacterCtrl : MonoBehaviour {
             if (climbing){
                 animator.SetBool("Climb", true);
                 animator.SetBool("Jump", false);
+                currentAnimation = GameConstants.AnimationTypes.climbing;
             }
             else if (jumping)
             {
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
+                currentAnimation = GameConstants.AnimationTypes.jumping;
             }
             else {
                 animator.SetBool("Fall", true);
+                currentAnimation = GameConstants.AnimationTypes.falling;
             }
         }
     }

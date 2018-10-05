@@ -885,6 +885,7 @@ MonoBehaviour:
   speed: 7
   jumpSpeed: 5
   winText: {fileID: 0}
+  currentAnimation: 0
   side: 0
   win: 0
 --- !u!114 &114952326556337214
@@ -898,6 +899,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 990c5868e8b57cc47af64fcfe0680335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  larpSmoothing: 10
+  currentAnimation: 0
 --- !u!137 &137321340268926368
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

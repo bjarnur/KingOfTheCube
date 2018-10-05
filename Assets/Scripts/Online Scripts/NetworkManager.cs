@@ -29,10 +29,12 @@ public class NetworkManager : MonoBehaviour {
 	void OnJoinedRoom()
     {
         Debug.Log("JOINING ROOM");
-
-        //Debug.Log("player count " + PhotonNetwork.playerList.Length);
-        //Transform loc = garden.transform.GetChild(PhotonNetwork.playerList.Length);
-           
+        
+        //TODO Remove the code below when running AR 
+        var newPlayer = PhotonNetwork.Instantiate("UnityPlayer", Vector3.zero, Quaternion.identity, 0);
+        newPlayer.GetComponent<Rigidbody>().useGravity = true;
+        PlayerController_AssemCube c = newPlayer.GetComponent<PlayerController_AssemCube>();
+        c.enabled = true;        
     }
 
 }

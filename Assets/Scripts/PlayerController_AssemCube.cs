@@ -8,6 +8,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public float speed = 1f;
     public float jumpSpeed = 5f;
     public GameObject winText;
+    public GameConstants.AnimationTypes currentAnimation;
 
     [HideInInspector]
     public int side = 0;
@@ -60,8 +61,10 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
         // Animate
         bool running = mov != 0f;
-        animator.SetBool("Run", running);
+        moving = running;
 
+        //animator.SetBool("Run", running);
+        TriggerAnimations();
     }
 
     void MovePlayer(float mov)
@@ -162,6 +165,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
@@ -175,6 +179,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder exit");
@@ -186,6 +191,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        if (!isActiveAndEnabled) return;
         if (collision.gameObject.CompareTag("Floor"))
         {
             grounded = true;
@@ -213,11 +219,13 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnCollisionExit(Collision collision)
     {
+        if (!isActiveAndEnabled) return;        
         if (collision.gameObject.CompareTag("Floor"))
         {
+            Debug.Log("Exiting floor");
             grounded = false;
         }
-        TriggerAnimations();
+        TriggerAnimations();        
     }
 
     IEnumerator Dying()
@@ -266,6 +274,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void TriggerAnimations()
     {
+        if (!isActiveAndEnabled) return;
         if (goingRight)
         {
             //transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
@@ -281,28 +290,31 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetBool("Climb", false);
             animator.SetBool("Jump", false);
             if (moving)
-            {
-                //animator.SetBool("Run", true);
-                //animator.SetBool("Stop", false);
+            {                
+                animator.SetBool("Run", true);
+                currentAnimation = GameConstants.AnimationTypes.running;                
             }
             else
             {
-                //animator.SetBool("Run", false);
-                //animator.SetBool("Stop", true);
+                animator.SetBool("Run", false);
+                currentAnimation = GameConstants.AnimationTypes.stopped;
             }
         }
         else if (climbing)
         {
             animator.SetBool("Climb", true);
             animator.SetBool("Jump", false);
+            currentAnimation = GameConstants.AnimationTypes.climbing;
         }
         else if (jumping)
         {
             animator.SetBool("Jump", true);
+            currentAnimation = GameConstants.AnimationTypes.jumping;
         }
         else if (!grounded)
         {
             animator.SetBool("Fall", true);
+            currentAnimation = GameConstants.AnimationTypes.falling;
         }
     }
 
