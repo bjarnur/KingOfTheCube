@@ -9,7 +9,6 @@ public class NetworkManager : MonoBehaviour {
     public string roomName = "myRoom";
     public GameObject player;
     public GameObject garden;
-    public Transform spawn;
     //public string playerPrefabName = "character";
 
 	// Use this for initialization
@@ -29,12 +28,18 @@ public class NetworkManager : MonoBehaviour {
 	void OnJoinedRoom()
     {
         Debug.Log("JOINING ROOM");
-        
+
         //TODO Remove the code below when running AR 
+        int numberOfPlayers = PhotonNetwork.countOfPlayers;
+        Vector3 spawn = GameObject.FindWithTag("Cube").GetComponent<LevelInstatiator>().instantiateSpawnPoint(numberOfPlayers);
+
         var newPlayer = PhotonNetwork.Instantiate("UnityPlayer", Vector3.zero, Quaternion.identity, 0);
+        newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
+        newPlayer.transform.localPosition = spawn;
+        
         newPlayer.GetComponent<Rigidbody>().useGravity = true;
         PlayerController_AssemCube c = newPlayer.GetComponent<PlayerController_AssemCube>();
-        c.enabled = true;        
+        c.enabled = true;                
     }
 
 }

@@ -46,8 +46,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
         topCube = 30f;
 
         // Move player to initial position
-        transform.position = new Vector3(16f, 2.5f, zBounds);
-        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        //transform.position = new Vector3(16f, 2.5f, zBounds);
+        //transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
     }
 

@@ -52,7 +52,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void Awake()
     {
-        transform.SetParent(GameObject.Find("WorldWrapper").transform);
+        transform.SetParent(GameObject.Find("WorldContainer").transform, false);
     }
 
     void Start () {
@@ -89,6 +89,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
@@ -102,6 +103,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder exit");
@@ -112,6 +114,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        if (!isActiveAndEnabled) return;
         if (collision.gameObject.tag == "Rock" && !dead)
         {
             Debug.Log("Killing character");
@@ -334,7 +337,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     void TriggerAnimations()
     {
-
+        if (!isActiveAndEnabled) return;
         if (goingRight) {
             transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
         }

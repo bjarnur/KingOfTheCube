@@ -9,6 +9,7 @@ TagManager:
   - Rock
   - ARPlayer
   - UnityPlayer
+  - Cube
   layers:
   - Default
   - TransparentFX

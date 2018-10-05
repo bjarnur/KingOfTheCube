@@ -32,6 +32,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         //GetComponent<CharacterCtrl>().enabled = true;        
         if (stream.isWriting){
             var controller = GetComponent<PlayerController_AssemCube>();
+            //var controller = GetComponent<CharacterCtrl>();
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
             stream.SendNext(controller.currentAnimation);
@@ -89,8 +90,8 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     {
         while(isAlive)
         {
-            transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * larpSmoothing);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * larpSmoothing);
+            transform.localPosition = Vector3.Lerp(transform.position, position, Time.deltaTime * larpSmoothing);
+            transform.localRotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * larpSmoothing);
 
             yield return null;
         }
