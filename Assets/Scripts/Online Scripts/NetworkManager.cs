@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
 
+    //TODO Some cleanup, constants for strings, and so on.. 
+
     private int playerNumber = 1;
     const string VERSION = "0.0.1";
     public string roomName = "myRoom";
-    public GameObject player;
-    public GameObject garden;
     //public string playerPrefabName = "character";
 
 	// Use this for initialization
@@ -27,9 +27,10 @@ public class NetworkManager : MonoBehaviour {
 	
 	void OnJoinedRoom()
     {
-        Debug.Log("JOINING ROOM");
 
-        //TODO Remove the code below when running AR 
+        Debug.Log("JOINING ROOM");
+        //TODO Only need the code below when running VR (need a permanent solution for this)
+        /*        
         int numberOfPlayers = PhotonNetwork.countOfPlayers;
         Vector3 spawn = GameObject.FindWithTag("Cube").GetComponent<LevelInstatiator>().instantiateSpawnPoint(numberOfPlayers);
 
@@ -39,7 +40,8 @@ public class NetworkManager : MonoBehaviour {
         
         newPlayer.GetComponent<Rigidbody>().useGravity = true;
         PlayerController_AssemCube c = newPlayer.GetComponent<PlayerController_AssemCube>();
-        c.enabled = true;                
+        c.enabled = true;
+        */
     }
 
 }

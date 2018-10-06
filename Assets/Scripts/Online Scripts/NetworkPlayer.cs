@@ -5,6 +5,8 @@ using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
 
+    //TODO: Some cleanup, practical way of switching between AR and VR multiplayer
+
     bool isAlive = true;
     public Vector3 position;
     public Quaternion rotation;
@@ -14,10 +16,11 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     // Use this for initialization
     void Start () {
         if(photonView.isMine)
-        {
+        {            
             gameObject.name = "Local Player";
-            //GetComponent<CharacterCtrl>().enabled = true;
-            GetComponent<PlayerController_AssemCube>().enabled = true;
+            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
+            //GetComponent<PlayerController_AssemCube>().enabled = true;
+            GetComponent<CharacterCtrl>().enabled = true;            
             GetComponent<Rigidbody>().useGravity = true;
         }
         else
@@ -31,10 +34,11 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         //GetComponent<CharacterCtrl>().enabled = true;        
         if (stream.isWriting){
-            var controller = GetComponent<PlayerController_AssemCube>();
-            //var controller = GetComponent<CharacterCtrl>();
-            stream.SendNext(transform.position);
-            stream.SendNext(transform.rotation);
+            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
+            //var controller = GetComponent<PlayerController_AssemCube>();
+            var controller = GetComponent<CharacterCtrl>();
+            stream.SendNext(transform.localPosition);
+            stream.SendNext(transform.localRotation);
             stream.SendNext(controller.currentAnimation);
         }
         else {
@@ -90,8 +94,8 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     {
         while(isAlive)
         {
-            transform.localPosition = Vector3.Lerp(transform.position, position, Time.deltaTime * larpSmoothing);
-            transform.localRotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * larpSmoothing);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, rotation, Time.deltaTime * larpSmoothing);
 
             yield return null;
         }

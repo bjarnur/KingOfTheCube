@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -534,9 +534,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1011708845}
   - component: {fileID: 1011708844}
-  - component: {fileID: 1011708846}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,9 +553,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: elBjarnacho
-  player: {fileID: 1084817040065256, guid: ef906ce459e904228895c8535034a8ef, type: 2}
-  garden: {fileID: 0}
-  spawn: {fileID: 0}
 --- !u!4 &1011708845
 Transform:
   m_ObjectHideFlags: 0
@@ -570,18 +566,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1011708846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1011708843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86b7299f39e15407c9100c05572b3d4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  worldContainer: {fileID: 343080613}
 --- !u!1 &1270585008
 GameObject:
   m_ObjectHideFlags: 0
