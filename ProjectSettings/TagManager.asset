@@ -10,6 +10,8 @@ TagManager:
   - ARPlayer
   - UnityPlayer
   - Cube
+  - ARController
+  - LevelBuilder
   layers:
   - Default
   - TransparentFX

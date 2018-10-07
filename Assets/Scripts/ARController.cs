@@ -143,17 +143,18 @@ public class ARController : MonoBehaviour
         c.world = world;
         c.winText = UIWinning;
 
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);*/
-
+        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);*/        
         var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, Vector3.zero, Quaternion.identity, 0); 
         CharacterCtrl c = newPlayer.GetComponent<CharacterCtrl>();
-        Debug.Log(c);
-        c.world = world;
+
+        int numberOfPlayers = PhotonNetwork.countOfPlayers;
+        Vector3 spawn = GameObject.FindWithTag("LevelBuilder").GetComponent<LevelInstatiator>().instantiateSpawnPoint(numberOfPlayers);
+
         newPlayer.transform.SetParent(world, false);
+        newPlayer.transform.localPosition = spawn;
 
         c.winText = UIWinning;
-
-        newPlayer.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
+        c.world = world;
     }
 
    /* public void ResetPlayer()
