@@ -146,12 +146,11 @@ public class ARController : MonoBehaviour
         c.world = world;
         c.winText = UIWinning;
 
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
+        ResetPlayer();
     }
 
     public void ResetPlayer()
     {
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
     }
 
@@ -160,6 +159,7 @@ public class ARController : MonoBehaviour
         GameObject kingInstance = Instantiate(king, world, false);
         KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
         kCtrl.setPlayer(playerInstance);
+        kCtrl.world = world;
         kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 }

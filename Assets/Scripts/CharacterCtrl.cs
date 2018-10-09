@@ -14,9 +14,9 @@ public class CharacterCtrl : MonoBehaviour {
     public Transform world;
     public GameObject winText;
 
-    public float xBounds = 1.55f;
-    public float zBounds = 1.55f;
-    public float topCube = 3.0f;
+    float xBounds = 1.63f;
+    float zBounds = 1.63f;
+    float topCube = 3.0f;
 
     [HideInInspector]
     public int side = 2;
@@ -74,6 +74,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     public void Reset()
     {
+        transform.localPosition = new Vector3(xBounds, 0.1f, zBounds);
         climbing = false;
         moving = false;
         goingRight = false;

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,8 @@ public class KingController_AR : MonoBehaviour {
     public bool isAI;
     public GameObject rockPrefab;
     public GameObject hand;
+    [HideInInspector]
+    public Transform world;
 
     GameObject player;
     GameObject rockInstance;
@@ -18,7 +20,7 @@ public class KingController_AR : MonoBehaviour {
 
     float xBounds, zBounds;
     int side = 2;
-    float angle = 0;
+    float angle = 180;
     bool throwing = false;
     bool dead = false;
 
@@ -34,7 +36,7 @@ public class KingController_AR : MonoBehaviour {
         zBounds = 1.3f;
 
         // Move king to initial position
-        transform.localPosition = new Vector3(0f, 3f, xBounds); 
+        transform.localPosition = new Vector3(zBounds / 2f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
         rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
@@ -98,6 +100,40 @@ public class KingController_AR : MonoBehaviour {
         return dx;
     }
 
+    Vector3 getDirection(bool local = false)
+    {
+        if (local)
+        {
+            switch (side)
+            {
+                case 0:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 1:
+                    return world.worldToLocalMatrix.MultiplyVector(world.forward);
+                case 2:
+                    return world.worldToLocalMatrix.MultiplyVector(world.right);
+                case 3:
+                    return -world.worldToLocalMatrix.MultiplyVector(world.forward);
+            }
+        }
+        else
+        {
+            switch (side)
+            {
+                case 0:
+                    return -world.right;
+                case 1:
+                    return world.forward;
+                case 2:
+                    return world.right;
+                case 3:
+                    return -world.forward;
+            }
+        }
+
+        return Vector3.zero;
+    }
+
     int FollowPlayer(int playerSide)
     {
         if (side == playerSide)
@@ -128,34 +164,27 @@ public class KingController_AR : MonoBehaviour {
 
     void MoveKing(float mov)
     {
-        // Check boundaries and change side if needed
-        CheckBounds();
-
         // Set movement into correct axis
-        switch (side)
-        {
-            case 0:
-                movement.Set(-mov, 0.0f, 0.0f);
-                break;
-            case 1:
-                movement.Set(0.0f, 0.0f, mov);
-                break;
-            case 2:
-                movement.Set(mov, 0.0f, 0.0f);
-                break;
-            case 3:
-                movement.Set(0.0f, 0.0f, -mov);
-                break;
-        }
-        movement = movement.normalized * speed * Time.deltaTime;
+        movement = (mov * getDirection(true)).normalized * speed * Time.deltaTime;
         //rb.MovePosition(transform.position + movement);
         transform.localPosition += movement;
+
+        // Check boundaries and change side if needed
+        CheckBounds();
 
         // Rotation
         if (mov != 0) // Follow the direction of motion
         {
-            Quaternion newRotation = Quaternion.LookRotation(movement);
-            rb.MoveRotation(newRotation);
+            /*Quaternion newRotation = Quaternion.LookRotation(getDirection(true));
+            rb.MoveRotation(newRotation);*/
+            if (mov == 1f)
+            {
+                transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
+            }
+            else
+            {
+                transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
+            }
         }
         else // Face the edge of the cube
         {
