@@ -49,8 +49,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         }
     }
 
-    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animation)
-    {
+    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animation) {
         Debug.Log(animation);
         switch (animation)
         {
