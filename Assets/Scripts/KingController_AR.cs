@@ -40,8 +40,7 @@ public class KingController_AR : MonoBehaviour {
         rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
-    public void setPlayer(GameObject player)
-    {
+    public void setPlayer(GameObject player) {
         this.player = player;
     }
 
@@ -98,10 +97,8 @@ public class KingController_AR : MonoBehaviour {
         return dx;
     }
 
-    int FollowPlayer(int playerSide)
-    {
-        if (side == playerSide)
-        {
+    int FollowPlayer(int playerSide) {
+        if (side == playerSide) {
             // Throw randomly if it's in the same side as the player
             float th = Random.Range(0.0f, 1.0f);
             if (th < 0.01 && !throwing)
@@ -132,8 +129,7 @@ public class KingController_AR : MonoBehaviour {
         CheckBounds();
 
         // Set movement into correct axis
-        switch (side)
-        {
+        switch (side) {
             case 0:
                 movement.Set(-mov, 0.0f, 0.0f);
                 break;

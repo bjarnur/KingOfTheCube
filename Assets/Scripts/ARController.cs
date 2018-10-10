@@ -29,13 +29,11 @@ public class ARController : MonoBehaviour
     private const float zBoundsMin = -1.6f;
     private const float zBoundsMax = 1.6f;
 
-    public void Start()
-    {
+    public void Start() {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    public void Update()
-    {
+    public void Update() {
         // Exit the app when the 'back' button is pressed.
         if (Input.GetKey(KeyCode.Escape))
         {
@@ -51,10 +49,8 @@ public class ARController : MonoBehaviour
         // Get updated augmented images for this frame.
         Session.GetTrackables<AugmentedImage>(m_AugmentedImages, TrackableQueryFilter.Updated);
 
-        foreach (var image in m_AugmentedImages)
-        {
-            switch (image.DatabaseIndex)
-            {
+        foreach (var image in m_AugmentedImages) {
+            switch (image.DatabaseIndex) {
             /*case 0: // The old ugly and bad and simple KOTC Marker
                 if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
                 {
@@ -85,8 +81,7 @@ public class ARController : MonoBehaviour
             case 0:
             case 1: // The new wonderful but which could be improved KOTC Marker (but in Black & White)
             case 2: // The amazing and beautiful (but which could still be improved) KOTC Marker
-                if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
-                {
+                if (image.TrackingState == TrackingState.Tracking && KOTCImage == null) {
                     Debug.Log("Tracking OK");
                     KOTCImage = image;
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
@@ -109,8 +104,7 @@ public class ARController : MonoBehaviour
                         readyMutiplayer();
                     }
                 }
-                else if (image.TrackingState == TrackingState.Stopped)
-                {
+                else if (image.TrackingState == TrackingState.Stopped) {
                     Debug.Log("Tracking Stopped");
                     world.SetParent(null, true);
 
@@ -132,16 +126,14 @@ public class ARController : MonoBehaviour
         }
     }
 
-    public void ToggleWorldLock()
-    {
-        if(world.parent == null)
-        {
+    public void ToggleWorldLock() {
+        if(world.parent == null) {
             world.parent = KOTCAnchor.transform;
             world.localPosition = Vector3.zero;
             world.localRotation = Quaternion.identity;
             world.localScale = Vector3.one * 0.1f;
-        } else
-        {
+        } 
+        else {
             world.SetParent(null, true);
         }
     }
