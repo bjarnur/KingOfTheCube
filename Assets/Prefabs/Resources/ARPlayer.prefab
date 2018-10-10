@@ -851,11 +851,16 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1084817040065256}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 990c5868e8b57cc47af64fcfe0680335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  larpSmoothing: 10
+  currentAnimation: 0
+  isAR: 1
 --- !u!114 &114418275220788004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -867,15 +872,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92422df305e791542960084ab0d44e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
-  jumpSpeed: 0.5
+  speed: 0.17
+  jumpSpeed: 0.9
   world: {fileID: 0}
   winText: {fileID: 0}
+  currentAnimation: 0
   xBounds: 1.6
   zBounds: 1.6
   topCube: 3
   side: 2
   win: 0
+  isMultiplayer: 0
 --- !u!114 &114747229779192852
 MonoBehaviour:
   m_ObjectHideFlags: 1

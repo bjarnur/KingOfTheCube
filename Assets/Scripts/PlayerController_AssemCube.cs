@@ -9,11 +9,12 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public float jumpSpeed = 5f;
     public GameObject winText;
     public GameConstants.AnimationTypes currentAnimation;
+    public bool isMultiplayer = true;
 
     [HideInInspector]
     public int side = 0;
     [HideInInspector]
-    public bool win = false;
+    public bool win = false;    
 
     Vector3 movement;
     Animator animator;
@@ -32,7 +33,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
     
     void Awake()
     {
-        transform.SetParent(GameObject.Find("Wrapper").transform);
+        if(isMultiplayer)
+            transform.SetParent(GameObject.Find("Wrapper").transform);
     }
 
     void Start ()

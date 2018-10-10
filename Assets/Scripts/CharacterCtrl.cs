@@ -17,12 +17,14 @@ public class CharacterCtrl : MonoBehaviour {
 
     public float xBounds = 1.6f;
     public float zBounds = 1.6f;
-    public float topCube = 3.0f;
+    public float topCube = 3.0f;    
 
     [HideInInspector]
     public int side = 2;
     [HideInInspector]
     public bool win = false;
+    [HideInInspector]
+    public bool isMultiplayer = false;
 
     /*********************\
         Private fields

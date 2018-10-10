@@ -6,6 +6,7 @@ public class GameController_AI : MonoBehaviour {
 
     public Transform world;
     public GameObject playerOne;
+    public bool isMultiplayer;
 
     const float xBoundsMin = -15.5f;
     const float xBoundsMax = 15.5f;
@@ -13,11 +14,13 @@ public class GameController_AI : MonoBehaviour {
     const float zBoundsMax = 15.5f;
 
     // Use this for initialization
-    void Start () {
-        
-        //Instantiate player
-        readyPlayerOne();
+    void Start ()
+    {        
         GetComponent<LevelInstatiator>().buildLevel();
+        if(!isMultiplayer)
+        {
+            readyPlayerOne();
+        }
     }
 
     /*********************************\
@@ -26,6 +29,8 @@ public class GameController_AI : MonoBehaviour {
    
     void readyPlayerOne()
     {
+        playerOne.GetComponent<NetworkPlayer>().StopCoroutine("UpdateNetworked");
+        playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
         //GameObject player = Instantiate(playerOne, new Vector3(15.5f, 2.5f, 15.5f), Quaternion.identity, world);
         //playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
         //playerOne.SetActive(true);

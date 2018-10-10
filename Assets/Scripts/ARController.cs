@@ -14,12 +14,15 @@ public class ARController : MonoBehaviour
     public GameObject UIWinning;
     public GameObject garden;
     public GameObject king;
+    public GameObject playerOne;    
     public Transform world;
     public Transform unitCube;
+    public bool isMultiplaer;
 
     private List<AugmentedImage> m_AugmentedImages = new List<AugmentedImage>();
     private AugmentedImage KOTCImage = null;
     private Anchor KOTCAnchor = null;
+    private GameObject playerInstance;
 
     private const float xBoundsMin = -1.6f;
     private const float xBoundsMax = 1.6f;
@@ -89,15 +92,22 @@ public class ARController : MonoBehaviour
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
                     world.SetParent(KOTCAnchor.transform, false);
-                    world.localPosition -= world.up * 0.5f;
+                    //world.localPosition -= world.up * 0.5f;
                     Transform gardenObj = Instantiate(garden).transform;
                     gardenObj.SetParent(world.transform, false);
 
                     GetComponent<LevelInstatiator>().world = world;
                     GetComponent<LevelInstatiator>().buildLevel();
 
-                    readyPlayerOne();
-                    //readyKing();
+                    if (!isMultiplaer)
+                    { 
+                        readyPlayerOne();
+                        readyKing();
+                    }
+                    else
+                    {
+                        readyMutiplayer();
+                    }
                 }
                 else if (image.TrackingState == TrackingState.Stopped)
                 {
@@ -138,26 +148,48 @@ public class ARController : MonoBehaviour
     
     void readyPlayerOne()
     {
-        /*playerInstance = Instantiate(playerOne, world, false);
-        CharacterCtrl c = playerInstance.GetComponent<CharacterCtrl>();
-        c.world = world;
-        c.winText = UIWinning;
+        playerInstance = Instantiate(playerOne, world, false);        
+        CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+        NetworkPlayer networkPlayer = playerInstance.GetComponent<NetworkPlayer>();
+        Rigidbody playerRigidbody = playerInstance.GetComponent<Rigidbody>();
 
-        playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.1f, 0.1f, zBoundsMin);*/        
-        var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, Vector3.zero, Quaternion.identity, 0); 
-        CharacterCtrl c = newPlayer.GetComponent<CharacterCtrl>();
+        networkPlayer.StopCoroutine("UpdateNetworked");
+        networkPlayer.enabled = false;
+        controller.enabled = true;
+        controller.world = world;
+        controller.winText = UIWinning;        
+        playerRigidbody.useGravity = true;
 
+        ResetPlayer();
+    }
+
+    void readyMutiplayer()
+    {
         int numberOfPlayers = PhotonNetwork.countOfPlayers;
-        Vector3 spawn = GameObject.FindWithTag("LevelBuilder").GetComponent<LevelInstatiator>().instantiateSpawnPoint(numberOfPlayers);
+        Vector3 spawn = GameObject.FindWithTag("LevelBuilder")
+                        .GetComponent<LevelInstatiator>()
+                        .instantiateSpawnPoint(numberOfPlayers);
+
+        var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, 
+                                                Vector3.zero, Quaternion.identity, 0);
+
+        CharacterCtrl controller = newPlayer.GetComponent<CharacterCtrl>();
+        NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
+        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
+
+        networkPlayer.enabled = true;
+        //networkPlayer.StopCoroutine("UpdateNetworked");
+        controller.enabled = true;
+        controller.winText = UIWinning;
+        controller.world = world;
+        controller.isMultiplayer = true;        
+        playerRigidbody.useGravity = true;
 
         newPlayer.transform.SetParent(world, false);
         newPlayer.transform.localPosition = spawn;
-
-        c.winText = UIWinning;
-        c.world = world;
     }
 
-   /* public void ResetPlayer()
+   public void ResetPlayer()
     {
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
         playerInstance.GetComponent<CharacterCtrl>().Reset();
@@ -169,5 +201,5 @@ public class ARController : MonoBehaviour
         KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
         kCtrl.setPlayer(playerInstance);
         kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
-    }*/
+    }
 }

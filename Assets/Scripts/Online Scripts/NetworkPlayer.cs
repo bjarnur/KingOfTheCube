@@ -4,42 +4,39 @@ using UnityEngine;
 using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
-
-    //TODO: Some cleanup, practical way of switching between AR and VR multiplayer
-
+    
     bool isAlive = true;
     public Vector3 position;
     public Quaternion rotation;
     public float larpSmoothing = 10f;
     public GameConstants.AnimationTypes currentAnimation;
+    public bool isAR = false;
 
-    // Use this for initialization
-    void Start () {
+    void Awake () {
         if(photonView.isMine)
         {            
             gameObject.name = "Local Player";
-            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
-            //GetComponent<PlayerController_AssemCube>().enabled = true;
-            GetComponent<CharacterCtrl>().enabled = true;            
-            GetComponent<Rigidbody>().useGravity = true;
         }
         else
         {
             gameObject.name = "Network Player";
-            StartCoroutine("Alive");
-            //this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
+            StartCoroutine("UpdateNetworked");
         }
 	}
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-        //GetComponent<CharacterCtrl>().enabled = true;        
+
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {     
         if (stream.isWriting){
-            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
-            //var controller = GetComponent<PlayerController_AssemCube>();
-            var controller = GetComponent<CharacterCtrl>();
             stream.SendNext(transform.localPosition);
             stream.SendNext(transform.localRotation);
-            stream.SendNext(controller.currentAnimation);
+            if(isAR)
+            {
+                stream.SendNext(GetComponent<CharacterCtrl>().currentAnimation);
+            }            
+            else
+            {
+                stream.SendNext(GetComponent<PlayerController_AssemCube>().currentAnimation);
+            }
         }
         else {
             position = (Vector3)stream.ReceiveNext();
@@ -90,13 +87,12 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
     /*
      For smooth transistion of networked players */
-    IEnumerator Alive()
+    IEnumerator UpdateNetworked()
     {
         while(isAlive)
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
             transform.localRotation = Quaternion.Lerp(transform.localRotation, rotation, Time.deltaTime * larpSmoothing);
-
             yield return null;
         }
     }

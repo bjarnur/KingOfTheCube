@@ -154,9 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: myRoom
-  player: {fileID: 1510283791401594, guid: e6ea37055f0990d48a5eaba54c213b77, type: 2}
-  garden: {fileID: 2122926092}
-  spawn: {fileID: 527262765}
+  isAR: 0
 --- !u!1 &464203989
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +479,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 1a43f7d46268042bda308b369b0971be, type: 3}
+      propertyPath: m_TagString
+      value: Cube
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a43f7d46268042bda308b369b0971be, type: 3}
   m_IsPrefabAsset: 0
@@ -697,6 +699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 2122926094}
   playerOne: {fileID: 1510283791401594, guid: e6ea37055f0990d48a5eaba54c213b77, type: 2}
+  isMultiplayer: 1
 --- !u!4 &2122926094 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 1a43f7d46268042bda308b369b0971be,
