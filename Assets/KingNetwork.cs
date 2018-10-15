@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 
-public class KingNetwork : Photon.MonoBehaviour {
+public class KingNetwork : Photon.MonoBehaviour
+{
 
     bool isAlive = true;
     public Vector3 position;
@@ -11,33 +12,39 @@ public class KingNetwork : Photon.MonoBehaviour {
     public float larpSmoothing = 10f;
     public GameConstants.AnimationTypes currentAnimation;
 
-	// Use this for initialization
-	void Start () {
-        if (photonView.isMine) {
+    // Use this for initialization
+    void Start()
+    {
+        if (photonView.isMine)
+        {
             gameObject.name = "Local King";
             //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
             //GetComponent<PlayerController_AssemCube>().enabled = true;
             GetComponent<CharacterCtrl>().enabled = true;
             GetComponent<Rigidbody>().useGravity = true;
         }
-        else {
+        else
+        {
             gameObject.name = "Network King";
-            StartCoroutine("Alive");
+            StartCoroutine("UpdateNetworked");
             //this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
 
-    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
         //GetComponent<CharacterCtrl>().enabled = true;        
-        if (stream.isWriting) {
+        if (stream.isWriting)
+        {
             //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
             //var controller = GetComponent<PlayerController_AssemCube>();
-            var controller = GetComponent<CharacterCtrl>();
+            var controller = GetComponent<KingController_AR>();
             stream.SendNext(transform.localPosition);
             stream.SendNext(transform.localRotation);
             stream.SendNext(controller.currentAnimation);
@@ -51,39 +58,39 @@ public class KingNetwork : Photon.MonoBehaviour {
         }
     }
 
-    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animation)
+    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animationState)
     {
-        Debug.Log(animation);
-        switch (animation)
+        Debug.Log(animationState);
+        switch (animationState)
         {
             case GameConstants.AnimationTypes.stopped:
-                animator.SetBool("Run", false);
-                animator.SetBool("Stop", true);
+                animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
+                animator.SetBool(GameConstants.AnimationNames.stopAnimation, true);
                 break;
             case GameConstants.AnimationTypes.running:
-                animator.SetBool("Fall", false);
-                animator.SetBool("Climb", false);
-                animator.SetBool("Jump", false);
-                animator.SetBool("Stop", false);
-                animator.SetBool("Run", true);
+                animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
+                animator.SetBool(GameConstants.AnimationNames.stopAnimation, true);
                 break;
-            case GameConstants.AnimationTypes.jumping:
-                animator.SetBool("Run", false);
-                animator.SetBool("Stop", false);
-                animator.SetBool("Run", false);
-                animator.SetBool("Jump", true);
+            case GameConstants.AnimationTypes.throwing:
+                animator.SetBool(GameConstants.AnimationNames.throwAnimation, true);
+                animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
+                animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
+                if (!photonView.isMine) {
+                    GetComponent<KingController_AR>().ThrowObject();
+                }
                 break;
-            case GameConstants.AnimationTypes.climbing:
-                animator.SetBool("Run", false);
-                animator.SetBool("Stop", false);
-                animator.SetBool("Climb", true);
-                animator.SetBool("Jump", false);
-                break;
-            case GameConstants.AnimationTypes.falling:
-                animator.SetBool("Run", false);
-                animator.SetBool("Stop", false);
-                animator.SetBool("Fall", true);
-                break;
+        }
+    }
+
+    /*
+     For smooth transistion of networked players */
+    IEnumerator UpdateNetworked()
+    {
+        while (true)
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, rotation, Time.deltaTime * larpSmoothing);
+            yield return null;
         }
     }
 }

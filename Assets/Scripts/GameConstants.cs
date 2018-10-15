@@ -11,6 +11,14 @@ public static class GameConstants  {
 
     public enum AnimationTypes
     {
-        stopped, running, jumping, falling, climbing
+        stopped, running, jumping, falling, climbing, throwing
     };
+
+    internal static class AnimationNames {
+        public const string throwAnimation = "Throw";
+        public const string jumpAnimation = "Jump";
+        public const string fallAnimation = "Fall";
+        public const string runAnimation = "Run";
+        public const string stopAnimation = "Stop";
+    }
 }

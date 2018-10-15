@@ -14,6 +14,7 @@ public class KingController_AR : MonoBehaviour {
 
     Vector3 movement;
     Animator anim;
+    public GameConstants.AnimationTypes currentAnimation; 
     Rigidbody rb;
 
     float xBounds, zBounds;
@@ -196,7 +197,7 @@ public class KingController_AR : MonoBehaviour {
         throwing = true;
     }
 
-    void ThrowObject() 
+    public void  ThrowObject() 
     {
         rockInstance.transform.position = hand.transform.position;
         rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
