@@ -27,7 +27,13 @@ public class KingController_AR : MonoBehaviour {
 
     int dir = 1;
 
-	void Start () {
+    void Awake()
+    {
+        if (isMultiplayer)
+            transform.SetParent(GameObject.Find("WorldContainer").transform);
+    }
+
+    void Start () {
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -70,18 +76,18 @@ public class KingController_AR : MonoBehaviour {
             {
                 mov = AutoMove();
             }
-            else if(Input.touchCount > 0)
+            else if(Input.touchCount == 1)
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
-                MoveKing(mov);
+                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;                
             }
             else
             {
                 mov = 0;
             }
 
+            MoveKing(mov);
             // Animate
             bool running = mov != 0f;
             anim.SetBool("IsRunning", running);
@@ -213,7 +219,7 @@ public class KingController_AR : MonoBehaviour {
         if (isMultiplayer)
         {
             GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
-            rockInstance.transform.SetParent(transform, false);
+            rockInstance.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
             rockInstance.GetComponent<BombController>().enabled = true;
             rockInstance.transform.position = hand.transform.position;
             rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;

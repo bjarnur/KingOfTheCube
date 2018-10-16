@@ -9,6 +9,7 @@ public class BombController : MonoBehaviour {
     public void Awake()
     {
         gameObject.SetActive(true);
+        gameObject.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
     }
 
     private void Start()

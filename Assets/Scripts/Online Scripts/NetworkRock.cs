@@ -26,7 +26,7 @@ public class NetworkRock : Photon.MonoBehaviour {
         //GetComponent<CharacterCtrl>().enabled = true;        
         if (stream.isWriting)
         {
-            stream.SendNext(transform.position);
+            stream.SendNext(transform.localPosition);
         }
         else
         {
@@ -41,7 +41,7 @@ public class NetworkRock : Photon.MonoBehaviour {
     {
         while (true)
         {
-            transform.localPosition = Vector3.Lerp(transform.position, position, Time.deltaTime * larpSmoothing);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
             yield return null;
         }
     }
