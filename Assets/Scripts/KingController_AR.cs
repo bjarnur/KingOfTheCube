@@ -80,7 +80,7 @@ public class KingController_AR : MonoBehaviour {
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;                
+                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             }
             else
             {
@@ -88,11 +88,30 @@ public class KingController_AR : MonoBehaviour {
             }
 
             MoveKing(mov);
+
             // Animate
             bool running = mov != 0f;
             anim.SetBool("IsRunning", running);
-            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
-            {
+            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3)){
+                switch (side)
+                {
+                    case 0:
+                        Debug.Log("SOY EL 0");
+                        transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                        break;
+                    case 1:
+                        Debug.Log("SOY EL 1");
+                        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                        break;
+                    case 2:
+                        Debug.Log("SOY EL 2");
+                        transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                        break;
+                    case 3:
+                        Debug.Log("SOY EL 3");
+                        transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                        break;
+                }
                 anim.SetTrigger("Throw");
                 groundedTime = 0.0f;
             }
@@ -216,8 +235,9 @@ public class KingController_AR : MonoBehaviour {
 
     public void  ThrowObject() 
     {
-        if (isMultiplayer)
-        {
+        
+        if (isMultiplayer) {
+
             GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
             rockInstance.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
             rockInstance.GetComponent<BombController>().enabled = true;
@@ -239,6 +259,7 @@ public class KingController_AR : MonoBehaviour {
 
     void EndThrowing()
     {
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
         throwing = false;
     }
 }
