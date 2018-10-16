@@ -14,7 +14,9 @@ public class PlayerController_AssemCube : MonoBehaviour {
     [HideInInspector]
     public int side = 0;
     [HideInInspector]
-    public bool win = false;    
+    public bool win = false;
+    [HideInInspector]
+    public bool dead = false;
 
     Vector3 movement;
     Animator animator;
@@ -26,8 +28,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
     bool climbing = false;
     bool grounded = false;
     bool jumping = false;
-    bool dead = false;
-
+   
     bool moving = false;
     bool goingRight = false;
     
@@ -204,11 +205,13 @@ public class PlayerController_AssemCube : MonoBehaviour {
             TriggerAnimations();
         }
 
-        if (collision.gameObject.name == "Rock" && !dead)
+        if (collision.gameObject.tag == "Rock" && !dead)
         {
             animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
+            if(isMultiplayer)          
+                GetComponent<PhotonView>().RPC("die", PhotonTargets.AllBuffered);
         }
         
         if(collision.gameObject.tag == GameConstants.UNITYPLAYERTAG)
@@ -230,7 +233,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
         TriggerAnimations();        
     }
 
-    IEnumerator Dying()
+    public IEnumerator Dying()
     {
         yield return new WaitForSeconds(3); // Length of dying animation
         // Move player to initial position
@@ -318,6 +321,5 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetBool("Fall", true);
             currentAnimation = GameConstants.AnimationTypes.falling;
         }
-    }
-
+    }   
 }

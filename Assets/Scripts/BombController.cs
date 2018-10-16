@@ -6,6 +6,11 @@ public class BombController : MonoBehaviour {
 
     public GameObject explosionPrefab;
 
+    public void Awake()
+    {
+        gameObject.SetActive(true);
+    }
+
     private void Start()
     {
         Physics.gravity = new Vector3(0, -1f, 0);

@@ -20,8 +20,8 @@ public class KingNetwork : Photon.MonoBehaviour
             gameObject.name = "Local King";
             //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
             //GetComponent<PlayerController_AssemCube>().enabled = true;
-            GetComponent<CharacterCtrl>().enabled = true;
-            GetComponent<Rigidbody>().useGravity = true;
+            //GetComponent<CharacterCtrl>().enabled = true;
+            //GetComponent<Rigidbody>().useGravity = true;
         }
         else
         {
@@ -44,7 +44,8 @@ public class KingNetwork : Photon.MonoBehaviour
         {
             //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
             //var controller = GetComponent<PlayerController_AssemCube>();
-            var controller = GetComponent<KingController_AR>();
+            //var controller = GetComponent<KingController_AR>();
+            var controller = GetComponent<KingController_AssemCube>();
             stream.SendNext(transform.localPosition);
             stream.SendNext(transform.localRotation);
             stream.SendNext(controller.currentAnimation);
@@ -60,7 +61,7 @@ public class KingNetwork : Photon.MonoBehaviour
 
     void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animationState)
     {
-        Debug.Log(animationState);
+        Debug.Log("Networked king animation: " + animationState);
         switch (animationState)
         {
             case GameConstants.AnimationTypes.stopped:
@@ -69,7 +70,7 @@ public class KingNetwork : Photon.MonoBehaviour
                 break;
             case GameConstants.AnimationTypes.running:
                 animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.stopAnimation, true);
+                animator.SetBool(GameConstants.AnimationNames.runAnimation, true);
                 break;
             case GameConstants.AnimationTypes.throwing:
                 animator.SetBool(GameConstants.AnimationNames.throwAnimation, true);
