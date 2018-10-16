@@ -76,10 +76,6 @@ public class KingNetwork : Photon.MonoBehaviour
                 animator.SetBool(GameConstants.AnimationNames.throwAnimation, true);
                 animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
-                if (!photonView.isMine) {
-                    //GetComponent<KingController_AR>().ThrowObject();
-                    //GetComponent<KingController_AR>().ThrowObject();
-                }
                 break;
         }
     }
