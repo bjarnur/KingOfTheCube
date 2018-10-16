@@ -10,7 +10,6 @@ public class KingNetwork : Photon.MonoBehaviour
     public Vector3 position;
     public Quaternion rotation;
     public float larpSmoothing = 10f;
-    public GameConstants.AnimationTypes currentAnimation;
 
     // Use this for initialization
     void Start()
@@ -54,7 +53,7 @@ public class KingNetwork : Photon.MonoBehaviour
         {
             position = (Vector3)stream.ReceiveNext();
             rotation = (Quaternion)stream.ReceiveNext();
-            currentAnimation = (GameConstants.AnimationTypes)stream.ReceiveNext();
+            var currentAnimation = (GameConstants.AnimationTypes)stream.ReceiveNext();
             SetCharacterAnimation(GetComponent<Animator>(), currentAnimation);
         }
     }
