@@ -40,7 +40,7 @@ public class KingController_AR : MonoBehaviour {
         transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
-        rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
+        //rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
     public void setPlayer(GameObject player) {
@@ -213,9 +213,8 @@ public class KingController_AR : MonoBehaviour {
         if (isMultiplayer)
         {
             GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
+            rockInstance.transform.SetParent(transform, false);
             rockInstance.GetComponent<BombController>().enabled = true;
-            rockInstance.transform.position = hand.transform.position;
-            rockInstance.transform.localScale = new Vector3(1, 1, 1);
             rockInstance.transform.position = hand.transform.position;
             rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
             rockInstance.SetActive(true);
