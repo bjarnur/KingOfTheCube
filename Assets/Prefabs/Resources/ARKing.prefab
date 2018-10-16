@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 114600077889547934}
   - component: {fileID: 114433597934438910}
   m_Layer: 0
-  m_Name: King
+  m_Name: ARKing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -860,6 +860,7 @@ MonoBehaviour:
   isAI: 1
   rockPrefab: {fileID: 1317834411581918, guid: 355e5f2a79d99a142bb98f7ad75c6e78, type: 2}
   hand: {fileID: 1998948071847084}
+  currentAnimation: 0
 --- !u!114 &114433597934438910
 MonoBehaviour:
   m_ObjectHideFlags: 1
