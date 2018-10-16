@@ -91,7 +91,14 @@ public class KingController_AR : MonoBehaviour {
 
             // Animate
             bool running = mov != 0f;
+            if (running) {
+                currentAnimation = GameConstants.AnimationTypes.running;
+            }
+            else {
+                currentAnimation = GameConstants.AnimationTypes.stopped;
+            }
             anim.SetBool("IsRunning", running);
+
             if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3)){
                 switch (side)
                 {
@@ -113,6 +120,7 @@ public class KingController_AR : MonoBehaviour {
                         break;
                 }
                 anim.SetTrigger("Throw");
+                currentAnimation = GameConstants.AnimationTypes.throwing;
                 groundedTime = 0.0f;
             }
         }
@@ -260,6 +268,7 @@ public class KingController_AR : MonoBehaviour {
     void EndThrowing()
     {
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        currentAnimation = GameConstants.AnimationTypes.stopped;
         throwing = false;
     }
 }
