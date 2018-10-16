@@ -39,13 +39,10 @@ public class NetworkRock : Photon.MonoBehaviour {
  For smooth transistion of networked players */
     IEnumerator UpdateNetworked()
     {
-        while (true)
+        while (bombIsLive)
         {
-            if(bombIsLive)
-            {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
-                yield return null;
-            }
+            transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
+            yield return null;
         }
     }
 
@@ -54,5 +51,6 @@ public class NetworkRock : Photon.MonoBehaviour {
     {
         gameObject.SetActive(false);
         bombIsLive = false;
+        position = Vector3.zero;
     }
 }

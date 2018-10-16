@@ -44,4 +44,5 @@ MonoBehaviour:
   - TaggedPlayer
   - die
   - detonateBomb
+  - DetonateBomb
   DisableAutoOpenWizard: 1
