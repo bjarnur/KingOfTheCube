@@ -5,7 +5,7 @@ using UnityEngine;
 public class NetworkRock : Photon.MonoBehaviour {
 
     public float larpSmoothing = 10;
-
+    private bool bombIsLive = true;
     private Vector3 position;
 
     void Start()
@@ -41,8 +41,18 @@ public class NetworkRock : Photon.MonoBehaviour {
     {
         while (true)
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
-            yield return null;
+            if(bombIsLive)
+            {
+                transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * larpSmoothing);
+                yield return null;
+            }
         }
+    }
+
+    [PunRPC]
+    void DetonateBomb()
+    {
+        gameObject.SetActive(false);
+        bombIsLive = false;
     }
 }

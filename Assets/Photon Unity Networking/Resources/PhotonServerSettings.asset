@@ -43,4 +43,5 @@ MonoBehaviour:
   - RequestForPickupTimes
   - TaggedPlayer
   - die
+  - detonateBomb
   DisableAutoOpenWizard: 1

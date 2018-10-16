@@ -22,5 +22,6 @@ public class BombController : MonoBehaviour {
         gameObject.SetActive(false); // hide rock
         GameObject explosion = Instantiate(explosionPrefab, transform.parent);
         Destroy(explosion, 1.5f);
+        GetComponent<PhotonView>().RPC("DetonateBomb", PhotonTargets.AllBuffered);
     }
 }
