@@ -47,10 +47,11 @@ public class KingController_AR : MonoBehaviour {
         this.player = player;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         groundedTime += Time.deltaTime;
-        if (player.GetComponent<CharacterCtrl>().win)
+        //if (player.GetComponent<CharacterCtrl>().win)
+        if(false)
         {
             //Something happens... 
             anim.SetBool("IsRunning", false);
@@ -69,12 +70,16 @@ public class KingController_AR : MonoBehaviour {
             {
                 mov = AutoMove();
             }
-            else
+            else if(Input.touchCount > 0)
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
                 mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
                 MoveKing(mov);
+            }
+            else
+            {
+                mov = 0;
             }
 
             // Animate
@@ -157,7 +162,8 @@ public class KingController_AR : MonoBehaviour {
         if (mov != 0) // Follow the direction of motion
         {
             Quaternion newRotation = Quaternion.LookRotation(movement);
-            rb.MoveRotation(newRotation);
+            //rb.MoveRotation(newRotation);
+            transform.localRotation = newRotation;
         }
         else // Face the edge of the cube
         {
@@ -206,7 +212,7 @@ public class KingController_AR : MonoBehaviour {
     {
         if (isMultiplayer)
         {
-            GameObject rockInstance = PhotonNetwork.Instantiate("UnityRock", Vector3.zero, Quaternion.identity, 0);
+            GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
             rockInstance.GetComponent<BombController>().enabled = true;
             rockInstance.transform.position = hand.transform.position;
             rockInstance.transform.localScale = new Vector3(1, 1, 1);
