@@ -101,7 +101,11 @@ public class ARController : MonoBehaviour
                     }
                     else
                     {
-                        readyMutiplayer();
+                        int numberOfPlayers = PhotonNetwork.countOfPlayers;
+                        if (numberOfPlayers == 1)
+                            spawnKing();
+                        else
+                            spawnPretender(numberOfPlayers);
                     }
                 }
                 else if (image.TrackingState == TrackingState.Stopped) {
@@ -155,12 +159,32 @@ public class ARController : MonoBehaviour
         ResetPlayer();
     }
 
-    void readyMutiplayer()
+    void spawnKing()
     {
-        int numberOfPlayers = PhotonNetwork.countOfPlayers;
+        Vector3 spawn = GameObject.FindWithTag("LevelBuilder")
+                            .GetComponent<LevelInstatiator>()
+                            .instantiateSpawnPoint(0);
+
+        GameObject newPlayer = PhotonNetwork.Instantiate("ARKing", Vector3.zero, Quaternion.identity, 0);
+        newPlayer.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+        newPlayer.transform.localPosition = spawn;
+
+        KingController_AR controller = newPlayer.GetComponent<KingController_AR>();
+        KingNetwork networkPlayer = newPlayer.GetComponent<KingNetwork>();
+        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
+
+        controller.enabled = true;
+        //controller.isMultiplayer = true;
+        controller.isAI = false;
+        networkPlayer.enabled = true;
+        playerRigidbody.useGravity = true;
+    }
+
+    void spawnPretender(int playerNumber)
+    {        
         Vector3 spawn = GameObject.FindWithTag("LevelBuilder")
                         .GetComponent<LevelInstatiator>()
-                        .instantiateSpawnPoint(numberOfPlayers);
+                        .instantiateSpawnPoint(playerNumber);
 
         var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, 
                                                 Vector3.zero, Quaternion.identity, 0);

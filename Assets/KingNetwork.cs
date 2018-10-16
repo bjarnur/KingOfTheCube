@@ -44,8 +44,8 @@ public class KingNetwork : Photon.MonoBehaviour
         {
             //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
             //var controller = GetComponent<PlayerController_AssemCube>();
-            //var controller = GetComponent<KingController_AR>();
-            var controller = GetComponent<KingController_AssemCube>();
+            var controller = GetComponent<KingController_AR>();
+            //var controller = GetComponent<KingController_AssemCube>();
             stream.SendNext(transform.localPosition);
             stream.SendNext(transform.localRotation);
             stream.SendNext(controller.currentAnimation);
@@ -77,7 +77,8 @@ public class KingNetwork : Photon.MonoBehaviour
                 animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
                 if (!photonView.isMine) {
-                    GetComponent<KingController_AR>().ThrowObject();
+                    //GetComponent<KingController_AR>().ThrowObject();
+                    //GetComponent<KingController_AR>().ThrowObject();
                 }
                 break;
         }
