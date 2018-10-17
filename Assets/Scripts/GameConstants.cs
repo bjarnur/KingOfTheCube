@@ -14,12 +14,18 @@ public static class GameConstants  {
         stopped, running, jumping, falling, climbing, throwing
     };
 
-    internal static class AnimationNames {
-        public const string throwAnimation = "Throw";
+    internal static class PlayerAnimationNames {
+        
         public const string jumpAnimation = "Jump";
         public const string fallAnimation = "Fall";
         public const string runAnimation = "Run";
         public const string stopAnimation = "Stop";
+    }
+
+    internal static class KingAnimationNames {
+        public const string throwAnimation = "Throw";
+        public const string dieAnimation = "Die";
+        public const string runAnimation = "IsRunning";
     }
 
     internal static class RPCTags {

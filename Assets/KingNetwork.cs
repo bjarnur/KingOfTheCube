@@ -7,8 +7,10 @@ public class KingNetwork : Photon.MonoBehaviour
 {
 
     bool isAlive = true;
+    [HideInInspector]
     public Vector3 position;
-    public Quaternion rotation;
+    [HideInInspector]
+    public Quaternion rotation = new Quaternion(0,0,0,0);
     public float larpSmoothing = 10f;
 
     // Use this for initialization
@@ -64,19 +66,18 @@ public class KingNetwork : Photon.MonoBehaviour
         switch (animationState)
         {
             case GameConstants.AnimationTypes.stopped:
-                animator.SetBool(GameConstants.AnimationNames.throwAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.stopAnimation, true);
+                animator.SetBool(GameConstants.KingAnimationNames.throwAnimation, false);
+                animator.SetBool(GameConstants.KingAnimationNames.runAnimation, false);
+
                 break;
             case GameConstants.AnimationTypes.running:
-                animator.SetBool(GameConstants.AnimationNames.throwAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.runAnimation, true);
+                animator.SetBool(GameConstants.KingAnimationNames.throwAnimation, false);
+                animator.SetBool(GameConstants.KingAnimationNames.runAnimation, true);
                 break;
             case GameConstants.AnimationTypes.throwing:
-                animator.SetBool(GameConstants.AnimationNames.throwAnimation, true);
-                animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
-                animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
+                animator.SetBool(GameConstants.KingAnimationNames.throwAnimation, true);
+                animator.SetBool(GameConstants.KingAnimationNames.runAnimation, false);
+
                 break;
         }
     }

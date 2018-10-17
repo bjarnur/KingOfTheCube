@@ -28,7 +28,6 @@ public class BombController : MonoBehaviour {
     {
         if (col.gameObject.tag != GameConstants.ARPLAYERTAG) {
             //GetComponent<PhotonView>().RPC(GameConstants.RPCTags.detonateBomb, PhotonTargets.All);
-            gameObject.SetActive(false); // hide rock
             PhotonNetwork.Destroy(this.gameObject);
         }
     }
