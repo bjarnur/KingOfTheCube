@@ -45,7 +45,6 @@ public class KingController_AR : MonoBehaviour {
         // Move king to initial position
         transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-
         //rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
@@ -99,26 +98,9 @@ public class KingController_AR : MonoBehaviour {
             }
             anim.SetBool("IsRunning", running);
 
-            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3)){
-                switch (side)
-                {
-                    case 0:
-                        Debug.Log("SOY EL 0");
-                        transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-                        break;
-                    case 1:
-                        Debug.Log("SOY EL 1");
-                        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
-                        break;
-                    case 2:
-                        Debug.Log("SOY EL 2");
-                        transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-                        break;
-                    case 3:
-                        Debug.Log("SOY EL 3");
-                        transform.localEulerAngles = new Vector3(0f, 270f, 0f);
-                        break;
-                }
+            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
+            {
+                
                 anim.SetTrigger("Throw");
                 currentAnimation = GameConstants.AnimationTypes.throwing;
                 groundedTime = 0.0f;
@@ -238,6 +220,25 @@ public class KingController_AR : MonoBehaviour {
 
     void StartThrowing()
     {
+        switch (side)
+        {
+            case 0:
+                Debug.Log("SOY EL 0");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 1:
+                Debug.Log("SOY EL 1");
+                transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                break;
+            case 2:
+                Debug.Log("SOY EL 2");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 3:
+                Debug.Log("SOY EL 3");
+                transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                break;
+        }
         throwing = true;
     }
 
@@ -245,13 +246,24 @@ public class KingController_AR : MonoBehaviour {
     {
         
         if (isMultiplayer) {
-
+            
             GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
-            rockInstance.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+            //rockInstance.transform.position = hand.transform.position;
+
+            //rockInstance.transform.localPosition = transform.localPosition 
+            //    + (transform.worldToLocalMatrix.MultiplyVector(transform.forward) * 0.1f);
+
+            rockInstance.transform.localPosition = transform.localPosition + (transform.localRotation * Vector3.forward * 0.4f);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.GetComponent<Rigidbody>().useGravity = true;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            /*
+            rockInstance = transform.GetChild(2).gameObject;
             rockInstance.GetComponent<BombController>().enabled = true;
             rockInstance.transform.position = hand.transform.position;
             rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
             rockInstance.SetActive(true);
+            */
         }
         else
         {
@@ -268,7 +280,9 @@ public class KingController_AR : MonoBehaviour {
     void EndThrowing()
     {
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-        currentAnimation = GameConstants.AnimationTypes.stopped;
+        if(currentAnimation == GameConstants.AnimationTypes.throwing)
+            currentAnimation = GameConstants.AnimationTypes.stopped;
         throwing = false;
     }
+
 }
