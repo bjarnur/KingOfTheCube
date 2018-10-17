@@ -53,6 +53,7 @@ public class NetworkRock : Photon.MonoBehaviour {
     void DetonateBomb()
     {
         gameObject.SetActive(false);
+        GameObject.Destroy(this.gameObject);
         //bombIsLive = false;
         //position = Vector3.zero;
     }
