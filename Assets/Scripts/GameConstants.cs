@@ -25,4 +25,9 @@ public static class GameConstants  {
     internal static class RPCTags {
         public const string detonateBomb = "DetonateBomb";
     }
+
+    /*internal static class GameObjectsTags
+    {
+        public const string detonateBomb = "DetonateBomb";
+    }*/
 }
