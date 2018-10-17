@@ -21,4 +21,8 @@ public static class GameConstants  {
         public const string runAnimation = "Run";
         public const string stopAnimation = "Stop";
     }
+
+    internal static class RPCTags {
+        public const string detonateBomb = "DetonateBomb";
+    }
 }

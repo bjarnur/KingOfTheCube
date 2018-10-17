@@ -120,8 +120,11 @@ public class CharacterCtrl : MonoBehaviour {
         if (!isActiveAndEnabled) return;
         if (collision.gameObject.tag == "Rock" && !dead)
         {
-            if (isMultiplayer)
+            if (isMultiplayer) {
+                PhotonNetwork.Destroy(collision.gameObject);
                 GetComponent<PhotonView>().RPC("die", PhotonTargets.AllBuffered);
+            }
+                
             Debug.Log("Killing character");
             animator.SetTrigger("Die");
             dead = true;

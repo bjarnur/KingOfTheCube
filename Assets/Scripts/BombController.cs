@@ -21,15 +21,15 @@ public class BombController : MonoBehaviour {
 
     private void Start()
     {
-        Physics.gravity = new Vector3(0, -0.01f, 0);
+        Physics.gravity = new Vector3(0, -0.075f, 0);
     }
 
     private void OnCollisionEnter(Collision col)
     {
-        GetComponent<PhotonView>().RPC("DetonateBomb", PhotonTargets.All);
-        gameObject.SetActive(false); // hide rock
-        //GameObject explosion = Instantiate(explosionPrefab, transform.parent);
-        //Destroy(explosion, 1.5f);
-        GameObject.Destroy(this.gameObject);        
+        if (col.gameObject.tag != GameConstants.ARPLAYERTAG) {
+            //GetComponent<PhotonView>().RPC(GameConstants.RPCTags.detonateBomb, PhotonTargets.All);
+            gameObject.SetActive(false); // hide rock
+            PhotonNetwork.Destroy(this.gameObject);
+        }
     }
 }
