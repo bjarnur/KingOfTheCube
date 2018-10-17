@@ -24,7 +24,7 @@ public class KingNetwork : Photon.MonoBehaviour
         }
         else
         {
-            gameObject.name = "Network King";
+            gameObject.name = "NetworkKing";
             StartCoroutine("UpdateNetworked");
             //this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
         }
@@ -64,10 +64,12 @@ public class KingNetwork : Photon.MonoBehaviour
         switch (animationState)
         {
             case GameConstants.AnimationTypes.stopped:
+                animator.SetBool(GameConstants.AnimationNames.throwAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.runAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.stopAnimation, true);
                 break;
             case GameConstants.AnimationTypes.running:
+                animator.SetBool(GameConstants.AnimationNames.throwAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.stopAnimation, false);
                 animator.SetBool(GameConstants.AnimationNames.runAnimation, true);
                 break;

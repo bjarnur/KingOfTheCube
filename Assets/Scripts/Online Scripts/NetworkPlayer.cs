@@ -101,11 +101,11 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     {
         if (isAR)
         {
-            //var controller = GetComponent<CharacterCtrl>();
-            //StartCoroutine(controller.Dying());
-            //controller.animator.SetTrigger("Die");
-            //controller.dead = true;
-            
+            GetComponent<Animator>().SetTrigger("Die");
+            var controller = GetComponent<CharacterCtrl>();
+            controller.dead = true;
+            StartCoroutine(controller.Dying());
+
         }
         else
         {
@@ -118,4 +118,17 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             //isAlive = false;
         }                
     }
+
+    /*
+    [PunRPC]
+    void DropBomb()
+    {
+        GameObject parent = transform.parent.gameObject;
+        GameObject rockInstance = transform.GetChild(2).gameObject;
+
+        rockInstance.GetComponent<BombController>().enabled = true;
+        rockInstance.transform.position = parent.GetComponent<KingController_AR>().hand.transform.position;
+        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        rockInstance.SetActive(true);
+    }*/
 }

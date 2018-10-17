@@ -45,4 +45,5 @@ MonoBehaviour:
   - die
   - detonateBomb
   - DetonateBomb
+  - DropBomb
   DisableAutoOpenWizard: 1
