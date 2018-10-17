@@ -44,10 +44,11 @@ public class LevelInstatiator : MonoBehaviour{
      * Private variables *
     \*********************/
 
-    private float xBoundsMin = -15.5f;
-    private float xBoundsMax = 15.5f;
-    private float zBoundsMin = -15.5f;
-    private float zBoundsMax = 15.5f;
+    private float xBoundsMin = -15.7f;
+    private float xBoundsMax = 15.7f;
+    private float zBoundsMin = -15.7f;
+    private float zBoundsMax = 15.7f;
+    private float top = 30f;
 
     private Vector3 firstFaceVector;
     private Vector3 secondFaceVector;
@@ -61,6 +62,7 @@ public class LevelInstatiator : MonoBehaviour{
         xBoundsMax *= scalingFactor;
         zBoundsMin *= scalingFactor;
         zBoundsMax *= scalingFactor;
+        top *= scalingFactor;
 
         firstFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
         secondFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMax);
@@ -71,13 +73,13 @@ public class LevelInstatiator : MonoBehaviour{
 
     public void buildLevel() {
 
-        
+        /*
         //Can be used to easilly see what face you are looking at
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 1, 1);
         buildLadder(CubeFaces.secondFace, CubeLevel.first, 1, 2);
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 1, 3);
         buildLadder(CubeFaces.fourthFace, CubeLevel.first, 1, 4);
-        
+        */
 
         //buildLadder(CubeFaces.secondFace, CubeLevel.first, 10, 25);        
         buildPlatform(CubeFaces.firstFace, CubeLevel.first, -1, 31);
@@ -197,4 +199,24 @@ public class LevelInstatiator : MonoBehaviour{
         Transform t = Instantiate(platformUnit, world, false);
         t.localPosition += copyVector;
     }    
+
+    public Vector3 instantiateSpawnPoint(int playerNumber)
+    {
+        switch(playerNumber)
+        {
+            case 0: //King
+                return firstFaceVector + new Vector3(0, top, 0);
+            case 1:
+                return firstFaceVector + new Vector3(0, 1.5f * scalingFactor, 0);
+            case 2:
+                return secondFaceVector + new Vector3(0, 1.5f * scalingFactor, 0);
+            case 3:
+                return thirdFaceVector + new Vector3(0, 1.5f * scalingFactor, 0);
+            case 4:
+                return fourthFaceVector + new Vector3(0, 1.5f * scalingFactor, 0);
+            default:
+                Debug.LogError("Maximum four players allowed, you tried registering player " + playerNumber);
+                return new Vector3();            
+        }
+    }
 }

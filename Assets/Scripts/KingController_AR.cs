@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,25 +8,32 @@ public class KingController_AR : MonoBehaviour {
     public bool isAI;
     public GameObject rockPrefab;
     public GameObject hand;
-    [HideInInspector]
-    public Transform world;
+    public bool isMultiplayer = true;
 
     GameObject player;
     GameObject rockInstance;
 
     Vector3 movement;
     Animator anim;
+    public GameConstants.AnimationTypes currentAnimation; 
     Rigidbody rb;
 
     float xBounds, zBounds;
     int side = 2;
-    float angle = 180;
+    float angle = 0;
     bool throwing = false;
     bool dead = false;
+    float groundedTime = 3.0f;
 
     int dir = 1;
 
-	void Start () {
+    void Awake()
+    {
+        if (isMultiplayer)
+            transform.SetParent(GameObject.Find("WorldContainer").transform);
+    }
+
+    void Start () {
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -36,20 +43,20 @@ public class KingController_AR : MonoBehaviour {
         zBounds = 1.3f;
 
         // Move king to initial position
-        transform.localPosition = new Vector3(zBounds / 2f, 3f, xBounds); 
+        transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-
-        rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
+        //rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
-    public void setPlayer(GameObject player)
-    {
+    public void setPlayer(GameObject player) {
         this.player = player;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (player.GetComponent<CharacterCtrl>().win)
+        groundedTime += Time.deltaTime;
+        //if (player.GetComponent<CharacterCtrl>().win)
+        if(false)
         {
             //Something happens... 
             anim.SetBool("IsRunning", false);
@@ -68,19 +75,35 @@ public class KingController_AR : MonoBehaviour {
             {
                 mov = AutoMove();
             }
-            else
+            else if(Input.touchCount == 1 && !throwing)
             {
                 // Don't move if it's throwing
-                mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                MoveKing(mov);
+                //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             }
+            else
+            {
+                mov = 0;
+            }
+
+            MoveKing(mov);
 
             // Animate
             bool running = mov != 0f;
-            anim.SetBool("IsRunning", running);
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (running && !throwing) {
+                currentAnimation = GameConstants.AnimationTypes.running;
+                anim.SetBool("IsRunning", true);
+            }
+            else if (!throwing) {
+                currentAnimation = GameConstants.AnimationTypes.stopped;
+                anim.SetBool("IsRunning", false);
+            }            
+
+            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
             {
+                currentAnimation = GameConstants.AnimationTypes.throwing;
                 anim.SetTrigger("Throw");
+                groundedTime = 0.0f;
             }
         }
     }
@@ -100,44 +123,8 @@ public class KingController_AR : MonoBehaviour {
         return dx;
     }
 
-    Vector3 getDirection(bool local = false)
-    {
-        if (local)
-        {
-            switch (side)
-            {
-                case 0:
-                    return -world.worldToLocalMatrix.MultiplyVector(world.right);
-                case 1:
-                    return world.worldToLocalMatrix.MultiplyVector(world.forward);
-                case 2:
-                    return world.worldToLocalMatrix.MultiplyVector(world.right);
-                case 3:
-                    return -world.worldToLocalMatrix.MultiplyVector(world.forward);
-            }
-        }
-        else
-        {
-            switch (side)
-            {
-                case 0:
-                    return -world.right;
-                case 1:
-                    return world.forward;
-                case 2:
-                    return world.right;
-                case 3:
-                    return -world.forward;
-            }
-        }
-
-        return Vector3.zero;
-    }
-
-    int FollowPlayer(int playerSide)
-    {
-        if (side == playerSide)
-        {
+    int FollowPlayer(int playerSide) {
+        if (side == playerSide) {
             // Throw randomly if it's in the same side as the player
             float th = Random.Range(0.0f, 1.0f);
             if (th < 0.01 && !throwing)
@@ -164,27 +151,34 @@ public class KingController_AR : MonoBehaviour {
 
     void MoveKing(float mov)
     {
-        // Set movement into correct axis
-        movement = (mov * getDirection(true)).normalized * speed * Time.deltaTime;
-        //rb.MovePosition(transform.position + movement);
-        transform.localPosition += movement;
-
         // Check boundaries and change side if needed
         CheckBounds();
+
+        // Set movement into correct axis
+        switch (side) {
+            case 0:
+                movement.Set(-mov, 0.0f, 0.0f);
+                break;
+            case 1:
+                movement.Set(0.0f, 0.0f, mov);
+                break;
+            case 2:
+                movement.Set(mov, 0.0f, 0.0f);
+                break;
+            case 3:
+                movement.Set(0.0f, 0.0f, -mov);
+                break;
+        }
+        movement = movement.normalized * speed * Time.deltaTime;
+        //rb.MovePosition(transform.position + movement);
+        transform.localPosition += movement;
 
         // Rotation
         if (mov != 0) // Follow the direction of motion
         {
-            /*Quaternion newRotation = Quaternion.LookRotation(getDirection(true));
-            rb.MoveRotation(newRotation);*/
-            if (mov == 1f)
-            {
-                transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
-            }
-            else
-            {
-                transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
-            }
+            Quaternion newRotation = Quaternion.LookRotation(movement);
+            //rb.MoveRotation(newRotation);
+            transform.localRotation = newRotation;
         }
         else // Face the edge of the cube
         {
@@ -226,19 +220,69 @@ public class KingController_AR : MonoBehaviour {
 
     void StartThrowing()
     {
+        switch (side)
+        {
+            case 0:
+                Debug.Log("SOY EL 0");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 1:
+                Debug.Log("SOY EL 1");
+                transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                break;
+            case 2:
+                Debug.Log("SOY EL 2");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 3:
+                Debug.Log("SOY EL 3");
+                transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                break;
+        }
         throwing = true;
     }
 
-    void ThrowObject() 
+    public void  ThrowObject() 
     {
-        rockInstance.transform.position = hand.transform.position;
-        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rockInstance.SetActive(true);
-        // TODO: Add a horizontal force to be more realistic
+        
+        if (isMultiplayer) {
+            
+            GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
+            //rockInstance.transform.position = hand.transform.position;
+
+            //rockInstance.transform.localPosition = transform.localPosition 
+            //    + (transform.worldToLocalMatrix.MultiplyVector(transform.forward) * 0.1f);
+
+            rockInstance.transform.localPosition = transform.localPosition + (transform.localRotation * Vector3.forward * 0.4f);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.GetComponent<Rigidbody>().useGravity = true;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            /*
+            rockInstance = transform.GetChild(2).gameObject;
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+            */
+        }
+        else
+        {
+            GameObject rockInstance = Instantiate(rockPrefab);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.transform.localScale = new Vector3(1, 1, 1);
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+        }
     }
 
     void EndThrowing()
     {
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        if(currentAnimation == GameConstants.AnimationTypes.throwing)
+            currentAnimation = GameConstants.AnimationTypes.stopped;
         throwing = false;
     }
+
 }

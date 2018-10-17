@@ -8,11 +8,15 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public float speed = 1f;
     public float jumpSpeed = 5f;
     public GameObject winText;
+    public GameConstants.AnimationTypes currentAnimation;
+    public bool isMultiplayer = true;
 
     [HideInInspector]
     public int side = 0;
     [HideInInspector]
     public bool win = false;
+    [HideInInspector]
+    public bool dead = false;
 
     Vector3 movement;
     Animator animator;
@@ -24,11 +28,15 @@ public class PlayerController_AssemCube : MonoBehaviour {
     bool climbing = false;
     bool grounded = false;
     bool jumping = false;
-    bool dead = false;
-
+   
     bool moving = false;
     bool goingRight = false;
     
+    void Awake()
+    {
+        if(isMultiplayer)
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+    }
 
     void Start ()
     {
@@ -41,8 +49,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
         topCube = 30f;
 
         // Move player to initial position
-        transform.position = new Vector3(16f, 2.5f, zBounds);
-        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        //transform.position = new Vector3(16f, 2.5f, zBounds);
+        //transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
     }
 
@@ -56,8 +64,10 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
         // Animate
         bool running = mov != 0f;
-        animator.SetBool("Run", running);
+        moving = running;
 
+        //animator.SetBool("Run", running);
+        TriggerAnimations();
     }
 
     void MovePlayer(float mov)
@@ -158,6 +168,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder enter");
@@ -171,6 +182,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
+        if (!isActiveAndEnabled) return;
         if (other.gameObject.CompareTag("Ladder"))
         {
             Debug.Log("Ladder exit");
@@ -182,6 +194,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void OnCollisionEnter(Collision collision)
     {
+        if (!isActiveAndEnabled) return;
         if (collision.gameObject.CompareTag("Floor"))
         {
             grounded = true;
@@ -192,24 +205,35 @@ public class PlayerController_AssemCube : MonoBehaviour {
             TriggerAnimations();
         }
 
-        if (collision.gameObject.name == "Rock" && !dead)
+        if (collision.gameObject.tag == "Rock" && !dead)
         {
             animator.SetTrigger("Die");
             dead = true;
             StartCoroutine(Dying());
+            if(isMultiplayer)          
+                GetComponent<PhotonView>().RPC("die", PhotonTargets.AllBuffered);
+        }
+        
+        if(collision.gameObject.tag == GameConstants.UNITYPLAYERTAG)
+        {
+            var colliderOther = collision.gameObject.GetComponent<Collider>();
+            var colliderThis = GetComponent<Collider>();
+            Physics.IgnoreCollision(colliderOther, colliderThis, true);
         }
     }
 
     void OnCollisionExit(Collision collision)
     {
+        if (!isActiveAndEnabled) return;        
         if (collision.gameObject.CompareTag("Floor"))
         {
+            Debug.Log("Exiting floor");
             grounded = false;
         }
-        TriggerAnimations();
+        TriggerAnimations();        
     }
 
-    IEnumerator Dying()
+    public IEnumerator Dying()
     {
         yield return new WaitForSeconds(3); // Length of dying animation
         // Move player to initial position
@@ -255,6 +279,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void TriggerAnimations()
     {
+        if (!isActiveAndEnabled) return;
         if (goingRight)
         {
             //transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
@@ -270,29 +295,31 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetBool("Climb", false);
             animator.SetBool("Jump", false);
             if (moving)
-            {
-                //animator.SetBool("Run", true);
-                //animator.SetBool("Stop", false);
+            {                
+                animator.SetBool("Run", true);
+                currentAnimation = GameConstants.AnimationTypes.running;                
             }
             else
             {
-                //animator.SetBool("Run", false);
-                //animator.SetBool("Stop", true);
+                animator.SetBool("Run", false);
+                currentAnimation = GameConstants.AnimationTypes.stopped;
             }
         }
         else if (climbing)
         {
             animator.SetBool("Climb", true);
             animator.SetBool("Jump", false);
+            currentAnimation = GameConstants.AnimationTypes.climbing;
         }
         else if (jumping)
         {
             animator.SetBool("Jump", true);
+            currentAnimation = GameConstants.AnimationTypes.jumping;
         }
         else if (!grounded)
         {
             animator.SetBool("Fall", true);
+            currentAnimation = GameConstants.AnimationTypes.falling;
         }
-    }
-
+    }   
 }

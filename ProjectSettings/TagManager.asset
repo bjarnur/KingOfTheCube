@@ -7,6 +7,11 @@ TagManager:
   - Ladder
   - Floor
   - Rock
+  - ARPlayer
+  - UnityPlayer
+  - Cube
+  - ARController
+  - LevelBuilder
   layers:
   - Default
   - TransparentFX
