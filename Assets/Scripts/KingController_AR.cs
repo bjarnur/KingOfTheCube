@@ -75,7 +75,7 @@ public class KingController_AR : MonoBehaviour {
             {
                 mov = AutoMove();
             }
-            else if(Input.touchCount == 1)
+            else if(Input.touchCount == 1 && !throwing)
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
@@ -90,19 +90,19 @@ public class KingController_AR : MonoBehaviour {
 
             // Animate
             bool running = mov != 0f;
-            if (running) {
+            if (running && !throwing) {
                 currentAnimation = GameConstants.AnimationTypes.running;
+                anim.SetBool("IsRunning", true);
             }
-            else {
+            else if (!throwing) {
                 currentAnimation = GameConstants.AnimationTypes.stopped;
-            }
-            anim.SetBool("IsRunning", running);
+                anim.SetBool("IsRunning", false);
+            }            
 
             if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
             {
-                
-                anim.SetTrigger("Throw");
                 currentAnimation = GameConstants.AnimationTypes.throwing;
+                anim.SetTrigger("Throw");
                 groundedTime = 0.0f;
             }
         }
