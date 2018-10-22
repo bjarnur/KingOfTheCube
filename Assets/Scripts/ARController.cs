@@ -87,7 +87,7 @@ public class ARController : MonoBehaviour
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
                     world.SetParent(KOTCAnchor.transform, false);
-                    //world.localPosition -= world.up * 0.5f;
+                    world.localPosition -= world.up * 0.5f;
                     Transform gardenObj = Instantiate(garden).transform;
                     gardenObj.SetParent(world.transform, false);
 
@@ -97,7 +97,7 @@ public class ARController : MonoBehaviour
                     if (!isMultiplaer)
                     { 
                         readyPlayerOne();
-                        readyKing();
+                        //readyKing();
                     }
                     else
                     {
@@ -153,7 +153,7 @@ public class ARController : MonoBehaviour
         networkPlayer.enabled = false;
         controller.enabled = true;
         controller.world = world;
-        controller.winText = UIWinning;        
+        controller.winText = UIWinning;
         playerRigidbody.useGravity = true;
 
         ResetPlayer();
@@ -208,13 +208,16 @@ public class ARController : MonoBehaviour
    public void ResetPlayer()
     {
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
-        playerInstance.GetComponent<CharacterCtrl>().Reset();
+        playerInstance.GetComponent<Rigidbody>().useGravity = true;
+        playerInstance.GetComponent<CharacterCtrl>().Reset();        
     }
 
     void readyKing()
     {
         GameObject kingInstance = Instantiate(king, world, false);
         KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
+        kCtrl.enabled = true;
+        kCtrl.isMultiplayer = false;
         kCtrl.setPlayer(playerInstance);
         kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
