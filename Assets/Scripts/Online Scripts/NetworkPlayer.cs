@@ -95,4 +95,40 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             yield return null;
         }
     }
+
+    [PunRPC]
+    void die()
+    {
+        if (isAR)
+        {
+            GetComponent<Animator>().SetTrigger("Die");
+            var controller = GetComponent<CharacterCtrl>();
+            controller.dead = true;
+            StartCoroutine(controller.Dying());
+
+        }
+        else
+        {
+            GetComponent<Animator>().SetTrigger("Die");
+            var controller = GetComponent<PlayerController_AssemCube>();            
+            controller.dead = true;
+            StartCoroutine(controller.Dying());
+            
+            //Use this if we don't want players to respawn
+            //isAlive = false;
+        }                
+    }
+
+    /*
+    [PunRPC]
+    void DropBomb()
+    {
+        GameObject parent = transform.parent.gameObject;
+        GameObject rockInstance = transform.GetChild(2).gameObject;
+
+        rockInstance.GetComponent<BombController>().enabled = true;
+        rockInstance.transform.position = parent.GetComponent<KingController_AR>().hand.transform.position;
+        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        rockInstance.SetActive(true);
+    }*/
 }

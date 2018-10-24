@@ -25,6 +25,8 @@ public class CharacterCtrl : MonoBehaviour {
     public bool win = false;
     [HideInInspector]
     public bool isMultiplayer = false;
+    [HideInInspector]
+    public bool dead = false;
 
     /*********************\
         Private fields
@@ -41,8 +43,7 @@ public class CharacterCtrl : MonoBehaviour {
     bool moving = false;
     bool goingRight = false;
     bool grounded = true;
-    bool jumping = false;
-    bool dead = false;
+    bool jumping = false;    
 
     float timeBetweenJumps = 0.3f;
     float groundedTime = 0.0f;
@@ -119,10 +120,15 @@ public class CharacterCtrl : MonoBehaviour {
         if (!isActiveAndEnabled) return;
         if (collision.gameObject.tag == "Rock" && !dead)
         {
+            if (isMultiplayer) {
+                PhotonNetwork.Destroy(collision.gameObject);
+                GetComponent<PhotonView>().RPC("die", PhotonTargets.AllBuffered);
+            }
+                
             Debug.Log("Killing character");
             animator.SetTrigger("Die");
             dead = true;
-            StartCoroutine(Dying());
+            StartCoroutine(Dying());            
         }
 
         if (collision.gameObject.tag == GameConstants.ARPLAYERTAG)
@@ -387,7 +393,7 @@ public class CharacterCtrl : MonoBehaviour {
         }
     }
 
-    IEnumerator Dying()
+    public IEnumerator Dying()
     {
         yield return new WaitForSeconds(3); // Length of dying animation
         // Move player to initial position

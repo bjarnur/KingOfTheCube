@@ -8,12 +8,14 @@ public class KingController_AR : MonoBehaviour {
     public bool isAI;
     public GameObject rockPrefab;
     public GameObject hand;
+    public bool isMultiplayer = true;
 
     GameObject player;
     GameObject rockInstance;
 
     Vector3 movement;
     Animator anim;
+    public GameConstants.AnimationTypes currentAnimation; 
     Rigidbody rb;
 
     float xBounds, zBounds;
@@ -21,10 +23,17 @@ public class KingController_AR : MonoBehaviour {
     float angle = 0;
     bool throwing = false;
     bool dead = false;
+    float groundedTime = 3.0f;
 
     int dir = 1;
 
-	void Start () {
+    void Awake()
+    {
+        if (isMultiplayer)
+            transform.SetParent(GameObject.Find("WorldContainer").transform);
+    }
+
+    void Start () {
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -36,17 +45,18 @@ public class KingController_AR : MonoBehaviour {
         // Move king to initial position
         transform.localPosition = new Vector3(0f, 3f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
-
-        rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
+        //rockInstance = Instantiate<GameObject>(rockPrefab, transform.parent);
     }
 	
     public void setPlayer(GameObject player) {
         this.player = player;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (player.GetComponent<CharacterCtrl>().win)
+        groundedTime += Time.deltaTime;
+        //if (player.GetComponent<CharacterCtrl>().win)
+        if(false)
         {
             //Something happens... 
             anim.SetBool("IsRunning", false);
@@ -65,19 +75,35 @@ public class KingController_AR : MonoBehaviour {
             {
                 mov = AutoMove();
             }
-            else
+            else if(Input.touchCount == 1 && !throwing)
             {
                 // Don't move if it's throwing
-                mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                MoveKing(mov);
+                //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
+                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             }
+            else
+            {
+                mov = 0;
+            }
+
+            MoveKing(mov);
 
             // Animate
             bool running = mov != 0f;
-            anim.SetBool("IsRunning", running);
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (running && !throwing) {
+                currentAnimation = GameConstants.AnimationTypes.running;
+                anim.SetBool("IsRunning", true);
+            }
+            else if (!throwing) {
+                currentAnimation = GameConstants.AnimationTypes.stopped;
+                anim.SetBool("IsRunning", false);
+            }            
+
+            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
             {
+                currentAnimation = GameConstants.AnimationTypes.throwing;
                 anim.SetTrigger("Throw");
+                groundedTime = 0.0f;
             }
         }
     }
@@ -151,7 +177,8 @@ public class KingController_AR : MonoBehaviour {
         if (mov != 0) // Follow the direction of motion
         {
             Quaternion newRotation = Quaternion.LookRotation(movement);
-            rb.MoveRotation(newRotation);
+            //rb.MoveRotation(newRotation);
+            transform.localRotation = newRotation;
         }
         else // Face the edge of the cube
         {
@@ -193,19 +220,69 @@ public class KingController_AR : MonoBehaviour {
 
     void StartThrowing()
     {
+        switch (side)
+        {
+            case 0:
+                Debug.Log("SOY EL 0");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 1:
+                Debug.Log("SOY EL 1");
+                transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                break;
+            case 2:
+                Debug.Log("SOY EL 2");
+                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                break;
+            case 3:
+                Debug.Log("SOY EL 3");
+                transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                break;
+        }
         throwing = true;
     }
 
-    void ThrowObject() 
+    public void  ThrowObject() 
     {
-        rockInstance.transform.position = hand.transform.position;
-        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rockInstance.SetActive(true);
-        // TODO: Add a horizontal force to be more realistic
+        
+        if (isMultiplayer) {
+            
+            GameObject rockInstance = PhotonNetwork.Instantiate("ARRock", Vector3.zero, Quaternion.identity, 0);
+            //rockInstance.transform.position = hand.transform.position;
+
+            //rockInstance.transform.localPosition = transform.localPosition 
+            //    + (transform.worldToLocalMatrix.MultiplyVector(transform.forward) * 0.1f);
+
+            rockInstance.transform.localPosition = transform.localPosition + (transform.localRotation * Vector3.forward * 0.4f);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.GetComponent<Rigidbody>().useGravity = true;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            /*
+            rockInstance = transform.GetChild(2).gameObject;
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+            */
+        }
+        else
+        {
+            GameObject rockInstance = Instantiate(rockPrefab);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.transform.localScale = new Vector3(1, 1, 1);
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+        }
     }
 
     void EndThrowing()
     {
+        transform.localEulerAngles = new Vector3(0f, angle, 0f);
+        if(currentAnimation == GameConstants.AnimationTypes.throwing)
+            currentAnimation = GameConstants.AnimationTypes.stopped;
         throwing = false;
     }
+
 }

@@ -10,6 +10,8 @@ public class KingController_AssemCube : MonoBehaviour {
     public GameObject hand;
     public GameObject garden;
     public GameObject player;
+    public bool isMultiplayer = true;
+    public GameConstants.AnimationTypes currentAnimation;
 
     Vector3 movement;
     Animator anim;
@@ -22,6 +24,13 @@ public class KingController_AssemCube : MonoBehaviour {
     bool dead = false;
 
     int dir = 1;
+
+
+    void Awake()
+    {
+        if (isMultiplayer)
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+    }
 
 	void Start () {
 
@@ -39,7 +48,9 @@ public class KingController_AssemCube : MonoBehaviour {
 	
     private void FixedUpdate()
     {
-        if(player.GetComponent<PlayerController_AssemCube>().win)
+
+        //if(player.GetComponent<PlayerController_AssemCube>().win)
+        if(false)
         {
             //Something happens... 
             anim.SetBool("IsRunning", false);
@@ -68,9 +79,14 @@ public class KingController_AssemCube : MonoBehaviour {
             // Animate
             bool running = mov != 0f;
             anim.SetBool("IsRunning", running);
+            if(running)
+                currentAnimation = GameConstants.AnimationTypes.running;
+            else
+                currentAnimation = GameConstants.AnimationTypes.stopped;
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 anim.SetTrigger("Throw");
+                currentAnimation = GameConstants.AnimationTypes.throwing;
             }
         } 
     }
@@ -193,10 +209,26 @@ public class KingController_AssemCube : MonoBehaviour {
 
     void ThrowObject() 
     {
-        rock.transform.position = hand.transform.position;
-        rock.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rock.SetActive(true);
-        // TODO: Add a horizontal force to be more realistic
+        if(isMultiplayer)
+        {
+            GameObject rockInstance = PhotonNetwork.Instantiate("UnityRock", Vector3.zero, Quaternion.identity, 0);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.transform.localScale = new Vector3(1, 1, 1);
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+        }
+        else
+        {
+            GameObject rockInstance = Instantiate(rock);
+            rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.transform.localScale = new Vector3(1, 1, 1);
+            rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rockInstance.SetActive(true);
+        }
     }
 
     void EndThrowing()

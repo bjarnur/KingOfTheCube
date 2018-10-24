@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/ARScene.unity
     guid: f2250fa5f86e930449662dfdd1a4fa15
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/AR_OnlineScene.unity
     guid: 671d3f98ae62c4e25a03a755b3522a6b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AssembleCube_AI_test.unity
     guid: 76ef7ef73d0236048b279ea5fb7ffe4e
   m_configObjects: {}

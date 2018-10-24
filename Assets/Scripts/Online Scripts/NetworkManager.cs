@@ -28,23 +28,52 @@ public class NetworkManager : MonoBehaviour {
         if(!isAR)
         {
             int numberOfPlayers = PhotonNetwork.countOfPlayers;
-            Vector3 spawn = GameObject.FindWithTag("Cube")
-                            .GetComponent<LevelInstatiator>()
-                            .instantiateSpawnPoint(numberOfPlayers);
-
-            GameObject newPlayer = PhotonNetwork.Instantiate("UnityPlayer", Vector3.zero, Quaternion.identity, 0);
-            newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
-            newPlayer.transform.localPosition = spawn;
-            
-            PlayerController_AssemCube controller = newPlayer.GetComponent<PlayerController_AssemCube>();
-            NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
-            Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
-
-            controller.enabled = true;
-            controller.isMultiplayer = true;            
-            networkPlayer.enabled = true;
-            playerRigidbody.useGravity = true;            
+            if (numberOfPlayers == 1)
+                spawnKing();
+            else
+                spawnPretender(numberOfPlayers);
         }
+    }
+
+    void spawnKing()
+    {
+        Vector3 spawn = GameObject.FindWithTag("Cube")
+                            .GetComponent<LevelInstatiator>()
+                            .instantiateSpawnPoint(0);
+
+        GameObject newPlayer = PhotonNetwork.Instantiate("UnityKing", Vector3.zero, Quaternion.identity, 0);
+        newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
+        newPlayer.transform.localPosition = spawn;
+
+        KingController_AssemCube controller = newPlayer.GetComponent<KingController_AssemCube>();
+        KingNetwork networkPlayer = newPlayer.GetComponent<KingNetwork>();
+        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
+
+        controller.enabled = true;
+        //controller.isMultiplayer = true;
+        controller.isAI = false;
+        networkPlayer.enabled = true;
+        playerRigidbody.useGravity = true;
+    }
+
+    void spawnPretender(int playerNumber)
+    {
+        Vector3 spawn = GameObject.FindWithTag("Cube")
+                            .GetComponent<LevelInstatiator>()
+                            .instantiateSpawnPoint(playerNumber);
+
+        GameObject newPlayer = PhotonNetwork.Instantiate("UnityPlayer", Vector3.zero, Quaternion.identity, 0);
+        newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
+        newPlayer.transform.localPosition = spawn;
+
+        PlayerController_AssemCube controller = newPlayer.GetComponent<PlayerController_AssemCube>();
+        NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
+        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
+
+        controller.enabled = true;
+        controller.isMultiplayer = true;
+        networkPlayer.enabled = true;
+        playerRigidbody.useGravity = true;
     }
 
 }

@@ -48,6 +48,7 @@ public class LevelInstatiator : MonoBehaviour{
     private float xBoundsMax = 15.7f;
     private float zBoundsMin = -15.7f;
     private float zBoundsMax = 15.7f;
+    private float top = 30f;
 
     private Vector3 firstFaceVector;
     private Vector3 secondFaceVector;
@@ -61,6 +62,7 @@ public class LevelInstatiator : MonoBehaviour{
         xBoundsMax *= scalingFactor;
         zBoundsMin *= scalingFactor;
         zBoundsMax *= scalingFactor;
+        top *= scalingFactor;
 
         firstFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
         secondFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMax);
@@ -202,9 +204,8 @@ public class LevelInstatiator : MonoBehaviour{
     {
         switch(playerNumber)
         {
-            case 10:
-                //TODO: King
-                return new Vector3();
+            case 0: //King
+                return firstFaceVector + new Vector3(0, top, 0);
             case 1:
                 return firstFaceVector + new Vector3(0, 1.5f * scalingFactor, 0);
             case 2:
