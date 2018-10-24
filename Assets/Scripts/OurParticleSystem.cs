@@ -18,8 +18,9 @@ public class OurParticleSystem : MonoBehaviour
       Tunable variables 
     \*******************/
 
-    public int numberOfParticles = 100;
-    public int newParticlesPerFrame = 2;
+    public int numberOfParticles = 200;
+    public int newParticlesPerFrame = 1;
+    public float scale = 1;
     public Vector3 initialVelocity = new Vector3(0.1f, 0.1f, 0.1f);
     public Vector3 minimalOffset = new Vector3(0.1f, 0.1f, 0.1f);
 
@@ -31,6 +32,7 @@ public class OurParticleSystem : MonoBehaviour
     private OurParticle[] particles;
     private GameObject[] particleCubes;
     int lastUsedParticle = 0;
+    Material smokeMaterial;
 
     /***************\
         Functions
@@ -42,7 +44,10 @@ public class OurParticleSystem : MonoBehaviour
         randomNumberGenerator = new Random();
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
-	}
+
+        smokeMaterial = Resources.Load<Material>("Materials/Mat_Smoke");
+        Debug.Log(smokeMaterial.name);    
+    }
 	
 	
 	void Update ()
@@ -50,6 +55,9 @@ public class OurParticleSystem : MonoBehaviour
         //Spawn new particles when relevant
         for (int i = 0; i < newParticlesPerFrame; i++)
         {
+            float reject = Random.Range(0, 10);
+            if (reject < 7) break;
+
             int unusedParticle = GetFirstUnusedParticle();
             RespawnParticle(unusedParticle);
         }
@@ -61,10 +69,12 @@ public class OurParticleSystem : MonoBehaviour
             if (particle == null) continue;
 
             particle.life -= Time.deltaTime;
-            if(particle.life >= 0.0f)
+            //if(particle.life >= 0.0f)
+            if(true)
             {
                 particle.position -= particle.velocity * Time.deltaTime;
                 particleCubes[i].transform.position = particle.position;
+                particleCubes[i].transform.localScale *= 1.005f;  
             }
         }
 
@@ -105,16 +115,21 @@ public class OurParticleSystem : MonoBehaviour
         {
             particle = new OurParticle();
             particles[particleIdx] = particle;
+
             particleCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            particleCube.GetComponent<Collider>().enabled = false;
+            particleCube.GetComponent<Renderer>().material = smokeMaterial;
             particleCubes[particleIdx] = particleCube;
         }            
 
-        float spread = Random.Range(-5f, 5f);
+        float spread = Random.Range(-2f, 2f);
         float ascend = Random.Range(-10f, -5f);
         Vector3 randomVector = new Vector3(spread, -5f, spread);
         particle.position = transform.position;
         particle.velocity = randomVector;
-        particle.life = 2f;
+        particle.life = 3f;
+
+        particleCubes[particleIdx].transform.localScale = new Vector3(scale, scale, scale);
     }
 }
 
