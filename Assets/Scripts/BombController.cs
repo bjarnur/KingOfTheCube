@@ -23,8 +23,11 @@ public class BombController : MonoBehaviour {
     private void Start()
     {
         //Physics.gravity = new Vector3(0, -0.075f, 0);
-        Physics.gravity = new Vector3(0, -1, 0);
+        var rb = GetComponent<Rigidbody>();
+        rb.AddForce((new Vector3(0, -1, 0) - Physics.gravity) * rb.mass);
+        //rb.AddForce((new Vector3(0, -0.075f, 0) - Physics.gravity) * rb.mass);
     }
+
 
     private void OnCollisionEnter(Collision col)
     {
