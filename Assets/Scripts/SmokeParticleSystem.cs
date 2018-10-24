@@ -11,7 +11,7 @@ using UnityEngine;
  * learnopengl.com: https://learnopengl.com/In-Practice/2D-Game/Particles
  * 
  */
-public class OurParticleSystem : MonoBehaviour
+public class SmokeParticleSystem : MonoBehaviour
 {
 
     /*******************\
@@ -21,9 +21,6 @@ public class OurParticleSystem : MonoBehaviour
     public int numberOfParticles = 200;
     public int newParticlesPerFrame = 1;
     public float scale = 0.1f;
-    //public float scale = 1f;
-    public Vector3 initialVelocity = new Vector3(0.1f, 0.1f, 0.1f);
-    public Vector3 minimalOffset = new Vector3(0.1f, 0.1f, 0.1f);
 
     [HideInInspector]
     public int axis;
@@ -49,9 +46,6 @@ public class OurParticleSystem : MonoBehaviour
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
         smokeMaterial = Resources.Load<Material>("Materials/Mat_Smoke");
-
-        initialVelocity *= scale;
-        minimalOffset *= scale;        
     }
 	
 	
@@ -82,10 +76,6 @@ public class OurParticleSystem : MonoBehaviour
                 particleCubes[i].transform.localScale *= 1.005f;  
             }
         }
-
-        //Render particles
-        //Material material = new Material(Shader.Find("SmokeShader"));
-
 	}
 
     private int GetFirstUnusedParticle()
@@ -130,14 +120,14 @@ public class OurParticleSystem : MonoBehaviour
             particleCubes[particleIdx] = particleCube;
         }            
 
-        float spread = Random.Range(-2f, 2f);
+        float spread = Random.Range(-3f, 3f);
         float ascend = Random.Range(-10f, -5f);
         Vector3 randomVector;
 
         if (axis == 0) //Spread along X
-            randomVector = new Vector3(spread, -5f, 0);
+            randomVector = new Vector3(spread, ascend, 0);
         else //Spread along z
-            randomVector = new Vector3(0, -5f, spread);
+            randomVector = new Vector3(0, ascend, spread);
 
         particle.position = transform.position;
         particle.velocity = randomVector;

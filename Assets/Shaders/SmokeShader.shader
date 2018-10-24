@@ -51,9 +51,9 @@ Shader "Unlit/SmokeShader"
 
 				float4 SmokeFragmentProgram(Interpolators i) 
 				: SV_TARGET {					
-					//float alpha = (1.0 - i.worldPosition.y / 40.0); //For Unity
+					float alpha = (1.0 - i.worldPosition.y / 50.0); //For Unity
 					//float alpha = (0.5 - i.worldPosition.y);
-					float alpha = (0.8 - i.worldPosition.y); //For AR
+					//float alpha = (0.8 - i.worldPosition.y); //For AR
 					float3 color = (0.2 - i.localPosition.y) + 0.4;
 					float4 col = float4(color, alpha);
 					//float color2 = (10.0 - i.worldPosition.y) / 10.0;

@@ -242,7 +242,7 @@ public class LevelInstatiator : MonoBehaviour{
                 break;
             case 2:
                 Debug.Log("Planting smoke at " + secondFaceVector);
-                smoke.GetComponent<OurParticleSystem>().axis = 1;
+                smoke.GetComponent<SmokeParticleSystem>().axis = 1;
                 smoke.transform.localPosition = centerSecondFaceVector;
                 smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
                 break;
@@ -252,7 +252,7 @@ public class LevelInstatiator : MonoBehaviour{
                 smoke.transform.localEulerAngles = new Vector3(0, 0, 0);
                 break;
             case 4:
-                smoke.GetComponent<OurParticleSystem>().axis = 1;
+                smoke.GetComponent<SmokeParticleSystem>().axis = 1;
                 Debug.Log("Planting smoke at " + centerFourthFaceVector);
                 smoke.transform.localPosition = centerFourthFaceVector;
                 smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
