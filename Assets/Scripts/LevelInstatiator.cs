@@ -55,8 +55,12 @@ public class LevelInstatiator : MonoBehaviour{
     private Vector3 thirdFaceVector;
     private Vector3 fourthFaceVector;
 
+    private Vector3 centerFirstFaceVector;
+    private Vector3 centerSecondFaceVector;
+    private Vector3 centerThirdFaceVector;
+    private Vector3 centerFourthFaceVector;
 
-    void Start() {
+    void Awake() {
                 
         xBoundsMin *= scalingFactor;
         xBoundsMax *= scalingFactor;
@@ -64,10 +68,15 @@ public class LevelInstatiator : MonoBehaviour{
         zBoundsMax *= scalingFactor;
         top *= scalingFactor;
 
+        centerFirstFaceVector = new Vector3(0f, 0f, zBoundsMin);
+        centerSecondFaceVector = new Vector3(xBoundsMax, 0f, 0f);
+        centerThirdFaceVector = new Vector3(0f, 0f, zBoundsMax);
+        centerFourthFaceVector = new Vector3(xBoundsMin, 0f, 0);
+
         firstFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
         secondFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMax);
         thirdFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMax);
-        fourthFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMin);
+        fourthFaceVector = new Vector3(xBoundsMax, 0f, zBoundsMin);
     }
     
 
@@ -217,6 +226,41 @@ public class LevelInstatiator : MonoBehaviour{
             default:
                 Debug.LogError("Maximum four players allowed, you tried registering player " + playerNumber);
                 return new Vector3();            
+        }
+    }
+
+    public void PlantSmoke(GameObject smokePrefab, int faceNumber)
+    {
+        GameObject smoke = Instantiate(smokePrefab, world, false);        
+
+        switch (faceNumber)
+        {
+            case 1:
+                Debug.Log("Planting smoke at " + firstFaceVector);
+                smoke.transform.localPosition = centerFirstFaceVector;
+                smoke.transform.localEulerAngles = new Vector3(0, 0, 0);
+                break;
+            case 2:
+                Debug.Log("Planting smoke at " + secondFaceVector);
+                smoke.GetComponent<OurParticleSystem>().axis = 1;
+                smoke.transform.localPosition = centerSecondFaceVector;
+                smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
+                break;
+            case 3:
+                Debug.Log("Planting smoke at " + centerThirdFaceVector);
+                smoke.transform.localPosition = centerThirdFaceVector;
+                smoke.transform.localEulerAngles = new Vector3(0, 0, 0);
+                break;
+            case 4:
+                smoke.GetComponent<OurParticleSystem>().axis = 1;
+                Debug.Log("Planting smoke at " + centerFourthFaceVector);
+                smoke.transform.localPosition = centerFourthFaceVector;
+                smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
+                break;
+            default:
+                Debug.Log("Planting smoke at " + fourthFaceVector);
+                smoke.transform.localPosition = fourthFaceVector;
+                break;
         }
     }
 }

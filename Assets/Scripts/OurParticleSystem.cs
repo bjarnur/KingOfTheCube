@@ -20,9 +20,13 @@ public class OurParticleSystem : MonoBehaviour
 
     public int numberOfParticles = 200;
     public int newParticlesPerFrame = 1;
-    public float scale = 1;
+    public float scale = 0.1f;
+    //public float scale = 1f;
     public Vector3 initialVelocity = new Vector3(0.1f, 0.1f, 0.1f);
     public Vector3 minimalOffset = new Vector3(0.1f, 0.1f, 0.1f);
+
+    [HideInInspector]
+    public int axis;
 
     /*******************\
       Private variables 
@@ -44,9 +48,10 @@ public class OurParticleSystem : MonoBehaviour
         randomNumberGenerator = new Random();
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
-
         smokeMaterial = Resources.Load<Material>("Materials/Mat_Smoke");
-        Debug.Log(smokeMaterial.name);    
+
+        initialVelocity *= scale;
+        minimalOffset *= scale;        
     }
 	
 	
@@ -72,7 +77,7 @@ public class OurParticleSystem : MonoBehaviour
             //if(particle.life >= 0.0f)
             if(true)
             {
-                particle.position -= particle.velocity * Time.deltaTime;
+                particle.position -= particle.velocity * Time.deltaTime * scale * scale;
                 particleCubes[i].transform.position = particle.position;
                 particleCubes[i].transform.localScale *= 1.005f;  
             }
@@ -117,6 +122,9 @@ public class OurParticleSystem : MonoBehaviour
             particles[particleIdx] = particle;
 
             particleCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            particleCube.transform.SetParent(transform, false);
+            particleCube.transform.localScale *= scale;
+
             particleCube.GetComponent<Collider>().enabled = false;
             particleCube.GetComponent<Renderer>().material = smokeMaterial;
             particleCubes[particleIdx] = particleCube;
@@ -124,7 +132,13 @@ public class OurParticleSystem : MonoBehaviour
 
         float spread = Random.Range(-2f, 2f);
         float ascend = Random.Range(-10f, -5f);
-        Vector3 randomVector = new Vector3(spread, -5f, spread);
+        Vector3 randomVector;
+
+        if (axis == 0) //Spread along X
+            randomVector = new Vector3(spread, -5f, 0);
+        else //Spread along z
+            randomVector = new Vector3(0, -5f, spread);
+
         particle.position = transform.position;
         particle.velocity = randomVector;
         particle.life = 3f;

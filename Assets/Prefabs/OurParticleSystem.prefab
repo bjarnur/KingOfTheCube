@@ -53,5 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfParticles: 100
   newParticlesPerFrame: 2
+  scale: 0.1
   initialVelocity: {x: 0.1, y: 0.1, z: 0.1}
   minimalOffset: {x: 0.1, y: 0.1, z: 0.1}
+  axis: 0

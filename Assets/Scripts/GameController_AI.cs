@@ -6,6 +6,7 @@ public class GameController_AI : MonoBehaviour {
 
     public Transform world;
     public GameObject playerOne;
+    public GameObject smokePrefab;
     public bool isMultiplayer;
 
     const float xBoundsMin = -15.5f;
@@ -17,7 +18,14 @@ public class GameController_AI : MonoBehaviour {
     void Start ()
     {        
         GetComponent<LevelInstatiator>().buildLevel();
-        if(!isMultiplayer)
+
+        GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 1);
+        GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 2);
+        GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 3);
+        GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 4);
+
+
+        if (!isMultiplayer)
         {
             readyPlayerOne();
         }

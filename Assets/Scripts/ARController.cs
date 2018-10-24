@@ -14,7 +14,8 @@ public class ARController : MonoBehaviour
     public GameObject UIWinning;
     public GameObject garden;
     public GameObject king;
-    public GameObject playerOne;    
+    public GameObject playerOne;
+    public GameObject smoke;
     public Transform world;
     public Transform unitCube;
     public bool isMultiplaer;
@@ -94,7 +95,12 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().world = world;
                     GetComponent<LevelInstatiator>().buildLevel();
 
-                    if (!isMultiplaer)
+                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 1);
+                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 2);
+                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 3);
+                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 4);
+
+                        if (!isMultiplaer)
                     { 
                         readyPlayerOne();
                         readyKing();
@@ -141,10 +147,10 @@ public class ARController : MonoBehaviour
             world.SetParent(null, true);
         }
     }
-    
+    GameObject smokeEffects;
     void readyPlayerOne()
     {
-        playerInstance = Instantiate(playerOne, world, false);        
+        playerInstance = Instantiate(playerOne, world, false);    
         CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
         NetworkPlayer networkPlayer = playerInstance.GetComponent<NetworkPlayer>();
         Rigidbody playerRigidbody = playerInstance.GetComponent<Rigidbody>();
