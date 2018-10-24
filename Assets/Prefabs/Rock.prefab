@@ -114,6 +114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 1783775622681224, guid: b3a762fd11e5f0444855fd4be316bd81,
     type: 2}
+  smokePrefab: {fileID: 1751778568257520, guid: 00cbd94c41e88d44991c6b1343a5fc57,
+    type: 2}
 --- !u!135 &135021450159102092
 SphereCollider:
   m_ObjectHideFlags: 1

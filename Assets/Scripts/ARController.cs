@@ -95,12 +95,14 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().world = world;
                     GetComponent<LevelInstatiator>().buildLevel();
 
+                    /*
                     GetComponent<LevelInstatiator>().PlantSmoke(smoke, 1);
                     GetComponent<LevelInstatiator>().PlantSmoke(smoke, 2);
                     GetComponent<LevelInstatiator>().PlantSmoke(smoke, 3);
                     GetComponent<LevelInstatiator>().PlantSmoke(smoke, 4);
+                    */
 
-                        if (!isMultiplaer)
+                    if (!isMultiplaer)
                     { 
                         readyPlayerOne();
                         readyKing();

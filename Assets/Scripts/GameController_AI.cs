@@ -19,11 +19,12 @@ public class GameController_AI : MonoBehaviour {
     {        
         GetComponent<LevelInstatiator>().buildLevel();
 
+        /*
         GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 1);
         GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 2);
         GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 3);
         GetComponent<LevelInstatiator>().PlantSmoke(smokePrefab, 4);
-
+        */
 
         if (!isMultiplayer)
         {

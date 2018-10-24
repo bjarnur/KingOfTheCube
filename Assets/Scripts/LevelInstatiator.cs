@@ -232,33 +232,23 @@ public class LevelInstatiator : MonoBehaviour{
     public void PlantSmoke(GameObject smokePrefab, int faceNumber)
     {
         GameObject smoke = Instantiate(smokePrefab, world, false);        
-
         switch (faceNumber)
         {
             case 1:
-                Debug.Log("Planting smoke at " + firstFaceVector);
                 smoke.transform.localPosition = centerFirstFaceVector;
-                smoke.transform.localEulerAngles = new Vector3(0, 0, 0);
                 break;
             case 2:
-                Debug.Log("Planting smoke at " + secondFaceVector);
                 smoke.GetComponent<SmokeParticleSystem>().axis = 1;
                 smoke.transform.localPosition = centerSecondFaceVector;
-                smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
                 break;
             case 3:
-                Debug.Log("Planting smoke at " + centerThirdFaceVector);
                 smoke.transform.localPosition = centerThirdFaceVector;
-                smoke.transform.localEulerAngles = new Vector3(0, 0, 0);
                 break;
             case 4:
                 smoke.GetComponent<SmokeParticleSystem>().axis = 1;
-                Debug.Log("Planting smoke at " + centerFourthFaceVector);
                 smoke.transform.localPosition = centerFourthFaceVector;
-                smoke.transform.localEulerAngles = new Vector3(0, 90, 0);
                 break;
             default:
-                Debug.Log("Planting smoke at " + fourthFaceVector);
                 smoke.transform.localPosition = fourthFaceVector;
                 break;
         }
