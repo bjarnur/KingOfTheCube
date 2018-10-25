@@ -18,7 +18,7 @@ public class SmokeParticleSystem : MonoBehaviour
       Tunable variables 
     \*******************/
 
-    public int numberOfParticles = 200;
+    public int numberOfParticles = 120;
     public int newParticlesPerFrame = 1;
     public float scale = 0.1f;
 
@@ -34,6 +34,7 @@ public class SmokeParticleSystem : MonoBehaviour
     private GameObject[] particleCubes;
     int lastUsedParticle = 0;
     Material smokeMaterial;
+    float timer = 0;
 
     /***************\
         Functions
@@ -51,14 +52,39 @@ public class SmokeParticleSystem : MonoBehaviour
 	
 	void Update ()
     {
-        //Spawn new particles when relevant
-        for (int i = 0; i < newParticlesPerFrame; i++)
+        timer += Time.deltaTime;
+        if(timer >= 10)
         {
-            float reject = Random.Range(0, 10);
-            if (reject < 7) break;
-
+            foreach (Transform child in transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+            GameObject.Destroy(this);
+            return;
+        }
+        /*
+        else if(timer >= 10)
+        {
             int unusedParticle = GetFirstUnusedParticle();
-            RespawnParticle(unusedParticle);
+            GameObject physicalParticle = particleCubes[unusedParticle];
+            if(physicalParticle != null)
+            {
+                GameObject.Destroy(particleCubes[unusedParticle]);
+                particleCubes[unusedParticle] = null;
+            }                
+        }
+        */
+        else
+        {
+            //Spawn new particles when relevant
+            for (int i = 0; i < newParticlesPerFrame; i++)
+            {
+                float reject = Random.Range(0, 10);
+                if (reject < 7) break;
+
+                int unusedParticle = GetFirstUnusedParticle();
+                RespawnParticle(unusedParticle);
+            }
         }
 
         //Update all excisting particles

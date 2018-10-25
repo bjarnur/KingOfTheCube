@@ -5,6 +5,8 @@ using UnityEngine;
 public class NetworkRock : Photon.MonoBehaviour {
 
     public float larpSmoothing = 10;
+    public GameObject smokePrefab;
+
     private bool bombIsLive = true;
     private Vector3 position;
 
@@ -56,5 +58,16 @@ public class NetworkRock : Photon.MonoBehaviour {
         GameObject.Destroy(this.gameObject);
         //bombIsLive = false;
         //position = Vector3.zero;
+    }
+
+    [PunRPC]
+    void PlantSmoke()
+    {
+        GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
+        smoke.transform.localPosition = transform.localPosition;
+
+        //TODO hack to get smoke emitter correctly rotated, fix this
+        if (transform.localPosition.x > 1.3 || transform.localPosition.x < -1.3)
+            smoke.GetComponent<SmokeParticleSystem>().axis = 1;
     }
 }

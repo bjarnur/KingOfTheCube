@@ -32,14 +32,20 @@ public class BombController : MonoBehaviour {
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag != GameConstants.ARPLAYERTAG) {
-            //GetComponent<PhotonView>().RPC(GameConstants.RPCTags.detonateBomb, PhotonTargets.All);
-            GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
-            smoke.transform.localPosition = transform.localPosition;
 
-            //TODO hack to get smoke emitter correctly rotated, fix this
-            if (transform.localPosition.x > 1.3 || transform.localPosition.x < -1.3)
-                smoke.GetComponent<SmokeParticleSystem>().axis = 1;
+            int reject = Random.Range(0, 5);
+            if (reject == 0)
+            { 
+                //GetComponent<PhotonView>().RPC(GameConstants.RPCTags.detonateBomb, PhotonTargets.All);
+                GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
+                smoke.transform.localPosition = transform.localPosition;
 
+                //TODO hack to get smoke emitter correctly rotated, fix this            
+                if (transform.localPosition.x > 1.3 || transform.localPosition.x < -1.3)
+                    smoke.GetComponent<SmokeParticleSystem>().axis = 1;
+
+                GetComponent<PhotonView>().RPC("PlantSmoke", PhotonTargets.All);
+            }
             PhotonNetwork.Destroy(this.gameObject);
         }
     }
