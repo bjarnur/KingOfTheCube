@@ -209,6 +209,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
         {
             animator.SetTrigger("Die");
             dead = true;
+            //Play hurt sound effect
+            GetComponent<AudioSource>().Play();
             StartCoroutine(Dying());
             if(isMultiplayer)          
                 GetComponent<PhotonView>().RPC("die", PhotonTargets.AllBuffered);

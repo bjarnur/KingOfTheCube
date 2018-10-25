@@ -116,7 +116,9 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             
             //Use this if we don't want players to respawn
             //isAlive = false;
-        }                
+        }
+        //Play hurt sound effect
+        GetComponent<AudioSource>().Play();
     }
 
     /*
