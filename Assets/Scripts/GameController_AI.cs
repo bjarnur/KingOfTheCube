@@ -39,7 +39,7 @@ public class GameController_AI : MonoBehaviour {
     void readyPlayerOne()
     {
         playerOne.GetComponent<NetworkPlayer>().StopCoroutine("UpdateNetworked");
-        playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
+        playerOne.transform.position = new Vector3(16f, 2.5f, 16f);
         //GameObject player = Instantiate(playerOne, new Vector3(15.5f, 2.5f, 15.5f), Quaternion.identity, world);
         //playerOne.transform.position = new Vector3(15.5f, 2.5f, 15.5f);
         //playerOne.SetActive(true);

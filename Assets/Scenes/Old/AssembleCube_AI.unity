@@ -244,6 +244,11 @@ Prefab:
       propertyPath: m_UseGravity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114910433232546942, guid: e6ea37055f0990d48a5eaba54c213b77,
+        type: 2}
+      propertyPath: winText
+      value: 
+      objectReference: {fileID: 1365333224}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6ea37055f0990d48a5eaba54c213b77, type: 2}
   m_IsPrefabAsset: 0
@@ -252,6 +257,101 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1510283791401594, guid: e6ea37055f0990d48a5eaba54c213b77,
     type: 2}
   m_PrefabInternal: {fileID: 34124388}
+--- !u!82 &34124397
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 34124389}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8e9bfa5a84734004ca1c896519a7d57a, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &127064023
 Prefab:
   m_ObjectHideFlags: 0
@@ -520,8 +620,17 @@ Prefab:
         type: 2}
       propertyPath: explosionPrefab
       value: 
-      objectReference: {fileID: 1783775622681224, guid: b3a762fd11e5f0444855fd4be316bd81,
+      objectReference: {fileID: 191186, guid: 32fffa611ee1635448f97bc972885cd7, type: 2}
+    - target: {fileID: 114970376387643732, guid: 355e5f2a79d99a142bb98f7ad75c6e78,
         type: 2}
+      propertyPath: isMultiplayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114970376387643732, guid: 355e5f2a79d99a142bb98f7ad75c6e78,
+        type: 2}
+      propertyPath: isAR
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 355e5f2a79d99a142bb98f7ad75c6e78, type: 2}
   m_IsPrefabAsset: 0
@@ -596,6 +705,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1365333224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1408518809937982, guid: 3edaaaebbe8e4b04d917113be0a6ad4a,
+    type: 2}
+  m_PrefabInternal: {fileID: 127064023}
 --- !u!1001 &1587293418
 Prefab:
   m_ObjectHideFlags: 0
@@ -743,6 +857,8 @@ MonoBehaviour:
   hand: {fileID: 1672962302}
   garden: {fileID: 2122926092}
   player: {fileID: 34124389}
+  isMultiplayer: 0
+  currentAnimation: 0
 --- !u!1 &1732910921
 GameObject:
   m_ObjectHideFlags: 0
