@@ -24,16 +24,15 @@ public class NetworkRock : Photon.MonoBehaviour {
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        //GetComponent<CharacterCtrl>().enabled = true;        
+    {        
         if (stream.isWriting)
         {
+            var controller = GetComponent<BombController>();
             stream.SendNext(transform.localPosition);
         }
         else
         {
             position = (Vector3)stream.ReceiveNext();
-            Debug.Log("Position: " + position);
         }
     }
 
@@ -64,10 +63,7 @@ public class NetworkRock : Photon.MonoBehaviour {
     void PlantSmoke()
     {
         GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
+        SmokeParticleSystem smokeCtrl = smoke.GetComponent<SmokeParticleSystem>();
         smoke.transform.localPosition = transform.localPosition;
-
-        //TODO hack to get smoke emitter correctly rotated, fix this
-        if (transform.localPosition.x > 1.3 || transform.localPosition.x < -1.3)
-            smoke.GetComponent<SmokeParticleSystem>().axis = 1;
     }
 }

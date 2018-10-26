@@ -51,7 +51,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571c05ee5f7589d4eb73935bc7ce6610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfParticles: 100
-  newParticlesPerFrame: 2
+  numberOfParticles: 150
+  sidewaysSpreadFactor: 4
+  forwardSpreadFactor: 2
+  verticalSpreadFactor: 3
+  verticalSpreadVariance: 3
+  rejectionRate: 7
+  scaleWithTime: 1.005
+  decelerateWithTime: 0.99
   scale: 0.1
-  axis: 0
+  systemLife: 1000
+  particleLife: 5

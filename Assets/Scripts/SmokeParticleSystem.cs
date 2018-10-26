@@ -18,31 +18,44 @@ public class SmokeParticleSystem : MonoBehaviour
       Tunable variables 
     \*******************/
 
-    public int numberOfParticles = 120;
-    public int newParticlesPerFrame = 1;
-    public float scale = 0.1f;
+    public int numberOfParticles = 150;
+    public float sidewaysSpreadFactor = 4;
+    public float forwardSpreadFactor = 2;
+    public float verticalSpreadFactor = 2;
+    public float verticalSpreadVariance = 3;
+    public float rejectionRate = 7;
+    public float scaleWithTime = 1.005f;
+    public float decelerateWithTime = 0.99f;
+    public float scale =  0.1f;
+    public float systemLife = 1000;
+    public float particleLife = 5;
 
-    [HideInInspector]
-    public int axis;
 
     /*******************\
       Private variables 
     \*******************/
 
-    Random randomNumberGenerator;
+    private Random randomNumberGenerator;
     private OurParticle[] particles;
-    private GameObject[] particleCubes;
-    int lastUsedParticle = 0;
-    Material smokeMaterial;
-    float timer = 0;
+    private GameObject[] particleCubes;    
+    private Material smokeMaterial;   
+    private Vector3 localFwd;
+    private Vector3 localRight;
+    private int lastUsedParticle = 0;
+
+    //Use rejection rate for tuning rather than this variable
+    private int newParticlesPerFrame = 1;
 
     /***************\
         Functions
     \***************/
 
-
     void Start ()
     {
+        GameObject kingObj = GameObject.FindWithTag("King");
+        localFwd = kingObj.transform.localRotation * Vector3.forward;
+        localRight = kingObj.transform.localRotation * Vector3.right;
+
         randomNumberGenerator = new Random();
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
@@ -52,35 +65,26 @@ public class SmokeParticleSystem : MonoBehaviour
 	
 	void Update ()
     {
-        timer += Time.deltaTime;
-        if(timer >= 10)
+        systemLife -= Time.deltaTime;
+
+        //Kill the system
+        if (systemLife <= 0)
         {
             foreach (Transform child in transform)
             {
-                GameObject.Destroy(child.gameObject);
+                Destroy(child.gameObject);
             }
-            GameObject.Destroy(this);
+            Destroy(this);
             return;
         }
-        /*
-        else if(timer >= 10)
-        {
-            int unusedParticle = GetFirstUnusedParticle();
-            GameObject physicalParticle = particleCubes[unusedParticle];
-            if(physicalParticle != null)
-            {
-                GameObject.Destroy(particleCubes[unusedParticle]);
-                particleCubes[unusedParticle] = null;
-            }                
-        }
-        */
-        else
-        {
-            //Spawn new particles when relevant
+
+        //Spawn new particles when relevant
+        else if (systemLife > 5)
+        {            
             for (int i = 0; i < newParticlesPerFrame; i++)
             {
                 float reject = Random.Range(0, 10);
-                if (reject < 7) break;
+                if (reject < 5) break;
 
                 int unusedParticle = GetFirstUnusedParticle();
                 RespawnParticle(unusedParticle);
@@ -94,12 +98,22 @@ public class SmokeParticleSystem : MonoBehaviour
             if (particle == null) continue;
 
             particle.life -= Time.deltaTime;
-            //if(particle.life >= 0.0f)
-            if(true)
+            if(particle.life >= 0.0f)
             {
+                //Update postition
                 particle.position -= particle.velocity * Time.deltaTime * scale * scale;
-                particleCubes[i].transform.position = particle.position;
-                particleCubes[i].transform.localScale *= 1.005f;  
+                particleCubes[i].transform.position = particle.position;                
+
+                //Particle speed and size vary over time
+                Vector3 v = particle.velocity;
+                particle.velocity = new Vector3(v.x * decelerateWithTime, v.y, v.z * decelerateWithTime);
+                particleCubes[i].transform.localScale *= scaleWithTime;
+            }
+            else
+            {
+                Destroy(particleCubes[i]);
+                particleCubes[i] = null;
+                particles[i] = null;
             }
         }
 	}
@@ -146,18 +160,13 @@ public class SmokeParticleSystem : MonoBehaviour
             particleCubes[particleIdx] = particleCube;
         }            
 
-        float spread = Random.Range(-3f, 3f);
-        float ascend = Random.Range(-10f, -5f);
-        Vector3 randomVector;
+        float sidewaySpread = Random.Range(-sidewaysSpreadFactor, sidewaysSpreadFactor);
+        float fwdSpread = Random.Range(-forwardSpreadFactor, 0.0f);
+        float ascend = Random.Range(-verticalSpreadFactor - verticalSpreadVariance, -verticalSpreadFactor);
 
-        if (axis == 0) //Spread along X
-            randomVector = new Vector3(spread, ascend, 0);
-        else //Spread along z
-            randomVector = new Vector3(0, ascend, spread);
-
+        particle.velocity = localFwd * fwdSpread + Vector3.up * ascend + localRight * sidewaySpread;
         particle.position = transform.position;
-        particle.velocity = randomVector;
-        particle.life = 3f;
+        particle.life = particleLife;
 
         particleCubes[particleIdx].transform.localScale = new Vector3(scale, scale, scale);
     }
@@ -170,12 +179,4 @@ class OurParticle
     public Vector3 velocity;
     public Vector4 color;
     public float life;
-    /*
-    OurParticle(Vector3 x, Vector3 v, Vector4 c, float l)
-    {
-        this.position = x;
-        this.velocity = v;
-        this.color = c;
-        this.life = l;
-    }*/
 }

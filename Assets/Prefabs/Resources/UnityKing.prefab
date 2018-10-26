@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 114166662776189088}
   m_Layer: 0
   m_Name: UnityKing
-  m_TagString: Untagged
+  m_TagString: King
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -888,6 +888,8 @@ MonoBehaviour:
   hand: {fileID: 1292949490435190}
   garden: {fileID: 0}
   player: {fileID: 0}
+  isMultiplayer: 1
+  currentAnimation: 0
 --- !u!114 &114897890126246432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -902,7 +904,6 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   larpSmoothing: 10
-  currentAnimation: 0
 --- !u!137 &137495322784954506
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

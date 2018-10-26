@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 114433597934438910}
   m_Layer: 0
   m_Name: ARKing
-  m_TagString: Untagged
+  m_TagString: King
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

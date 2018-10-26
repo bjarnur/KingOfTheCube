@@ -238,14 +238,12 @@ public class LevelInstatiator : MonoBehaviour{
                 smoke.transform.localPosition = centerFirstFaceVector;
                 break;
             case 2:
-                smoke.GetComponent<SmokeParticleSystem>().axis = 1;
                 smoke.transform.localPosition = centerSecondFaceVector;
                 break;
             case 3:
                 smoke.transform.localPosition = centerThirdFaceVector;
                 break;
             case 4:
-                smoke.GetComponent<SmokeParticleSystem>().axis = 1;
                 smoke.transform.localPosition = centerFourthFaceVector;
                 break;
             default:

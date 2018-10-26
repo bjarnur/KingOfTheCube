@@ -32,8 +32,8 @@ public static class GameConstants  {
         public const string detonateBomb = "DetonateBomb";
     }
 
-    /*internal static class GameObjectsTags
-    {
-        public const string detonateBomb = "DetonateBomb";
-    }*/
+    internal static class GameObjectsTags {
+        public const string gardenObject = "GardenObject";
+        public const string king = "King";
+    }
 }

@@ -8,21 +8,20 @@ public class BombController : MonoBehaviour {
     public GameObject smokePrefab;
 
     public bool isMultiplayer = true;
-    public bool isAR = true;
-
+    public bool isAR = true;    
 
     public void Awake()
     {
         if(isMultiplayer)
         {
-            transform.SetParent(GameObject.Find("WorldContainer").transform, false);
-            //gameObject.SetActive(true);
+            transform.SetParent(GameObject.Find("WorldContainer").transform, false);            
+            //transform.SetParent(GameObject.Find("Wrapper").transform, false);
 
-            GameObject kingObj = GameObject.Find("NetworkKing");
-            if(kingObj != null)
-            { 
-                transform.localPosition = kingObj.transform.localPosition
-                    + (kingObj.transform.localRotation * Vector3.forward * 0.4f);            
+            GameObject kingObj = GameObject.FindWithTag(GameConstants.GameObjectsTags.king);            
+            if (kingObj != null)
+            {
+                Vector3 localFwd = kingObj.transform.localRotation * Vector3.forward;
+                transform.localPosition = kingObj.transform.localPosition + (localFwd * 0.4f);            
             }
         }
 
@@ -52,14 +51,6 @@ public class BombController : MonoBehaviour {
                     int reject = Random.Range(0, 5);
                     if (reject == 0)
                     {
-                        //GetComponent<PhotonView>().RPC(GameConstants.RPCTags.detonateBomb, PhotonTargets.All);
-                        GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
-                        smoke.transform.localPosition = transform.localPosition;
-
-                        //TODO hack to get smoke emitter correctly rotated, fix this            
-                        if (transform.localPosition.x > 1.3 || transform.localPosition.x < -1.3)
-                            smoke.GetComponent<SmokeParticleSystem>().axis = 1;
-
                         GetComponent<PhotonView>().RPC("PlantSmoke", PhotonTargets.All);
                     }
                     PhotonNetwork.Destroy(this.gameObject);

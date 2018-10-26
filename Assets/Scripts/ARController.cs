@@ -88,9 +88,10 @@ public class ARController : MonoBehaviour
                     KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
                     world.SetParent(KOTCAnchor.transform, false);
-                    world.localPosition -= world.up * 0.5f;
+                    //world.localPosition -= world.up * 0.5f;
                     Transform gardenObj = Instantiate(garden).transform;
                     gardenObj.SetParent(world.transform, false);
+                    gardenObj.tag = GameConstants.GameObjectsTags.gardenObject;
 
                     GetComponent<LevelInstatiator>().world = world;
                     GetComponent<LevelInstatiator>().buildLevel();

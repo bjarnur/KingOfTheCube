@@ -13,6 +13,7 @@ TagManager:
   - ARController
   - LevelBuilder
   - WorldContainer
+  - King
   layers:
   - Default
   - TransparentFX
