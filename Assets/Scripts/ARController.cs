@@ -96,13 +96,6 @@ public class ARController : MonoBehaviour
                     GetComponent<LevelInstatiator>().world = world;
                     GetComponent<LevelInstatiator>().buildLevel();
 
-                    /*
-                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 1);
-                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 2);
-                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 3);
-                    GetComponent<LevelInstatiator>().PlantSmoke(smoke, 4);
-                    */
-
                     if (!isMultiplaer)
                     { 
                         readyPlayerOne();
@@ -158,7 +151,7 @@ public class ARController : MonoBehaviour
         NetworkPlayer networkPlayer = playerInstance.GetComponent<NetworkPlayer>();
         Rigidbody playerRigidbody = playerInstance.GetComponent<Rigidbody>();
 
-        networkPlayer.StopCoroutine("UpdateNetworked");
+        networkPlayer.StopCoroutine(GameConstants.RPCTags.updateNetworked);
         networkPlayer.enabled = false;
         controller.enabled = true;
         controller.world = world;
@@ -170,12 +163,12 @@ public class ARController : MonoBehaviour
 
     void spawnKing()
     {
-        Vector3 spawn = GameObject.FindWithTag("LevelBuilder")
+        Vector3 spawn = GameObject.FindWithTag(GameConstants.GameObjectsTags.controller)
                             .GetComponent<LevelInstatiator>()
                             .instantiateSpawnPoint(0);
 
-        GameObject newPlayer = PhotonNetwork.Instantiate("ARKing", Vector3.zero, Quaternion.identity, 0);
-        newPlayer.transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+        GameObject newPlayer = PhotonNetwork.Instantiate(GameConstants.PunNames.arKing, Vector3.zero, Quaternion.identity, 0);
+        newPlayer.transform.SetParent(GameObject.FindWithTag(GameConstants.GameObjectsTags.worldContainer).transform, false);
         newPlayer.transform.localPosition = spawn;
 
         KingController_AR controller = newPlayer.GetComponent<KingController_AR>();
@@ -183,7 +176,6 @@ public class ARController : MonoBehaviour
         Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
 
         controller.enabled = true;
-        //controller.isMultiplayer = true;
         controller.isAI = false;
         networkPlayer.enabled = true;
         playerRigidbody.useGravity = true;
@@ -191,7 +183,7 @@ public class ARController : MonoBehaviour
 
     void spawnPretender(int playerNumber)
     {        
-        Vector3 spawn = GameObject.FindWithTag("LevelBuilder")
+        Vector3 spawn = GameObject.FindWithTag(GameConstants.GameObjectsTags.controller)
                         .GetComponent<LevelInstatiator>()
                         .instantiateSpawnPoint(playerNumber);
 

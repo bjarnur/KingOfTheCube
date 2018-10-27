@@ -14,9 +14,7 @@ public class BombController : MonoBehaviour {
     {
         if(isMultiplayer)
         {
-            transform.SetParent(GameObject.Find("WorldContainer").transform, false);            
-            //transform.SetParent(GameObject.Find("Wrapper").transform, false);
-
+            transform.SetParent(GameObject.FindWithTag(GameConstants.GameObjectsTags.worldContainer).transform, false);
             GameObject kingObj = GameObject.FindWithTag(GameConstants.GameObjectsTags.king);            
             if (kingObj != null)
             {
@@ -29,7 +27,6 @@ public class BombController : MonoBehaviour {
 
     private void Start()
     {
-        //Physics.gravity = new Vector3(0, -0.075f, 0);
         var rb = GetComponent<Rigidbody>();
         if(isAR)
         {
@@ -51,7 +48,7 @@ public class BombController : MonoBehaviour {
                     int reject = Random.Range(0, 5);
                     if (reject == 0)
                     {
-                        GetComponent<PhotonView>().RPC("PlantSmoke", PhotonTargets.All);
+                        GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantSmoke, PhotonTargets.All);
                     }
                     PhotonNetwork.Destroy(this.gameObject);
                 }

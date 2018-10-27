@@ -60,5 +60,5 @@ MonoBehaviour:
   scaleWithTime: 1.005
   decelerateWithTime: 0.99
   scale: 0.1
-  systemLife: 1000
+  systemLife: 15
   particleLife: 5

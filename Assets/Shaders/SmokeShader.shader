@@ -1,7 +1,5 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 Shader "Unlit/SmokeShader"
@@ -9,7 +7,8 @@ Shader "Unlit/SmokeShader"
 	Properties
 	{
 		_Tint("Tint", Color) = (1, 1, 1, 1)
-		_Transparency("Transparency", Range(0.0,0.5)) = 0.25
+		_Origin("Origin", Vector) = (0, 0, 0, 0)
+		_Transparency("Transparency", Range(0.0,0.5)) = 0.25		
 	}
 
 	SubShader
@@ -28,6 +27,7 @@ Shader "Unlit/SmokeShader"
 				#include "UnityCG.cginc"
 
 				float4 _Tint;
+				float4 _Origin;
 				float _Transparency;
 
 				struct Interpolators
@@ -52,7 +52,8 @@ Shader "Unlit/SmokeShader"
 				float4 SmokeFragmentProgram(Interpolators i) 
 				: SV_TARGET {					
 					//float alpha = (1.0 - i.worldPosition.y / 50.0); //For Unity
-					float alpha = (0.7 - i.worldPosition.y); //For AR
+					//float alpha = (0.7 - i.worldPosition.y); //For AR
+					float alpha = (1 - (i.worldPosition.y - _Origin.y)); //For AR					
 					
 					float3 color = (0.45 - i.localPosition.y/1.4);
 					float4 col = float4(color, alpha);

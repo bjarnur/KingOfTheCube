@@ -27,7 +27,7 @@ public class SmokeParticleSystem : MonoBehaviour
     public float scaleWithTime = 1.005f;
     public float decelerateWithTime = 0.99f;
     public float scale =  0.1f;
-    public float systemLife = 1000;
+    public float systemLife = 15;
     public float particleLife = 5;
 
 
@@ -52,14 +52,15 @@ public class SmokeParticleSystem : MonoBehaviour
 
     void Start ()
     {
-        GameObject kingObj = GameObject.FindWithTag("King");
+        GameObject kingObj = GameObject.FindWithTag(GameConstants.GameObjectsTags.king);
         localFwd = kingObj.transform.localRotation * Vector3.forward;
         localRight = kingObj.transform.localRotation * Vector3.right;
 
         randomNumberGenerator = new Random();
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
-        smokeMaterial = Resources.Load<Material>("Materials/Mat_Smoke");
+        smokeMaterial = Resources.Load<Material>(GameConstants.Materials.smoke);
+        smokeMaterial.SetVector(GameConstants.ShaderProperties.smokeOrigin, transform.position);
     }
 	
 	
@@ -79,7 +80,7 @@ public class SmokeParticleSystem : MonoBehaviour
         }
 
         //Spawn new particles when relevant
-        else if (systemLife > 5)
+        else if (systemLife > particleLife)
         {            
             for (int i = 0; i < newParticlesPerFrame; i++)
             {
@@ -102,7 +103,7 @@ public class SmokeParticleSystem : MonoBehaviour
             {
                 //Update postition
                 particle.position -= particle.velocity * Time.deltaTime * scale * scale;
-                particleCubes[i].transform.position = particle.position;                
+                particleCubes[i].transform.position = particle.position;
 
                 //Particle speed and size vary over time
                 Vector3 v = particle.velocity;

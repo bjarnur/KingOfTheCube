@@ -30,10 +30,27 @@ public static class GameConstants  {
 
     internal static class RPCTags {
         public const string detonateBomb = "DetonateBomb";
+        public const string updateNetworked = "UpdateNetworked";
+        public const string plantSmoke = "PlantSmoke";
+    }
+
+    internal static class PunNames {
+        public static string arKing = "ARKing";
+        public static string unityKing = "UnityKing";
     }
 
     internal static class GameObjectsTags {
         public const string gardenObject = "GardenObject";
+        public const string controller = "LevelBuilder";
         public const string king = "King";
+        public const string worldContainer = "WorldContainer";
+    }
+
+    internal static class Materials {
+        public static string smoke = "Materials/Mat_Smoke";
+    }
+
+    internal static class ShaderProperties {
+        public static string smokeOrigin = "_Origin";
     }
 }
