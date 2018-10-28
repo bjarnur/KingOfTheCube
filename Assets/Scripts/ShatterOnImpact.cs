@@ -9,11 +9,15 @@ public class ShatterOnImpact : MonoBehaviour {
     public float timer = 3f;
 
 
-    private void OnMouseDown( )
+    private void OnCollisionEnter(Collision col)
     {
 
-        GameObject.Instantiate(shattered, transform.position, transform.rotation);
+        if (col.transform.gameObject.name == "Rock")
+        {
+            GameObject.Instantiate(shattered, transform.position, transform.rotation);
 
-        Destroy(this.gameObject);
+            Destroy(this.gameObject);
+
+        }
     }
 }
