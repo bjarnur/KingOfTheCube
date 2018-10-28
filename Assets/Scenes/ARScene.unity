@@ -698,7 +698,7 @@ MonoBehaviour:
   UIScanning: {fileID: 1782389318}
   UIWinning: {fileID: 2016045061}
   garden: {fileID: 1541667144648622, guid: 474618c9117ea4046b96628c9f349217, type: 2}
-  king: {fileID: 1711386312576774, guid: db4c630a28ff84e42bf12e8c195fd14d, type: 2}
+  king: {fileID: 1711386312576774, guid: 7772612f8ab40e640914334a275aa0ad, type: 2}
   playerOne: {fileID: 1084817040065256, guid: ef906ce459e904228895c8535034a8ef, type: 2}
   smoke: {fileID: 1751778568257520, guid: 00cbd94c41e88d44991c6b1343a5fc57, type: 2}
   world: {fileID: 343080613}

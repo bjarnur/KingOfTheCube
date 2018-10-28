@@ -99,7 +99,7 @@ public class ARController : MonoBehaviour
                     if (!isMultiplaer)
                     { 
                         readyPlayerOne();
-                        //readyKing();
+                        readyKing();
                     }
                     else
                     {
@@ -142,8 +142,8 @@ public class ARController : MonoBehaviour
         else {
             world.SetParent(null, true);
         }
-    }
-    GameObject smokeEffects;
+    }    
+
     void readyPlayerOne()
     {
         playerInstance = Instantiate(playerOne, world, false);    
@@ -159,6 +159,19 @@ public class ARController : MonoBehaviour
         playerRigidbody.useGravity = true;
 
         ResetPlayer();
+    }
+
+    void readyKing()
+    {
+        GameObject kingInstance = Instantiate(king);
+        kingInstance.transform.SetParent(GameObject.FindWithTag(GameConstants.GameObjectsTags.worldContainer).transform, false);
+
+        KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
+        kCtrl.isAI = true;
+        kCtrl.isMultiplayer = false;
+        kCtrl.enabled = true;        
+        kCtrl.setPlayer(playerInstance);
+        kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 
     void spawnKing()
@@ -211,15 +224,5 @@ public class ARController : MonoBehaviour
         playerInstance.transform.localPosition = new Vector3(xBoundsMin + 0.13f, 0.3f, zBoundsMin);
         playerInstance.GetComponent<Rigidbody>().useGravity = true;
         playerInstance.GetComponent<CharacterCtrl>().Reset();        
-    }
-
-    void readyKing()
-    {
-        GameObject kingInstance = Instantiate(king, world, false);
-        KingController_AR kCtrl = kingInstance.GetComponent<KingController_AR>();
-        kCtrl.enabled = true;
-        kCtrl.isMultiplayer = false;
-        kCtrl.setPlayer(playerInstance);
-        kingInstance.transform.localPosition = new Vector3(xBoundsMin - 0.5f, 3.1f, zBoundsMin);
     }
 }

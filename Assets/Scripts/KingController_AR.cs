@@ -220,24 +220,27 @@ public class KingController_AR : MonoBehaviour {
 
     void StartThrowing()
     {
-        switch (side)
-        {
-            case 0:
-                Debug.Log("SOY EL 0");
-                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-                break;
-            case 1:
-                Debug.Log("SOY EL 1");
-                transform.localEulerAngles = new Vector3(0f, 90f, 0f);
-                break;
-            case 2:
-                Debug.Log("SOY EL 2");
-                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-                break;
-            case 3:
-                Debug.Log("SOY EL 3");
-                transform.localEulerAngles = new Vector3(0f, 270f, 0f);
-                break;
+        if(isMultiplayer)
+        { 
+            switch (side)
+            {
+                case 0:
+                    Debug.Log("SOY EL 0");
+                    transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                    break;
+                case 1:
+                    Debug.Log("SOY EL 1");
+                    transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                    break;
+                case 2:
+                    Debug.Log("SOY EL 2");
+                    transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                    break;
+                case 3:
+                    Debug.Log("SOY EL 3");
+                    transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                    break;
+            }
         }
         throwing = true;
     }
@@ -269,8 +272,9 @@ public class KingController_AR : MonoBehaviour {
         {
             GameObject rockInstance = Instantiate(rockPrefab);
             rockInstance.GetComponent<BombController>().enabled = true;
+            rockInstance.GetComponent<BombController>().isMultiplayer = false;
             rockInstance.transform.position = hand.transform.position;
-            rockInstance.transform.localScale = new Vector3(1, 1, 1);
+            //rockInstance.transform.localScale = new Vector3(1, 1, 1);
             rockInstance.transform.position = hand.transform.position;
             rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
             rockInstance.SetActive(true);
