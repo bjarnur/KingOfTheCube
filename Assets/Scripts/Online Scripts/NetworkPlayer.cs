@@ -12,6 +12,9 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     public GameConstants.AnimationTypes currentAnimation;
     public bool isAR = false;
 
+    public AudioSource jumpSound;
+    public AudioSource dieSound;
+
     void Awake () {
         if(photonView.isMine)
         {            
@@ -69,6 +72,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
                 animator.SetBool("Stop", false);
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
+                jumpSound.Play();
                 break;
             case GameConstants.AnimationTypes.climbing:
                 animator.SetBool("Run", false);
@@ -118,7 +122,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             //isAlive = false;
         }
         //Play hurt sound effect
-        GetComponent<AudioSource>().Play();
+        dieSound.Play();
     }
 
     /*
