@@ -14,6 +14,7 @@ TagManager:
   - LevelBuilder
   - WorldContainer
   - King
+  - GardenObject
   layers:
   - Default
   - TransparentFX
