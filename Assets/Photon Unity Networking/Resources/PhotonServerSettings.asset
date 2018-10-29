@@ -47,4 +47,5 @@ MonoBehaviour:
   - DetonateBomb
   - DropBomb
   - PlantSmoke
+  - PlantExplosion
   DisableAutoOpenWizard: 1

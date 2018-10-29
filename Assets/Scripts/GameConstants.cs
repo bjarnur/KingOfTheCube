@@ -32,6 +32,7 @@ public static class GameConstants  {
         public const string detonateBomb = "DetonateBomb";
         public const string updateNetworked = "UpdateNetworked";
         public const string plantSmoke = "PlantSmoke";
+        public const string plantExplosion = "PlantExplosion";
     }
 
     internal static class PunNames {
@@ -48,6 +49,7 @@ public static class GameConstants  {
 
     internal static class Materials {
         public static string smoke = "Materials/Mat_Smoke";
+        public static string explosion = "Materials/Mat_Explosion";
     }
 
     internal static class ShaderProperties {

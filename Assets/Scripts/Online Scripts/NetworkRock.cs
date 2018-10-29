@@ -77,8 +77,35 @@ public class NetworkRock : Photon.MonoBehaviour {
         smokeCtrl.scale = 0.1f;
         smokeCtrl.systemLife = 15f;
         smokeCtrl.particleLife = 5f;
+        smokeCtrl.systemType = 0;
 
         //Need to do this last, some variables are used at startup
         smokeCtrl.enabled = true;
+    }
+
+    [PunRPC]
+    void PlantExplosion()
+    {
+        Debug.Log("Plating explosin");
+
+        GameObject explosion = Instantiate(smokePrefab, transform.parent, false);
+        explosion.transform.localPosition = transform.localPosition;
+
+        SmokeParticleSystem explosionCtrl = explosion.GetComponent<SmokeParticleSystem>();
+        explosionCtrl.numberOfParticles = 50;
+        explosionCtrl.sidewaysSpreadFactor = 16;
+        explosionCtrl.forwardSpreadFactor = 16;
+        explosionCtrl.verticalSpreadFactor = 0;
+        explosionCtrl.verticalSpreadVariance = 6;
+        explosionCtrl.rejectionRate = 3;
+        explosionCtrl.scaleWithTime = 1.005f;
+        explosionCtrl.decelerateWithTime = 0.9f;
+        explosionCtrl.scale = 0.1f;
+        explosionCtrl.systemLife = 1.5f;
+        explosionCtrl.particleLife = 0.5f;
+        explosionCtrl.systemType = 1;
+
+        //Need to do this last, some variables are used at startup
+        explosionCtrl.enabled = true;
     }
 }

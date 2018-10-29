@@ -50,8 +50,12 @@ public class BombController : MonoBehaviour {
                     {
                         GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantSmoke, PhotonTargets.All);
                     }
+                    else
+                    {
+                        GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantExplosion, PhotonTargets.All);
+                    }
                     PhotonNetwork.Destroy(this.gameObject);
-                }
+             }
         }
         else
         {
