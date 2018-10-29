@@ -96,7 +96,6 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.thirdFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.first, -1, 31);
 
-        buildLadder(CubeFaces.firstFace, CubeLevel.first, 19, 8);
         buildPlatform(CubeFaces.firstFace, CubeLevel.fourth, 20, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.fourth, -1, 10);
         //buildLadder(CubeFaces.fourthFace, CubeLevel.fourth, 3, 25);
@@ -104,21 +103,17 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.fourthFace, CubeLevel.fifth, 15, 31);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
 
-        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, 15, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.ninth, 20, 25);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.eleventh, 25, 28);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, 28, 31);
         buildPlatform(CubeFaces.secondFace, CubeLevel.thirteenth, -1, 9);
 
-
-        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 12);
         buildPlatform(CubeFaces.secondFace, CubeLevel.eleventh, 15, 25);
         buildPlatform(CubeFaces.secondFace, CubeLevel.fourth, 15, 24);
         buildPlatform(CubeFaces.secondFace, CubeLevel.seventh, 18, 31);
         buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, -1, 10);
         buildPlatform(CubeFaces.firstFace, CubeLevel.seventh, 15, 20);
-        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 19, 8);
 
         buildPlatform(CubeFaces.firstFace, CubeLevel.tenth, 20, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.tenth, -1, 10);
@@ -126,8 +121,13 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 25, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, -1, 5);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 6);
-        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 5);
+
+        buildLadder(CubeFaces.firstFace, CubeLevel.first, 18, 3);
+        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 18, 2);
+        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 3);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 13, 5);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 1);
+        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 13, 1);
     }
 
     private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
@@ -139,9 +139,9 @@ public class LevelInstatiator : MonoBehaviour{
         }
     }
 
-    private void buildLadder(CubeFaces inFace, float atLevel, int column, float height)
+    private void buildLadder(CubeFaces inFace, float atLevel, int column, float numOfLadders)
     {
-        Transform t = Instantiate(ladder, world, false); ;
+        Transform t = Instantiate(ladder, world, false); 
         Quaternion rotation = Quaternion.identity;
         Vector3 copyVector = new Vector3(0, 0, 0);
         switch(inFace)
@@ -149,32 +149,40 @@ public class LevelInstatiator : MonoBehaviour{
             case CubeFaces.firstFace:
                 copyVector = firstFaceVector;
                 copyVector.x = xBoundsMax - (column * scalingFactor);
-                copyVector.z = zBoundsMin + (0.5f * scalingFactor);
-                rotation = Quaternion.Euler(0, 180, 0);
+                copyVector.z = zBoundsMin + (0.6f * scalingFactor);
+                rotation = Quaternion.Euler(0, 90 + 180, 0);
                 break;
             case CubeFaces.secondFace:
                 copyVector = secondFaceVector;
                 copyVector.z = zBoundsMax - (column * scalingFactor);
-                copyVector.x = xBoundsMax - (0.5f * scalingFactor);
-                rotation = Quaternion.Euler(0, 90, 0);
+                copyVector.x = xBoundsMax - (0.6f * scalingFactor);
+                rotation = Quaternion.Euler(0, 90 + 90, 0);
                 break;
             case CubeFaces.thirdFace:
                 copyVector = thirdFaceVector;
                 copyVector.x = xBoundsMin + (column * scalingFactor);
-                copyVector.z = zBoundsMax - (0.5f * scalingFactor);
+                copyVector.z = zBoundsMax - (0.6f * scalingFactor);
+                rotation = Quaternion.Euler(0, 90, 0);
                 break;
             case CubeFaces.fourthFace:
                 copyVector = fourthFaceVector;
                 copyVector.z = zBoundsMin + (column * scalingFactor);                                
-                copyVector.x = xBoundsMin + (0.5f * scalingFactor);
-                rotation = Quaternion.Euler(0, 270, 0);
+                copyVector.x = xBoundsMin + (0.6f * scalingFactor);
+                rotation = Quaternion.Euler(0, 90 + 270, 0);
                 break;
         }
 
-        copyVector.y = (atLevel * scalingFactor) + ((height / 2) * scalingFactor);
-        t.localScale = new Vector3(t.localScale.x, t.localScale.y * height, t.localScale.z);
+        copyVector.y = atLevel * scalingFactor;
         t.localRotation = rotation;
         t.localPosition += copyVector;
+
+        for (int i = 2; i <= numOfLadders; ++i) {
+            var newLadder = Instantiate(ladder, world, false); 
+            var newCopyVector = copyVector;
+            newCopyVector.y += 2f  * scalingFactor * (i-1);
+            newLadder.localPosition += newCopyVector;
+            newLadder.localRotation = rotation;
+        }
     }
 
 
