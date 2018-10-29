@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -967,6 +967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 2122926094}
   playerOne: {fileID: 34124389}
+  smokePrefab: {fileID: 0}
   isMultiplayer: 0
 --- !u!4 &2122926094 stripped
 Transform:
@@ -988,4 +989,4 @@ MonoBehaviour:
   world: {fileID: 2122926094}
   platformUnit: {fileID: 4107635161414470, guid: 2e6fb3d70a41d3a4eb5a81cf4497ebd5,
     type: 2}
-  ladder: {fileID: 4120511166099770, guid: aa13fb0327c21934f9bda95092e29a3a, type: 2}
+  ladder: {fileID: 4219220066929524, guid: d9f22985877474625b72cd017b72f7a4, type: 2}
