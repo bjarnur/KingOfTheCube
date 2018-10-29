@@ -413,16 +413,16 @@ GameObject:
   - component: {fileID: 95624246817075838}
   - component: {fileID: 54726747987341816}
   - component: {fileID: 65792458258414242}
-  - component: {fileID: 114032949492834754}
-  - component: {fileID: 114144758410587124}
+  - component: {fileID: 114200969340419540}
   - component: {fileID: 114072779002070632}
+  - component: {fileID: 114941279700310398}
   m_Layer: 0
   m_Name: Player_Four
-  m_TagString: King
+  m_TagString: ARPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4034999118579812
 Transform:
   m_ObjectHideFlags: 1
@@ -737,8 +737,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1987473022931796}
   m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 30, z: 14.5}
-  m_LocalScale: {x: 15, y: 15, z: 15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4223765848775242}
   - {fileID: 4797120873914092}
@@ -810,12 +810,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_Constraints: 80
+  m_CollisionDetection: 1
 --- !u!65 &65792458258414242
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -826,8 +826,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.12, y: 0.29, z: 0.056931306}
-  m_Center: {x: 0.0030397952, y: 0.15, z: 0.00038108826}
+  m_Size: {x: 0.12, y: 0.30436307, z: 0.056931306}
+  m_Center: {x: 0.003039796, y: 0.14281848, z: 0.00038108788}
 --- !u!95 &95624246817075838
 Animator:
   serializedVersion: 3
@@ -837,7 +837,7 @@ Animator:
   m_GameObject: {fileID: 1987473022931796}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 3e14fe9264fbe49c2bb1dbfcb512c1da, type: 3}
-  m_Controller: {fileID: 9100000, guid: 41ca3f3f43800574d94fd731eac4358f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 895671bfd1b5ab04bba9c5b52e9f252d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -846,25 +846,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114032949492834754
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1987473022931796}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27f8f63bfa52a594b9ce8b95041ec963, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 15
-  isAI: 0
-  rock: {fileID: 0}
-  hand: {fileID: 0}
-  garden: {fileID: 0}
-  player: {fileID: 0}
-  isMultiplayer: 1
-  currentAnimation: 0
 --- !u!114 &114072779002070632
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -885,13 +866,36 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 114144758410587124}
+  - {fileID: 114941279700310398}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 3
-  instantiationId: 3
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
---- !u!114 &114144758410587124
+--- !u!114 &114200969340419540
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1987473022931796}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92422df305e791542960084ab0d44e22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.17
+  jumpSpeed: 0.9
+  world: {fileID: 0}
+  winText: {fileID: 0}
+  currentAnimation: 0
+  xBounds: 1.6
+  zBounds: 1.6
+  topCube: 3
+  side: 2
+  win: 0
+  isMultiplayer: 0
+  dead: 0
+--- !u!114 &114941279700310398
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -899,12 +903,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1987473022931796}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efded8a9b2854b8eaee23b1b3a7a0ec, type: 3}
+  m_Script: {fileID: 11500000, guid: 990c5868e8b57cc47af64fcfe0680335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   larpSmoothing: 10
+  currentAnimation: 0
+  isAR: 1
+  jumpSound: {fileID: 0}
+  dieSound: {fileID: 0}
 --- !u!137 &137708329038518758
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -199,9 +199,23 @@ public class ARController : MonoBehaviour
         Vector3 spawn = GameObject.FindWithTag(GameConstants.GameObjectsTags.controller)
                         .GetComponent<LevelInstatiator>()
                         .instantiateSpawnPoint(playerNumber);
-
-        var newPlayer = PhotonNetwork.Instantiate(GameConstants.ARPLAYERNAME, 
-                                                Vector3.zero, Quaternion.identity, 0);
+      
+        GameObject newPlayer = null;
+        switch (playerNumber)
+        {
+            case 2:
+                newPlayer = PhotonNetwork.Instantiate("Player_One", Vector3.zero, Quaternion.identity, 0);
+                break;
+            case 3:
+                newPlayer = PhotonNetwork.Instantiate("Player_Two", Vector3.zero, Quaternion.identity, 0);
+                break;
+            case 4:
+                newPlayer = PhotonNetwork.Instantiate("Player_Three", Vector3.zero, Quaternion.identity, 0);
+                break;
+            case 5:
+                newPlayer = PhotonNetwork.Instantiate("Player_Four", Vector3.zero, Quaternion.identity, 0);
+                break;
+        }
 
         CharacterCtrl controller = newPlayer.GetComponent<CharacterCtrl>();
         NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
