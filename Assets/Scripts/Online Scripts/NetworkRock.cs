@@ -63,7 +63,22 @@ public class NetworkRock : Photon.MonoBehaviour {
     void PlantSmoke()
     {
         GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
-        SmokeParticleSystem smokeCtrl = smoke.GetComponent<SmokeParticleSystem>();
         smoke.transform.localPosition = transform.localPosition;
+
+        SmokeParticleSystem smokeCtrl = smoke.GetComponent<SmokeParticleSystem>();
+        smokeCtrl.numberOfParticles = 150;
+        smokeCtrl.sidewaysSpreadFactor = 4;
+        smokeCtrl.forwardSpreadFactor = 2;
+        smokeCtrl.verticalSpreadFactor = 3;
+        smokeCtrl.verticalSpreadVariance = 3;
+        smokeCtrl.rejectionRate = 7;
+        smokeCtrl.scaleWithTime = 1.005f;
+        smokeCtrl.decelerateWithTime = 0.99f;
+        smokeCtrl.scale = 0.1f;
+        smokeCtrl.systemLife = 15f;
+        smokeCtrl.particleLife = 5f;
+
+        //Need to do this last, some variables are used at startup
+        smokeCtrl.enabled = true;
     }
 }
