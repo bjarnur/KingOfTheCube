@@ -30,6 +30,9 @@ public class SmokeParticleSystem : MonoBehaviour
     public float systemLife = 15;
     public float particleLife = 5;
 
+    //TODO Make this an enum
+    public int systemType;
+
 
     /*******************\
       Private variables 
@@ -59,8 +62,13 @@ public class SmokeParticleSystem : MonoBehaviour
         randomNumberGenerator = new Random();
         particles = new OurParticle[numberOfParticles];
         particleCubes = new GameObject[numberOfParticles];
-        smokeMaterial = Resources.Load<Material>(GameConstants.Materials.smoke);
-        smokeMaterial.SetVector(GameConstants.ShaderProperties.smokeOrigin, transform.position);
+
+        if(systemType == 0)
+            smokeMaterial = Resources.Load<Material>(GameConstants.Materials.smoke);
+        else if(systemType == 1)
+            smokeMaterial = Resources.Load<Material>(GameConstants.Materials.explosion);
+            
+        smokeMaterial.SetVector(GameConstants.ShaderProperties.smokeOrigin, transform.position);        
     }
 	
 	
