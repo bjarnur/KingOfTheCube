@@ -58,9 +58,9 @@ Shader "Unlit/ExplosionShader"
 					
 					float red = 1;
 					//float yellow = 0.5 + ((i.worldPosition.x - _Origin.x)*(i.worldPosition.x - _Origin.x));
-					float green = 1.0 - (abs(i.worldPosition.x - _Origin.x)
+					float green = 0.5 + (abs(i.worldPosition.x - _Origin.x)
 										+abs(i.worldPosition.y - _Origin.y)
-										+abs(i.worldPosition.z - _Origin.z)) * 3; // / 6 (good for Unity)
+										+abs(i.worldPosition.z - _Origin.z)) * 5; // / 6 (good for Unity)
 					float4 col = float4(red, green, 0, alpha);
 					
 					return col;

@@ -10,6 +10,8 @@ public class BombController : MonoBehaviour {
     public bool isMultiplayer = true;
     public bool isAR = true;    
 
+    private bool hasCollided = false;
+
     public void Awake()
     {
         if(isMultiplayer)
@@ -41,10 +43,13 @@ public class BombController : MonoBehaviour {
 
     private void OnCollisionEnter(Collision col)
     {
+        if (hasCollided) return;
+
         if(isMultiplayer)
         {
             if (col.gameObject.tag != GameConstants.ARPLAYERTAG)
             {
+                    hasCollided = true;
                     int reject = Random.Range(0, 5);
                     if (reject == 0)
                     {
@@ -53,12 +58,13 @@ public class BombController : MonoBehaviour {
                     else
                     {
                         GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantExplosion, PhotonTargets.All);
-                    }
+                    }                    
                     PhotonNetwork.Destroy(this.gameObject);
              }
         }
         else
         {
+            hasCollided = true;
             Destroy(this.gameObject);
             GameObject explosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
             Destroy(explosion, 1.5f);
