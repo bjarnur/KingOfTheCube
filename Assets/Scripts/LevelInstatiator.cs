@@ -25,6 +25,8 @@ public static class CubeLevel {
     public const float thirteenth = 24.5f;
     public const float fourtheenth = 26.5f;
     public const float fifteenth = 28.5f;
+    public const float desFirst = -10.0f;
+
 }
 
 
@@ -38,6 +40,7 @@ public class LevelInstatiator : MonoBehaviour{
     public Transform world;
     public Transform platformUnit;
     public Transform ladder;
+    public Transform destructible;
 
 
     /*********************\
@@ -67,11 +70,13 @@ public class LevelInstatiator : MonoBehaviour{
         thirdFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMax);
         fourthFaceVector = new Vector3(xBoundsMin, 0f, zBoundsMin);
     }
-    
 
-    public void buildLevel() {
 
-        
+    public void buildLevel()
+    {
+
+
+
         //Can be used to easilly see what face you are looking at
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 1, 1);
         buildLadder(CubeFaces.secondFace, CubeLevel.first, 1, 2);
@@ -92,6 +97,8 @@ public class LevelInstatiator : MonoBehaviour{
 
         buildPlatform(CubeFaces.fourthFace, CubeLevel.fifth, 15, 31);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
+
+
 
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 11, 14);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, 15, 20);
@@ -115,16 +122,31 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.fourthFace, CubeLevel.thirteenth, 25, 31);
         buildPlatform(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, -1, 5);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 6);
-        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 5);
-    }
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 6);  
+        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 5);  
 
-    private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
+        buildDestructible(CubeFaces.thirdFace, CubeLevel.eleventh, 10, 18);
+
+
+
+
+    }
+        private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
     {
         for (int i = fromColumn; i <= toColumn; i++)
         {
             instantiateFacePlatform(inFace, atLevel, i, 0);
             instantiateFacePlatform(inFace, atLevel, i, 1);
+        }
+    }
+
+
+    private void buildDestructible(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
+    {
+        for (int i = fromColumn; i <= toColumn; i++)
+        {
+            //instantiateDestructible(inFace, atLevel, i, 0);
+            instantiateDestructible(inFace, atLevel, i, 1);
         }
     }
 
@@ -167,6 +189,7 @@ public class LevelInstatiator : MonoBehaviour{
     }
 
 
+
     private void instantiateFacePlatform(CubeFaces inFace, float atLevel, float atColumn, float distanceFromCube)
     {
         var copyVector = new Vector3(0, 0, 0);
@@ -196,5 +219,37 @@ public class LevelInstatiator : MonoBehaviour{
         copyVector.y = atLevel * scalingFactor;
         Transform t = Instantiate(platformUnit, world, false);
         t.localPosition += copyVector;
-    }    
+    }
+
+    private void instantiateDestructible(CubeFaces inFace, float atLevel, float atColumn, float distanceFromCube)
+    {
+        var copyVector = new Vector3(0, 0, 0);
+        switch (inFace)
+        {
+            case CubeFaces.firstFace:
+                copyVector = firstFaceVector;
+                copyVector.x = xBoundsMax - (atColumn * scalingFactor);
+                copyVector.z = zBoundsMin - (distanceFromCube * scalingFactor);
+                break;
+            case CubeFaces.secondFace:
+                copyVector = secondFaceVector;
+                copyVector.z = zBoundsMax - (atColumn * scalingFactor);
+                copyVector.x = xBoundsMax + (distanceFromCube * scalingFactor);
+                break;
+            case CubeFaces.thirdFace:
+                copyVector = thirdFaceVector;
+                copyVector.x = xBoundsMin + (atColumn * scalingFactor);
+                copyVector.z = zBoundsMax + (distanceFromCube * scalingFactor);
+                break;
+            case CubeFaces.fourthFace:
+                copyVector = fourthFaceVector;
+                copyVector.z = zBoundsMin + (atColumn * scalingFactor);
+                copyVector.x = xBoundsMin - (distanceFromCube * scalingFactor);
+                break;
+        }
+        copyVector.y = atLevel * scalingFactor;
+        Transform t = Instantiate(destructible, world, false);
+        t.localPosition += copyVector;
+    }
+
 }
