@@ -44,7 +44,7 @@ public class BombController : MonoBehaviour {
     private void OnCollisionEnter(Collision col)
     {
         if (hasCollided) return;
-
+        Debug.Log("THE TAG IS: " + col.gameObject.tag);
         if (col.gameObject.tag != GameConstants.ARPLAYERTAG)
         {
             hasCollided = true;

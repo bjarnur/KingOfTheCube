@@ -384,11 +384,12 @@ public class CharacterCtrl : MonoBehaviour {
                 animator.SetBool("Jump", false);
                 currentAnimation = GameConstants.AnimationTypes.climbing;
             }
-            else if (jumping){
+            else if (jumping && !animator.GetBool("Jump")){
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
-                Debug.Log("IOM HEREEEEEE");
-                jumpSound.Play();
+                if (!jumpSound.isPlaying) {
+                    jumpSound.Play();
+                }
                 currentAnimation = GameConstants.AnimationTypes.jumping;
             }
             else {
