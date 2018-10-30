@@ -276,6 +276,7 @@ public class KingController_AR : MonoBehaviour {
             rockInstance.transform.position = hand.transform.position;
             //rockInstance.transform.localScale = new Vector3(1, 1, 1);
             rockInstance.transform.position = hand.transform.position;
+            rockInstance.GetComponent<Rigidbody>().useGravity = true;
             rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
             rockInstance.SetActive(true);
         }
