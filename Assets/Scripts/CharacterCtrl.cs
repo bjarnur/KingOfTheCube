@@ -19,6 +19,9 @@ public class CharacterCtrl : MonoBehaviour {
     public float zBounds = 1.6f;
     public float topCube = 3.0f;    
 
+    public AudioSource jumpSound;
+    public AudioSource dieSound;
+
     [HideInInspector]
     public int side = 2;
     [HideInInspector]
@@ -128,6 +131,7 @@ public class CharacterCtrl : MonoBehaviour {
             Debug.Log("Killing character");
             animator.SetTrigger("Die");
             dead = true;
+            dieSound.Play();
             StartCoroutine(Dying());            
         }
 
@@ -380,10 +384,10 @@ public class CharacterCtrl : MonoBehaviour {
                 animator.SetBool("Jump", false);
                 currentAnimation = GameConstants.AnimationTypes.climbing;
             }
-            else if (jumping)
-            {
+            else if (jumping){
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
+                jumpSound.Play();
                 currentAnimation = GameConstants.AnimationTypes.jumping;
             }
             else {

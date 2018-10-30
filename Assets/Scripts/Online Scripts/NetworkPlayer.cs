@@ -12,8 +12,6 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     public GameConstants.AnimationTypes currentAnimation;
     public bool isAR = false;
 
-    public AudioSource jumpSound;
-    public AudioSource dieSound;
 
     void Awake () {
         if(photonView.isMine)
@@ -49,9 +47,9 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         }
     }
 
-    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animation) {
-        Debug.Log(animation);
-        switch (animation)
+    void SetCharacterAnimation(Animator animator, GameConstants.AnimationTypes animationType) {
+        Debug.Log(animationType);
+        switch (animationType)
         {
             case GameConstants.AnimationTypes.stopped:
                 animator.SetBool("Fall", false);
@@ -72,7 +70,6 @@ public class NetworkPlayer : Photon.MonoBehaviour {
                 animator.SetBool("Stop", false);
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
-                jumpSound.Play();
                 break;
             case GameConstants.AnimationTypes.climbing:
                 animator.SetBool("Run", false);
@@ -121,8 +118,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
             //Use this if we don't want players to respawn
             //isAlive = false;
         }
-        //Play hurt sound effect
-        dieSound.Play();
+
     }
 
     /*

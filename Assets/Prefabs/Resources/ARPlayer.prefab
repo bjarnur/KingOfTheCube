@@ -1053,8 +1053,6 @@ MonoBehaviour:
   larpSmoothing: 10
   currentAnimation: 0
   isAR: 1
-  jumpSound: {fileID: 82725183440129586}
-  dieSound: {fileID: 82698745449783268}
 --- !u!114 &114418275220788004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1074,6 +1072,8 @@ MonoBehaviour:
   xBounds: 1.6
   zBounds: 1.6
   topCube: 3
+  jumpSound: {fileID: 82725183440129586}
+  dieSound: {fileID: 82698745449783268}
   side: 2
   win: 0
   isMultiplayer: 0
