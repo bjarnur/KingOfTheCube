@@ -387,6 +387,7 @@ public class CharacterCtrl : MonoBehaviour {
             else if (jumping){
                 animator.SetBool("Run", false);
                 animator.SetBool("Jump", true);
+                Debug.Log("IOM HEREEEEEE");
                 jumpSound.Play();
                 currentAnimation = GameConstants.AnimationTypes.jumping;
             }
