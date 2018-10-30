@@ -45,29 +45,77 @@ public class BombController : MonoBehaviour {
     {
         if (hasCollided) return;
 
-        if(isMultiplayer)
-        {
-            if (col.gameObject.tag != GameConstants.ARPLAYERTAG)
-            {
-                    hasCollided = true;
-                    int reject = Random.Range(0, 5);
-                    if (reject == 0)
-                    {
-                        GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantSmoke, PhotonTargets.All);
-                    }
-                    else
-                    {
-                        GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantExplosion, PhotonTargets.All);
-                    }                    
-                    PhotonNetwork.Destroy(this.gameObject);
-             }
-        }
-        else
+        if (col.gameObject.tag != GameConstants.ARPLAYERTAG)
         {
             hasCollided = true;
+            int reject = Random.Range(0, 5);
+            if (reject == 0)
+            {
+                if (isMultiplayer)
+                    GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantSmoke, PhotonTargets.All);
+                else
+                    PlantSmoke();
+            }
+            else
+            {
+                if (isMultiplayer)
+                    GetComponent<PhotonView>().RPC(GameConstants.RPCTags.plantExplosion, PhotonTargets.All);
+                else
+                    PlantExplosion();
+        }
+
+        if (isMultiplayer)
+            PhotonNetwork.Destroy(this.gameObject);
+        else
             Destroy(this.gameObject);
-            GameObject explosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
-            Destroy(explosion, 1.5f);
-        }     
+        }
+    }
+
+    private void PlantSmoke()
+    {
+        GameObject smoke = Instantiate(smokePrefab, transform.parent, false);
+        smoke.transform.localPosition = transform.localPosition;
+
+        SmokeParticleSystem smokeCtrl = smoke.GetComponent<SmokeParticleSystem>();
+        smokeCtrl.numberOfParticles = 150;
+        smokeCtrl.sidewaysSpreadFactor = 4;
+        smokeCtrl.forwardSpreadFactor = 2;
+        smokeCtrl.verticalSpreadFactor = 3;
+        smokeCtrl.verticalSpreadVariance = 3;
+        smokeCtrl.rejectionRate = 7;
+        smokeCtrl.scaleWithTime = 1.005f;
+        smokeCtrl.decelerateWithTime = 0.99f;
+        smokeCtrl.scale = 0.1f;
+        smokeCtrl.systemLife = 15f;
+        smokeCtrl.particleLife = 5f;
+        smokeCtrl.systemType = 0;
+
+        //Need to do this last, some variables are used at startup
+        smokeCtrl.enabled = true;
+    }
+
+    private void PlantExplosion()
+    {
+        Debug.Log("Plating explosin");
+
+        GameObject explosion = Instantiate(smokePrefab, transform.parent, false);
+        explosion.transform.localPosition = transform.localPosition;
+
+        SmokeParticleSystem explosionCtrl = explosion.GetComponent<SmokeParticleSystem>();
+        explosionCtrl.numberOfParticles = 50;
+        explosionCtrl.sidewaysSpreadFactor = 16;
+        explosionCtrl.forwardSpreadFactor = 16;
+        explosionCtrl.verticalSpreadFactor = 0;
+        explosionCtrl.verticalSpreadVariance = 6;
+        explosionCtrl.rejectionRate = 3;
+        explosionCtrl.scaleWithTime = 1.005f;
+        explosionCtrl.decelerateWithTime = 0.9f;
+        explosionCtrl.scale = 0.1f;
+        explosionCtrl.systemLife = 1.5f;
+        explosionCtrl.particleLife = 0.5f;
+        explosionCtrl.systemType = 1;
+
+        //Need to do this last, some variables are used at startup
+        explosionCtrl.enabled = true;
     }
 }
