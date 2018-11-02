@@ -42,12 +42,16 @@ public class TutorialController : MonoBehaviour {
             new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Press both sides at the same" },
             new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "time to jump or go up" }
         });
+        Begin();
+    }
 
-        enumerator = steps.GetEnumerator();
+    public void Begin()
+    {
+        enumerator.Reset();
         NextStep();
     }
-	
-	void Update () {
+
+    void Update () {
 		
 	}
 

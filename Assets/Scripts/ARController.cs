@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -19,6 +19,7 @@ public class ARController : MonoBehaviour
     public Transform world;
     public Transform unitCube;
     public bool isMultiplaer;
+    public TutorialController tutorial;
 
     private List<AugmentedImage> m_AugmentedImages = new List<AugmentedImage>();
     private AugmentedImage KOTCImage = null;
@@ -130,6 +131,11 @@ public class ARController : MonoBehaviour
         {
             world.localRotation = Quaternion.Euler(-KOTCAnchor.transform.localEulerAngles.x, world.localEulerAngles.y, -KOTCAnchor.transform.localEulerAngles.z);
         }
+    }
+
+    public void ShowInstructions()
+    {
+        tutorial.Begin();
     }
 
     public void ToggleWorldLock() {
