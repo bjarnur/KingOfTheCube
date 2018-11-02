@@ -47,7 +47,7 @@ public class TutorialController : MonoBehaviour {
 
     public void Begin()
     {
-        enumerator.Reset();
+        enumerator = steps.GetEnumerator();
         NextStep();
     }
 
@@ -122,7 +122,10 @@ public class TutorialController : MonoBehaviour {
                 NextStep();
             } else
             {
-                Destroy(gameObject);
+                foreach (Transform child in transform)
+                {
+                    Destroy(child.gameObject);
+                }
             }
         }
     }
