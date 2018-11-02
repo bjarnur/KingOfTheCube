@@ -110,6 +110,7 @@ public class ARController : MonoBehaviour
                         else
                             spawnPretender(numberOfPlayers);
                     }
+                    tutorial.Begin();
                 }
                 else if (image.TrackingState == TrackingState.Stopped) {
                     Debug.Log("Tracking Stopped");
