@@ -81,7 +81,6 @@ public class LevelInstatiator : MonoBehaviour{
     
 
     public void buildLevel() {
-
         /*
         //Can be used to easilly see what face you are looking at
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 1, 1);
@@ -89,7 +88,6 @@ public class LevelInstatiator : MonoBehaviour{
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 1, 3);
         buildLadder(CubeFaces.fourthFace, CubeLevel.first, 1, 4);
         */
-
         //buildLadder(CubeFaces.secondFace, CubeLevel.first, 10, 25);        
         buildPlatform(CubeFaces.firstFace, CubeLevel.first, -1, 31);
         buildPlatform(CubeFaces.secondFace, CubeLevel.first, -1, 31);
@@ -124,9 +122,9 @@ public class LevelInstatiator : MonoBehaviour{
 
         buildLadder(CubeFaces.firstFace, CubeLevel.first, 18, 3);
         buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 18, 2);
-        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 3);
+        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 6);
         buildLadder(CubeFaces.thirdFace, CubeLevel.first, 13, 5);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 1);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 3);
         buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 13, 1);
     }
 
