@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
+using System;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
@@ -8,30 +10,16 @@ public class NetworkManager : MonoBehaviour {
 
     const string VERSION = "0.0.1";
     private string roomName = "myRoom";
-
-    void Start () {
-        Debug.Log("STARTING UP");
-        PhotonNetwork.ConnectUsingSettings(VERSION);
-        PhotonNetwork.autoJoinLobby = true;
-	}
-
-    void OnJoinedLobby()
+    
+    void Start()
     {
-        Debug.Log("JOINED LOBBY");
-        RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 5 };
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-    }
-	
-	void OnJoinedRoom()
-    {
-        Debug.Log("JOINING ROOM");
-        if(!isAR)
+        if (!isAR)
         {
-            int numberOfPlayers = PhotonNetwork.countOfPlayers;
-            if (numberOfPlayers == 1)
+            int PlayerIndex = Convert.ToInt32(PhotonNetwork.player.NickName);
+            if(PlayerIndex == 0)
                 spawnKing();
             else
-                spawnPretender(numberOfPlayers);
+                spawnPretender(PlayerIndex);
         }
     }
 
@@ -50,7 +38,7 @@ public class NetworkManager : MonoBehaviour {
         Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
 
         controller.enabled = true;
-        //controller.isMultiplayer = true;
+        controller.isMultiplayer = true;
         controller.isAI = false;
         networkPlayer.enabled = true;
         playerRigidbody.useGravity = true;
