@@ -51,77 +51,46 @@ public class ARController : MonoBehaviour
         // Get updated augmented images for this frame.
         Session.GetTrackables<AugmentedImage>(m_AugmentedImages, TrackableQueryFilter.Updated);
 
-        foreach (var image in m_AugmentedImages) {
-            /*switch (image.DatabaseIndex) {
-            /*case 0: // The old ugly and bad and simple KOTC Marker
-                if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
-                {
-                    Debug.Log("Tracking OK");
-                    KOTCImage = image;
-                    KOTCAnchor = image.CreateAnchor(image.CenterPose);
+        foreach (var image in m_AugmentedImages)
+        {           
+            if (image.TrackingState == TrackingState.Tracking && KOTCImage == null)
+            {
+                Debug.Log("Tracking OK");
+                KOTCImage = image;
+                KOTCAnchor = image.CreateAnchor(image.CenterPose);
 
-                    world.SetParent(KOTCAnchor.transform, false);
-                    Transform gardenObj = Instantiate(garden).transform;                    
-                    gardenObj.SetParent(world.transform, false);
+                world.SetParent(KOTCAnchor.transform, false);
+                world.localPosition -= world.up * 0.5f;
+                Transform gardenObj = Instantiate(garden).transform;
+                gardenObj.SetParent(world.transform, false);
+                gardenObj.tag = GameConstants.GameObjectsTags.gardenObject;
 
-                    GetComponent<LevelInstatiator>().world = world;
-                    GetComponent<LevelInstatiator>().buildLevel();
+                GetComponent<LevelInstatiator>().world = world;
+                GetComponent<LevelInstatiator>().buildLevel();
 
+                if (!isMultiplaer)
+                { 
                     readyPlayerOne();
                     readyKing();
                 }
-                else if (image.TrackingState == TrackingState.Stopped)
+                else
                 {
-                    Debug.Log("Tracking Stopped");
-                    world.SetParent(null, true);
-
-                    KOTCImage = null;
-                    GameObject.Destroy(KOTCAnchor);
-                    KOTCAnchor = null;
-                }
-                break;*/
-            //case 0:
-            //case 1: // The new wonderful but which could be improved KOTC Marker (but in Black & White)
-            //case 2: // The amazing and beautiful (but which could still be improved) KOTC Marker
-                if (image.TrackingState == TrackingState.Tracking && KOTCImage == null) {
-                    Debug.Log("Tracking OK");
-                    KOTCImage = image;
-                    KOTCAnchor = image.CreateAnchor(image.CenterPose);
-
-                    world.SetParent(KOTCAnchor.transform, false);
-                    world.localPosition -= world.up * 0.5f;
-                    Transform gardenObj = Instantiate(garden).transform;
-                    gardenObj.SetParent(world.transform, false);
-                    gardenObj.tag = GameConstants.GameObjectsTags.gardenObject;
-
-                    GetComponent<LevelInstatiator>().world = world;
-                    GetComponent<LevelInstatiator>().buildLevel();
-
-                    if (!isMultiplaer)
-                    { 
-                        readyPlayerOne();
-                        readyKing();
-                    }
+                    int PlayerIndex = Convert.ToInt32(PhotonNetwork.player.NickName);
+                    if (PlayerIndex == 0)
+                        spawnKing();
                     else
-                    {
-                        int numberOfPlayers = PhotonNetwork.countOfPlayers;
-                        if (numberOfPlayers == 1)
-                            spawnKing();
-                        else
-                            spawnPretender(numberOfPlayers);
-                    }
-                    tutorial.Begin();
+                        spawnPretender(PlayerIndex);
                 }
-                else if (image.TrackingState == TrackingState.Stopped) {
-                    Debug.Log("Tracking Stopped");
-                    world.SetParent(null, true);
+                tutorial.Begin();
+            }
+            else if (image.TrackingState == TrackingState.Stopped) {
+                Debug.Log("Tracking Stopped");
+                world.SetParent(null, true);
 
-                    KOTCImage = null;
-                    GameObject.Destroy(KOTCAnchor);
-                    KOTCAnchor = null;
-                }
-                //break;
-            //}
+                KOTCImage = null;
+                GameObject.Destroy(KOTCAnchor);
+                KOTCAnchor = null;
+            }
         }
 
         UIScanning.SetActive(KOTCImage == null);
@@ -183,11 +152,14 @@ public class ARController : MonoBehaviour
 
     void spawnKing()
     {
+        object[] InstanceData = new object[1];
+        InstanceData[0] = "AR";
+
         Vector3 spawn = GameObject.FindWithTag(GameConstants.GameObjectsTags.controller)
                             .GetComponent<LevelInstatiator>()
                             .instantiateSpawnPoint(0);
-
-        GameObject newPlayer = PhotonNetwork.Instantiate(GameConstants.PunNames.arKing, Vector3.zero, Quaternion.identity, 0);
+        
+        GameObject newPlayer = PhotonNetwork.Instantiate(GameConstants.PunNames.arKing, Vector3.zero, Quaternion.identity, 0, InstanceData);
         newPlayer.transform.SetParent(GameObject.FindWithTag(GameConstants.GameObjectsTags.worldContainer).transform, false);
         newPlayer.transform.localPosition = spawn;
 

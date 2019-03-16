@@ -17,25 +17,35 @@ public class LobbyManager : MonoBehaviour
         "Julien"
     };
 
+    public bool IsAr = false;
     public Canvas LobbyCanvas;
-   
+    public GameObject JoinGamePanel;
+    public GameObject LaunchGamePanel;
+    public GameObject CountdownTimer;
+
     const string VERSION = "0.0.1";
-    private string RoomName = "myRoom";
+    private string RoomName = "PrivateRoom";
     private string PlayerName = "Player";
+    private bool HasJoinedRoom = false;
+    private bool CountdownTimerActive = false;
+    private byte MaxPlayerNumber = 5;
     private int LastKnownPlayerCount = 0;
+    private float CountdowntimerValue = 10;
 
     void Start ()
     {
         Debug.Log("STARTING UP");
         
         PhotonNetwork.autoJoinLobby = true;
-        PhotonNetwork.automaticallySyncScene = true;
+        //PhotonNetwork.automaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings(VERSION);
 
     }
 
     void Update ()
     {
+        if (!HasJoinedRoom) return;
+
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
         if(NumberOfPlayers > LastKnownPlayerCount)
         {
@@ -48,105 +58,78 @@ public class LobbyManager : MonoBehaviour
             GameObject.Find("PlayerList").GetComponent<Text>().text = PlayerNames;
             GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
         }
-                
 
-        /*
-        int NumberOfRooms = PhotonNetwork.countOfRooms;
-        if(NumberOfRooms > 1)
-        {            
-            long IDthis = Convert.ToInt64(roomName);
-            long IDmin = IDthis;
-
-            var AllRooms = PhotonNetwork.GetRoomList();
-            foreach(var Room in AllRooms)
-            {                
-                long IDother = Convert.ToInt64(Room.Name);
-                if(IDother < IDmin)
-                {
-                    IDmin = IDother;
-                }
-            }
-
-            if(IDmin < IDthis)
+        if(!CountdownTimerActive)
+        { 
+            bool AllPlayersReady = true;
+            foreach (PhotonPlayer Player in PhotonNetwork.playerList)
             {
-                Debug.Log("Joiningn other room");
-                PhotonNetwork.JoinRoom(IDmin.ToString());
+                bool PlayerReady = (bool) Player.CustomProperties["Ready"];
+                AllPlayersReady = AllPlayersReady && PlayerReady;
             }
-        } */
+            if(AllPlayersReady)
+            {
+                CountdowntimerValue = 10;
+                CountdownTimerActive = true;
+                CountdownTimer.GetComponent<Text>().text = ((int)Math.Round(CountdowntimerValue)).ToString();
+            }
+        }
+        else
+        {
+            CountdowntimerValue -= Time.deltaTime;
+            CountdownTimer.GetComponent<Text>().text = ((int)Math.Round(CountdowntimerValue)).ToString();
+            if (CountdowntimerValue < 0.0f)
+                LaunchGame();
+        }
     }
 
-    [PunRPC]
-    public void LaunchGame()
+    public void JoinGame()
     {
-        if (PhotonNetwork.isMasterClient)
-            PhotonNetwork.LoadLevel("AssembleCube_AI_test");
-        else
-            Debug.Log("You have now power here");
+        JoinGamePanel.SetActive(false);
+        LaunchGamePanel.SetActive(true);
+
+        GetComponent<LobbyManager>().enabled = true;                
+    }
+
+    public void PlayerReady()
+    {
+        ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+        PropertyTable.Add("Ready", true);
+        PhotonNetwork.player.SetCustomProperties(PropertyTable);
+    }
+
+    void LaunchGame()
+    {
+        //if (PhotonNetwork.isMasterClient)
+            if(IsAr)
+                PhotonNetwork.LoadLevel("ARScene");
+            else
+                PhotonNetwork.LoadLevel("AssembleCube_AI_test");        
     }
 
     void OnJoinedLobby()
     {
         Debug.Log("JOINED LOBBY");
 
-        long Ticks = DateTime.Now.Ticks;
-        RoomName = Ticks.ToString();
-
-        RoomOptions roomOptions = new RoomOptions() { IsVisible = false, MaxPlayers = 5 };
-        PhotonNetwork.JoinOrCreateRoom("FUN ROOM", roomOptions, TypedLobby.Default);
+        RoomOptions roomOptions = new RoomOptions() { IsVisible = false, MaxPlayers = MaxPlayerNumber };
+        PhotonNetwork.JoinOrCreateRoom(RoomName, roomOptions, TypedLobby.Default);
     }
 	
 	void OnJoinedRoom()
     {
         Debug.Log("JOINING ROOM");
+        HasJoinedRoom = true;
 
         string RoomName = PhotonNetwork.room.Name;
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
         int PlayerIndex = NumberOfPlayers - 1;
-
         PhotonNetwork.player.NickName = PlayerIndex.ToString();
+
+        ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+        PropertyTable.Add("Ready", false);        
+        PhotonNetwork.player.SetCustomProperties(PropertyTable);
+
         GameObject.FindGameObjectWithTag("RoomNameText").GetComponent<Text>().text = RoomName;
         GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
-    }
-
-    void spawnKing()
-    {
-        Vector3 spawn = GameObject.FindWithTag("Cube")
-                            .GetComponent<LevelInstatiator>()
-                            .instantiateSpawnPoint(0);
-
-        GameObject newPlayer = PhotonNetwork.Instantiate("UnityKing", Vector3.zero, Quaternion.identity, 0);
-        newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
-        newPlayer.transform.localPosition = spawn;
-
-        KingController_AssemCube controller = newPlayer.GetComponent<KingController_AssemCube>();
-        KingNetwork networkPlayer = newPlayer.GetComponent<KingNetwork>();
-        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
-
-        controller.enabled = true;
-        controller.isMultiplayer = true;
-        controller.isAI = false;
-        networkPlayer.enabled = true;
-        playerRigidbody.useGravity = true;
-    }
-
-    void spawnPretender(int playerNumber)
-    {
-        Vector3 spawn = GameObject.FindWithTag("Cube")
-                            .GetComponent<LevelInstatiator>()
-                            .instantiateSpawnPoint(playerNumber);
-
-        GameObject newPlayer = PhotonNetwork.Instantiate("UnityPlayer", Vector3.zero, Quaternion.identity, 0);
-        newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
-        newPlayer.transform.localPosition = spawn;
-
-        PlayerController_AssemCube controller = newPlayer.GetComponent<PlayerController_AssemCube>();
-        NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
-        Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
-
-        controller.enabled = true;
-        controller.isMultiplayer = true;
-        networkPlayer.enabled = true;
-        playerRigidbody.useGravity = true;
-    }
-
+    }   
 }

@@ -25,11 +25,14 @@ public class NetworkManager : MonoBehaviour {
 
     void spawnKing()
     {
+        object[] InstanceData = new object[1];
+        InstanceData[0] = "VR";
+
         Vector3 spawn = GameObject.FindWithTag("Cube")
                             .GetComponent<LevelInstatiator>()
                             .instantiateSpawnPoint(0);
 
-        GameObject newPlayer = PhotonNetwork.Instantiate("UnityKing", Vector3.zero, Quaternion.identity, 0);
+        GameObject newPlayer = PhotonNetwork.Instantiate("UnityKing", Vector3.zero, Quaternion.identity, 0, InstanceData);
         newPlayer.transform.SetParent(GameObject.Find("Wrapper").transform, false);
         newPlayer.transform.localPosition = spawn;
 

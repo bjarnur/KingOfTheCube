@@ -4,14 +4,13 @@ using UnityEngine;
 using Photon;
 
 public class KingNetwork : Photon.MonoBehaviour
-{
+{    
+    [HideInInspector] public Vector3 position;
+    [HideInInspector] public Quaternion rotation = new Quaternion(0,0,0,0);
 
-    bool isAlive = true;
-    [HideInInspector]
-    public Vector3 position;
-    [HideInInspector]
-    public Quaternion rotation = new Quaternion(0,0,0,0);
     public float larpSmoothing = 10f;
+
+    private bool isAR = true;
 
     // Use this for initialization
     void Start()
@@ -19,37 +18,40 @@ public class KingNetwork : Photon.MonoBehaviour
         if (photonView.isMine)
         {
             gameObject.name = "Local King";
-            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
-            GetComponent<PlayerController_AssemCube>().enabled = true;
-            GetComponent<CharacterCtrl>().enabled = true;
-            GetComponent<Rigidbody>().useGravity = true;
+
+            object[] InstanceData = gameObject.GetPhotonView().instantiationData;
+            if((string) InstanceData[0] == "VR")
+            {
+                isAR = false;
+                GetComponent<CharacterCtrl>().enabled = true;
+                GetComponent<Rigidbody>().useGravity = true;
+            }
         }
         else
         {
             gameObject.name = "NetworkKing";
             StartCoroutine("UpdateNetworked");
-            //this.transform.SetParent(OmniscientController.GetInstance().worldContainer);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //GetComponent<CharacterCtrl>().enabled = true;        
         if (stream.isWriting)
         {
-            //TODO Use appropriate controller depending on VR or AR (need a permanent solution for this)
-            //var controller = GetComponent<PlayerController_AssemCube>();
-            //var controller = GetComponent<KingController_AR>();
-            var controller = GetComponent<KingController_AssemCube>();
-            stream.SendNext(transform.localPosition);
-            stream.SendNext(transform.localRotation);
-            stream.SendNext(controller.currentAnimation);
+            if (isAR)
+            { 
+                var controller = GetComponent<KingController_AR>();
+                stream.SendNext(transform.localPosition);
+                stream.SendNext(transform.localRotation);
+                stream.SendNext(controller.currentAnimation);
+            }
+            else
+            { 
+                var controller = GetComponent<KingController_AssemCube>();
+                stream.SendNext(transform.localPosition);
+                stream.SendNext(transform.localRotation);
+                stream.SendNext(controller.currentAnimation);
+            }
         }
         else
         {
