@@ -22,6 +22,7 @@ public class LobbyManager : MonoBehaviour
     public GameObject JoinGamePanel;
     public GameObject LaunchGamePanel;
     public GameObject CountdownTimer;
+    public GameObject ReadyMessage;
 
     const string VERSION = "0.0.1";
     private string RoomName = "PrivateRoom";
@@ -29,7 +30,7 @@ public class LobbyManager : MonoBehaviour
     private bool HasJoinedRoom = false;
     private bool CountdownTimerActive = false;
     private byte MaxPlayerNumber = 5;
-    private int LastKnownPlayerCount = 0;
+    private int LastKnownPlayerCount = -1;
     private float CountdowntimerValue = 10;
 
     void Start ()
@@ -57,6 +58,7 @@ public class LobbyManager : MonoBehaviour
             }
             GameObject.Find("PlayerList").GetComponent<Text>().text = PlayerNames;
             GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
+            LastKnownPlayerCount = NumberOfPlayers;
         }
 
         if(!CountdownTimerActive)
@@ -71,13 +73,13 @@ public class LobbyManager : MonoBehaviour
             {
                 CountdowntimerValue = 10;
                 CountdownTimerActive = true;
-                CountdownTimer.GetComponent<Text>().text = ((int)Math.Round(CountdowntimerValue)).ToString();
+                CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
             }
         }
         else
         {
             CountdowntimerValue -= Time.deltaTime;
-            CountdownTimer.GetComponent<Text>().text = ((int)Math.Round(CountdowntimerValue)).ToString();
+            CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
             if (CountdowntimerValue < 0.0f)
                 LaunchGame();
         }
@@ -93,6 +95,9 @@ public class LobbyManager : MonoBehaviour
 
     public void PlayerReady()
     {
+        if (LastKnownPlayerCount < 2) return;
+
+        ReadyMessage.GetComponent<Text>().text = "Ready, waiting for other players";
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", true);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
@@ -102,7 +107,7 @@ public class LobbyManager : MonoBehaviour
     {
         //if (PhotonNetwork.isMasterClient)
             if(IsAr)
-                PhotonNetwork.LoadLevel("ARScene");
+                PhotonNetwork.LoadLevel("AR_OnlineScene");
             else
                 PhotonNetwork.LoadLevel("AssembleCube_AI_test");        
     }

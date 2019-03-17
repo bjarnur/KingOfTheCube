@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KingController_AssemCube : MonoBehaviour {
 
@@ -28,8 +29,17 @@ public class KingController_AssemCube : MonoBehaviour {
 
     void Awake()
     {
-        if (isMultiplayer)
+        if (!isMultiplayer) return;
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "AssembleCube_AI_test")
+        {
             transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+        else
+        {
+            SceneManager.sceneLoaded += OnSceneChangedCallback;
+        }
     }
 
 	void Start () {
@@ -234,5 +244,14 @@ public class KingController_AssemCube : MonoBehaviour {
     void EndThrowing()
     {
         throwing = false;
+    }
+
+    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "AssembleCube_AI_test")
+        {
+            Debug.Log("Setting king parent");
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
     }
 }

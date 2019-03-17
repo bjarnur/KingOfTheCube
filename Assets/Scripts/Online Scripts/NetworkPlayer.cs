@@ -22,6 +22,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         {
             gameObject.name = "Network Player";
             StartCoroutine("UpdateNetworked");
+            DontDestroyOnLoad(this.gameObject);
         }
 	}
 

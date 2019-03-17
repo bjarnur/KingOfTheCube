@@ -31,6 +31,7 @@ public class KingNetwork : Photon.MonoBehaviour
         {
             gameObject.name = "NetworkKing";
             StartCoroutine("UpdateNetworked");
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController_AssemCube : MonoBehaviour {
 
@@ -34,8 +35,17 @@ public class PlayerController_AssemCube : MonoBehaviour {
     
     void Awake()
     {
-        if(isMultiplayer)
+        if (!isMultiplayer) return;
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "AssembleCube_AI_test")
+        {
             transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+        else
+        {
+            SceneManager.sceneLoaded += OnSceneChangedCallback;
+        }
     }
 
     void Start ()
@@ -323,5 +333,14 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetBool("Fall", true);
             currentAnimation = GameConstants.AnimationTypes.falling;
         }
-    }   
+    }
+
+    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "AssembleCube_AI_test")
+        {
+            Debug.Log("Setting character parent");
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+    }
 }

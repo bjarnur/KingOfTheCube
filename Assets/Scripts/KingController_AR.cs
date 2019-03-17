@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KingController_AR : MonoBehaviour {
 
@@ -29,8 +30,18 @@ public class KingController_AR : MonoBehaviour {
 
     void Awake()
     {
-        if (isMultiplayer)
-            transform.SetParent(GameObject.Find("WorldContainer").transform);
+        if (!isMultiplayer) return;
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "AR_OnlineScene")
+        {
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+        else
+        {
+            SceneManager.sceneLoaded += OnSceneChangedCallback;
+        }
+
     }
 
     void Start () {
@@ -290,4 +301,12 @@ public class KingController_AR : MonoBehaviour {
         throwing = false;
     }
 
+    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "AR_OnlineScene")
+        {
+            Debug.Log("Setting king parent");
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+    }
 }

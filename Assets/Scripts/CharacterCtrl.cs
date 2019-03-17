@@ -1,7 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterCtrl : MonoBehaviour {
 
@@ -58,8 +60,17 @@ public class CharacterCtrl : MonoBehaviour {
 
     void Awake()
     {
-        transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+        Scene scene = SceneManager.GetActiveScene();
+        if(scene.name == "AssembleCube_AI_test")
+        {
+            transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+        }
+        else
+        {
+            SceneManager.sceneLoaded += OnSceneChangedCallback;
+        }
     }
+
 
     void Start () {
         animator = GetComponent<Animator>();
@@ -149,9 +160,18 @@ public class CharacterCtrl : MonoBehaviour {
         return Physics.Raycast(transform.position, -Vector3.up, distToGround);
     }
 
+    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "AR_OnlineScene")
+        {
+            Debug.Log("Setting character parent");
+            transform.SetParent(GameObject.Find("Wrapper").transform);
+        }
+    }
+
     /*********************************\
         Helper and utility functions
-    \*********************************/ 
+    \*********************************/
 
     Vector3 getDirection(bool local = false)
     {
