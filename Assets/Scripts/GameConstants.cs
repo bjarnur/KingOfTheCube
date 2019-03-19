@@ -55,4 +55,7 @@ public static class GameConstants  {
     internal static class ShaderProperties {
         public static string smokeOrigin = "_Origin";
     }
+
+    /**/
+    public static int NetworkedPlayerID = -1;
 }

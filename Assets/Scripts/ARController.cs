@@ -75,7 +75,7 @@ public class ARController : MonoBehaviour
                 }
                 else
                 {
-                    int PlayerIndex = Convert.ToInt32(PhotonNetwork.player.NickName);
+                    int PlayerIndex = GameConstants.NetworkedPlayerID;
                     if (PlayerIndex == 0)
                         spawnKing();
                     else

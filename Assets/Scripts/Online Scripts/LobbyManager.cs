@@ -47,21 +47,9 @@ public class LobbyManager : MonoBehaviour
     {
         if (!HasJoinedRoom) return;
 
-        int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
-        if(NumberOfPlayers > LastKnownPlayerCount)
-        {
-            string PlayerNames = "";
-            foreach (PhotonPlayer Player in PhotonNetwork.playerList)
-            {
-                PlayerNames += names[Convert.ToInt32(Player.NickName)] + Player.NickName;
-                PlayerNames += "\n";
-            }
-            GameObject.Find("PlayerList").GetComponent<Text>().text = PlayerNames;
-            GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
-            LastKnownPlayerCount = NumberOfPlayers;
-        }
+        AssignPlayerIndices();
 
-        if(!CountdownTimerActive)
+        if (!CountdownTimerActive)
         { 
             bool AllPlayersReady = true;
             foreach (PhotonPlayer Player in PhotonNetwork.playerList)
@@ -112,6 +100,48 @@ public class LobbyManager : MonoBehaviour
                 PhotonNetwork.LoadLevel("AssembleCube_AI_test");        
     }
 
+    Dictionary<long, PhotonPlayer> GetPlayerTimestampMap()
+    {
+        Dictionary<long, PhotonPlayer> res = new Dictionary<long, PhotonPlayer>();
+        foreach (PhotonPlayer Player in PhotonNetwork.playerList)
+        {
+            res.Add(Convert.ToInt64(Player.NickName), Player);
+        }
+        return res;
+    }
+
+    void AssignPlayerIndices()
+    {
+        int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
+
+        if (NumberOfPlayers > LastKnownPlayerCount)
+        {
+            Dictionary<long, PhotonPlayer> PlayerTimestampMap = GetPlayerTimestampMap();
+            List<long> MapKeys = new List<long>(PlayerTimestampMap.Keys);
+            MapKeys.Sort();
+
+            int PlayerIndex = 0;
+            string PlayerNames = "";
+            foreach (long Key in MapKeys)
+            {
+                PhotonPlayer Player = PlayerTimestampMap[Key];
+                if (Player.ID == PhotonNetwork.player.ID)
+                {
+                    //Static ID used to instantiate character in game scene
+                    GameConstants.NetworkedPlayerID = PlayerIndex;
+                }
+
+                PlayerNames += names[Convert.ToInt32(PlayerIndex)] + PlayerIndex;
+                PlayerNames += "\n";
+                PlayerIndex++;
+            }
+
+            GameObject.Find("PlayerList").GetComponent<Text>().text = PlayerNames;
+            GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
+            LastKnownPlayerCount = NumberOfPlayers;
+        }
+    }
+
     void OnJoinedLobby()
     {
         Debug.Log("JOINED LOBBY");
@@ -127,8 +157,9 @@ public class LobbyManager : MonoBehaviour
 
         string RoomName = PhotonNetwork.room.Name;
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
-        int PlayerIndex = NumberOfPlayers - 1;
-        PhotonNetwork.player.NickName = PlayerIndex.ToString();
+        //int PlayerIndex = NumberOfPlayers - 1;
+        //PhotonNetwork.player.NickName = PlayerIndex.ToString();
+        PhotonNetwork.player.NickName = DateTime.Now.Ticks.ToString();
 
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", false);        

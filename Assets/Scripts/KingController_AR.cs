@@ -41,7 +41,6 @@ public class KingController_AR : MonoBehaviour {
         {
             SceneManager.sceneLoaded += OnSceneChangedCallback;
         }
-
     }
 
     void Start () {

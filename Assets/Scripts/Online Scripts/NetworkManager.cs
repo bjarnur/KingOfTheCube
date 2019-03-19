@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour {
     {
         if (!isAR)
         {
-            int PlayerIndex = Convert.ToInt32(PhotonNetwork.player.NickName);
-            if(PlayerIndex == 0)
+            int PlayerIndex = GameConstants.NetworkedPlayerID;
+            if (PlayerIndex == 0)
                 spawnKing();
             else
                 spawnPretender(PlayerIndex);
