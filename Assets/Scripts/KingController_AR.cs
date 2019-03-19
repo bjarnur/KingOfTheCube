@@ -35,7 +35,7 @@ public class KingController_AR : MonoBehaviour {
         Scene scene = SceneManager.GetActiveScene();
         if (scene.name == "AR_OnlineScene")
         {
-            transform.SetParent(GameObject.Find("Wrapper").transform);
+            transform.SetParent(GameObject.Find("WorldContainer").transform);
         }
         else
         {
@@ -306,7 +306,7 @@ public class KingController_AR : MonoBehaviour {
         if (scene.name == "AR_OnlineScene")
         {
             Debug.Log("Setting king parent");
-            transform.SetParent(GameObject.Find("Wrapper").transform);
+            transform.SetParent(GameObject.Find("WorldContainer").transform);
         }
     }
 }
