@@ -23,7 +23,7 @@ public class KingNetwork : Photon.MonoBehaviour
             if((string) InstanceData[0] == "VR")
             {
                 isAR = false;
-                GetComponent<CharacterCtrl>().enabled = true;
+                GetComponent<KingController_AssemCube>().enabled = true;
                 GetComponent<Rigidbody>().useGravity = true;
             }
         }

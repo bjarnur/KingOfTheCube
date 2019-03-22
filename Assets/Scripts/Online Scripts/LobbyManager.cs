@@ -32,13 +32,18 @@ public class LobbyManager : MonoBehaviour
     private byte MaxPlayerNumber = 5;
     private int LastKnownPlayerCount = -1;
     private float CountdowntimerValue = 10;
+    private long PlayerID;
 
     void Start ()
     {
-        Debug.Log("STARTING UP");
-        
+        Debug.Log("STARTING UP");       
+
+        ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+        PropertyTable.Add("Ready", false);
+        PropertyTable.Add("Stamp", null);
+
+        PhotonNetwork.player.SetCustomProperties(PropertyTable);
         PhotonNetwork.autoJoinLobby = true;
-        //PhotonNetwork.automaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings(VERSION);
 
     }
@@ -54,6 +59,9 @@ public class LobbyManager : MonoBehaviour
             bool AllPlayersReady = true;
             foreach (PhotonPlayer Player in PhotonNetwork.playerList)
             {
+                object check = Player.CustomProperties["Ready"];
+                if (check == null) return;
+
                 bool PlayerReady = (bool) Player.CustomProperties["Ready"];
                 AllPlayersReady = AllPlayersReady && PlayerReady;
             }
@@ -75,10 +83,17 @@ public class LobbyManager : MonoBehaviour
 
     public void JoinGame()
     {
+        RoomOptions roomOptions = new RoomOptions() { IsVisible = false, MaxPlayers = MaxPlayerNumber };
+        bool success = PhotonNetwork.JoinOrCreateRoom(RoomName, roomOptions, TypedLobby.Default);
+        if(!success)
+        {
+            Debug.Log("Failed to join room");
+            return;
+        }
+
+        Debug.Log("Player joining game");
         JoinGamePanel.SetActive(false);
         LaunchGamePanel.SetActive(true);
-
-        GetComponent<LobbyManager>().enabled = true;                
     }
 
     public void PlayerReady()
@@ -88,16 +103,16 @@ public class LobbyManager : MonoBehaviour
         ReadyMessage.GetComponent<Text>().text = "Ready, waiting for other players";
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", true);
+        PropertyTable.Add("Stamp", PlayerID);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
     }
 
     void LaunchGame()
     {
-        //if (PhotonNetwork.isMasterClient)
-            if(IsAr)
-                PhotonNetwork.LoadLevel("AR_OnlineScene");
-            else
-                PhotonNetwork.LoadLevel("AssembleCube_AI_test");        
+        if(IsAr)
+            PhotonNetwork.LoadLevel("AR_OnlineScene");
+        else
+            PhotonNetwork.LoadLevel("AssembleCube_AI_test");
     }
 
     Dictionary<long, PhotonPlayer> GetPlayerTimestampMap()
@@ -105,7 +120,12 @@ public class LobbyManager : MonoBehaviour
         Dictionary<long, PhotonPlayer> res = new Dictionary<long, PhotonPlayer>();
         foreach (PhotonPlayer Player in PhotonNetwork.playerList)
         {
-            res.Add(Convert.ToInt64(Player.NickName), Player);
+            //Will be null if other player hasn't had time to start up
+            object check = Player.CustomProperties["Stamp"];
+            if (check == null) return null;
+
+            long Stamp = (long)Player.CustomProperties["Stamp"];
+            res.Add(Stamp, Player);
         }
         return res;
     }
@@ -117,6 +137,8 @@ public class LobbyManager : MonoBehaviour
         if (NumberOfPlayers > LastKnownPlayerCount)
         {
             Dictionary<long, PhotonPlayer> PlayerTimestampMap = GetPlayerTimestampMap();
+            if (PlayerTimestampMap == null) return;
+
             List<long> MapKeys = new List<long>(PlayerTimestampMap.Keys);
             MapKeys.Sort();
 
@@ -145,24 +167,20 @@ public class LobbyManager : MonoBehaviour
     void OnJoinedLobby()
     {
         Debug.Log("JOINED LOBBY");
-
-        RoomOptions roomOptions = new RoomOptions() { IsVisible = false, MaxPlayers = MaxPlayerNumber };
-        PhotonNetwork.JoinOrCreateRoom(RoomName, roomOptions, TypedLobby.Default);
     }
-	
+    
 	void OnJoinedRoom()
     {
         Debug.Log("JOINING ROOM");
-        HasJoinedRoom = true;
 
+        HasJoinedRoom = true;
+        PlayerID = DateTime.Now.Ticks;
         string RoomName = PhotonNetwork.room.Name;
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
-        //int PlayerIndex = NumberOfPlayers - 1;
-        //PhotonNetwork.player.NickName = PlayerIndex.ToString();
-        PhotonNetwork.player.NickName = DateTime.Now.Ticks.ToString();
-
+        
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-        PropertyTable.Add("Ready", false);        
+        PropertyTable.Add("Ready", false);
+        PropertyTable.Add("Stamp", PlayerID);   
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
         GameObject.FindGameObjectWithTag("RoomNameText").GetComponent<Text>().text = RoomName;

@@ -16,10 +16,19 @@ public class NetworkManager : MonoBehaviour {
         if (!isAR)
         {
             int PlayerIndex = GameConstants.NetworkedPlayerID;
+            Debug.Log("Registering player " + PlayerIndex);
             if (PlayerIndex == 0)
                 spawnKing();
             else
                 spawnPretender(PlayerIndex);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ExitToLobby();
         }
     }
 
@@ -67,4 +76,17 @@ public class NetworkManager : MonoBehaviour {
         playerRigidbody.useGravity = true;
     }
 
+    //TODO: Call from AR controller (or player) on game over
+    void ExitToLobby()
+    {
+        Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void OnLeftRoom()
+    {
+        Debug.Log("Loading lobby scene");
+        PhotonNetwork.LoadLevel("LobbyScene");
+    }
 }
