@@ -182,16 +182,16 @@ public class ARController : MonoBehaviour
         GameObject newPlayer = null;
         switch (playerNumber)
         {
-            case 2:
+            case 1:
                 newPlayer = PhotonNetwork.Instantiate("Player_One", Vector3.zero, Quaternion.identity, 0);
                 break;
-            case 3:
+            case 2:
                 newPlayer = PhotonNetwork.Instantiate("Player_Two", Vector3.zero, Quaternion.identity, 0);
                 break;
-            case 4:
+            case 3:
                 newPlayer = PhotonNetwork.Instantiate("Player_Three", Vector3.zero, Quaternion.identity, 0);
                 break;
-            case 5:
+            case 4:
                 newPlayer = PhotonNetwork.Instantiate("Player_Four", Vector3.zero, Quaternion.identity, 0);
                 break;
         }

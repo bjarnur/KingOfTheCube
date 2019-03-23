@@ -61,7 +61,7 @@ public class CharacterCtrl : MonoBehaviour {
     void Awake()
     {
         Scene scene = SceneManager.GetActiveScene();
-        if(scene.name == "AssembleCube_AI_test")
+        if(scene.name == "AR_OnlineScene")
         {
             transform.SetParent(GameObject.Find("WorldContainer").transform, false);
         }
@@ -165,7 +165,7 @@ public class CharacterCtrl : MonoBehaviour {
         if (scene.name == "AR_OnlineScene")
         {
             Debug.Log("Setting character parent");
-            transform.SetParent(GameObject.Find("Wrapper").transform);
+            transform.SetParent(GameObject.Find("WorldContainer").transform, false);
         }
     }
 

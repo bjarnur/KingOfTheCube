@@ -41,6 +41,7 @@ public class LobbyManager : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", false);
         PropertyTable.Add("Stamp", null);
+        PropertyTable.Add("Inactive", false);
 
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
         PhotonNetwork.autoJoinLobby = true;
@@ -104,6 +105,7 @@ public class LobbyManager : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", true);
         PropertyTable.Add("Stamp", PlayerID);
+        PropertyTable.Add("Inactive", false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
     }
 
@@ -180,7 +182,8 @@ public class LobbyManager : MonoBehaviour
         
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add("Ready", false);
-        PropertyTable.Add("Stamp", PlayerID);   
+        PropertyTable.Add("Stamp", PlayerID);
+        PropertyTable.Add("Inactive", false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
         GameObject.FindGameObjectWithTag("RoomNameText").GetComponent<Text>().text = RoomName;

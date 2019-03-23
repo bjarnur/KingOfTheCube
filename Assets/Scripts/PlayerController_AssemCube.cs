@@ -11,6 +11,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public GameObject winText;
     public GameConstants.AnimationTypes currentAnimation;
     public bool isMultiplayer = true;
+    private float SecondsInactive;
 
     [HideInInspector]
     public int side = 0;
@@ -32,11 +33,13 @@ public class PlayerController_AssemCube : MonoBehaviour {
    
     bool moving = false;
     bool goingRight = false;
-    
+
+    private NetworkManager networkManager;
+
     void Awake()
     {
         if (!isMultiplayer) return;
-
+        
         Scene scene = SceneManager.GetActiveScene();
         if (scene.name == "AssembleCube_AI_test")
         {
@@ -50,6 +53,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     void Start ()
     {
+        networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
@@ -62,6 +67,24 @@ public class PlayerController_AssemCube : MonoBehaviour {
         //transform.position = new Vector3(16f, 2.5f, zBounds);
         //transform.localEulerAngles = new Vector3(0f, angle, 0f);
 
+    }
+
+    private void Update()
+    {
+        if(SecondsInactive > 30)
+        {
+            networkManager.IsInactive = true;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add("Inactive", true);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+        else
+        {
+            networkManager.IsInactive = false;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add("Inactive", false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
     }
 
     private void FixedUpdate()
@@ -109,8 +132,6 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
         else {
             
-            
-
             // Check boundaries and change side if needed
             CheckBounds();
 
@@ -134,15 +155,18 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
             if (mov != 0)
             {
+                SecondsInactive = 0.0f;
                 Quaternion newRotation = Quaternion.LookRotation(movement);
                 rb.MoveRotation(newRotation);
             }
             else if(climbing)
             {
+                SecondsInactive = 0.0f;
                 transform.localEulerAngles = new Vector3(0f, angle + 180, 0f); // Face the the cube
             }
-            else
+            else //No movement
             {
+                SecondsInactive += Time.deltaTime;
                 transform.localEulerAngles = new Vector3(0f, angle, 0f); // Face the edge of the cube
             }
         }

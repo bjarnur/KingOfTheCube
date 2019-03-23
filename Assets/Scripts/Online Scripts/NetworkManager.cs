@@ -10,7 +10,8 @@ public class NetworkManager : MonoBehaviour {
 
     const string VERSION = "0.0.1";
     private string roomName = "myRoom";
-    
+    [HideInInspector] public bool IsInactive = false;
+
     void Start()
     {
         if (!isAR)
@@ -29,6 +30,17 @@ public class NetworkManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ExitToLobby();
+        }
+
+        if (IsInactive)
+        {
+            bool AllPlayersInactive = true;
+            foreach (PhotonPlayer Player in PhotonNetwork.playerList)
+            {
+                bool PlayerReady = (bool)Player.CustomProperties["Inactive"];
+                AllPlayersInactive = AllPlayersInactive && PlayerReady;
+            }
+            if (AllPlayersInactive) ExitToLobby();
         }
     }
 

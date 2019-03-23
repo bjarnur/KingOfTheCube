@@ -26,6 +26,9 @@ public class KingController_AssemCube : MonoBehaviour {
 
     int dir = 1;
 
+    private float SecondsInactive = 0.0f;
+
+    private NetworkManager networkManager;
 
     void Awake()
     {
@@ -44,6 +47,8 @@ public class KingController_AssemCube : MonoBehaviour {
 
 	void Start () {
 
+        networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
@@ -54,6 +59,24 @@ public class KingController_AssemCube : MonoBehaviour {
         // Move king to initial position
         transform.position = new Vector3(0f, 30f, xBounds); 
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
+    }
+
+    void Update()
+    {
+        if (SecondsInactive > 30)
+        {
+            networkManager.IsInactive = true;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add("Inactive", true);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+        else
+        {
+            networkManager.IsInactive = false;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add("Inactive", false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
     }
 	
     private void FixedUpdate()
@@ -90,9 +113,15 @@ public class KingController_AssemCube : MonoBehaviour {
             bool running = mov != 0f;
             anim.SetBool("IsRunning", running);
             if(running)
+            { 
                 currentAnimation = GameConstants.AnimationTypes.running;
+                SecondsInactive = 0.0f;
+            }
             else
+            { 
                 currentAnimation = GameConstants.AnimationTypes.stopped;
+                SecondsInactive += Time.deltaTime;
+            }
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 anim.SetTrigger("Throw");
