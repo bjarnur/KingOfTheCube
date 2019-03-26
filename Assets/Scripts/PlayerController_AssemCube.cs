@@ -11,7 +11,6 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public GameObject winText;
     public GameConstants.AnimationTypes currentAnimation;
     public bool isMultiplayer = true;
-    private float SecondsInactive;
 
     [HideInInspector]
     public int side = 0;
@@ -34,6 +33,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
     bool moving = false;
     bool goingRight = false;
 
+    private float SecondsInactive = 0.0f;
     private NetworkManager networkManager;
 
     void Awake()

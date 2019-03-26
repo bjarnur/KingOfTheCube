@@ -28,6 +28,9 @@ public class KingController_AR : MonoBehaviour {
 
     int dir = 1;
 
+    private float SecondsInactive = 0.0f;
+    private NetworkManager networkManager;
+
     void Awake()
     {
         if (!isMultiplayer) return;
@@ -36,6 +39,7 @@ public class KingController_AR : MonoBehaviour {
         if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
             transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform);
+            networkManager = GameObject.Find(GameConstants.ObjecNames.NetworkManager).GetComponent<NetworkManager>();
         }
         else
         {
@@ -64,6 +68,21 @@ public class KingController_AR : MonoBehaviour {
 
     private void Update()
     {
+        if (SecondsInactive > 30)
+        {
+            networkManager.IsInactive = true;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, true);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+        else
+        {
+            networkManager.IsInactive = false;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+
         groundedTime += Time.deltaTime;
         //if (player.GetComponent<CharacterCtrl>().win)
         if(false)
@@ -84,16 +103,20 @@ public class KingController_AR : MonoBehaviour {
             if (isAI)
             {
                 mov = AutoMove();
+                SecondsInactive = 0.0f;
             }
             else if(Input.touchCount == 1 && !throwing)
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
                 mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+                SecondsInactive = 0.0f;
             }
             else
             {
                 mov = 0;
+                if(!throwing)
+                    SecondsInactive += Time.deltaTime;
             }
 
             MoveKing(mov);

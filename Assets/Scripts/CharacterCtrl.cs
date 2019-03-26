@@ -39,6 +39,7 @@ public class CharacterCtrl : MonoBehaviour {
 
     Animator animator;
     Rigidbody rb;
+    NetworkManager networkManager;
 
     // 0 & 2 = Moving along X
     // 1 & 3 = Moving along Z
@@ -53,6 +54,7 @@ public class CharacterCtrl : MonoBehaviour {
     float timeBetweenJumps = 0.3f;
     float groundedTime = 0.0f;
     bool oneFingerReleased = false;
+    private float SecondsInactive = 0.0f;
 
     /*********************\
         Unity functions
@@ -64,6 +66,7 @@ public class CharacterCtrl : MonoBehaviour {
         if(scene.name == GameConstants.SceneNames.OnlineAR)
         {
             transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform, false);
+            networkManager = GameObject.Find(GameConstants.ObjecNames.NetworkManager).GetComponent<NetworkManager>();
         }
         else
         {
@@ -78,6 +81,21 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
+        if (SecondsInactive > 30)
+        {
+            networkManager.IsInactive = true;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, true);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+        else
+        {
+            networkManager.IsInactive = false;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
 
         if (win)
             return;
@@ -300,14 +318,15 @@ public class CharacterCtrl : MonoBehaviour {
 
         // Only one touch, we go in that direction
         if (Input.touchCount == 1)
-        {
+        {            
             touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
             firstTouchFingerID = Input.GetTouch(0).fingerId;
             oneFingerReleased = true;
+            SecondsInactive = 0.0f;
         }
         // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
         else if (Input.touchCount == 2)
-        {
+        {            
             foreach (Touch t in Input.touches)
             {
                 if (t.fingerId != firstTouchFingerID && !ignoreBothTouch)
@@ -316,12 +335,14 @@ public class CharacterCtrl : MonoBehaviour {
                     bothTouch = (t.position.x < floatScreenWidth / 2f ? -1f : 1f) != touchDir;
                 }
             }
+            SecondsInactive = 0.0f;
         }
         // Anything else = Reset and do nothing
         else
         {
             firstTouchFingerID = -1;
             touchDir = 0f;
+            SecondsInactive += Time.deltaTime;
         }
 
         Vector3 yVelocity = world.up * rb.velocity.y;
