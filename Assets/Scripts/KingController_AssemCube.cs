@@ -35,9 +35,9 @@ public class KingController_AssemCube : MonoBehaviour {
         if (!isMultiplayer) return;
 
         Scene scene = SceneManager.GetActiveScene();
-        if (scene.name == "AssembleCube_AI_test")
+        if (scene.name == GameConstants.SceneNames.OnlineVR)
         {
-            transform.SetParent(GameObject.Find("Wrapper").transform);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
         }
         else
         {
@@ -47,7 +47,7 @@ public class KingController_AssemCube : MonoBehaviour {
 
 	void Start () {
 
-        networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+        networkManager = GameObject.Find(GameConstants.ObjecNames.NetworkManager).GetComponent<NetworkManager>();
 
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -67,14 +67,14 @@ public class KingController_AssemCube : MonoBehaviour {
         {
             networkManager.IsInactive = true;
             ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-            PropertyTable.Add("Inactive", true);
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, true);
             PhotonNetwork.player.SetCustomProperties(PropertyTable);
         }
         else
         {
             networkManager.IsInactive = false;
             ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-            PropertyTable.Add("Inactive", false);
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
             PhotonNetwork.player.SetCustomProperties(PropertyTable);
         }
     }
@@ -277,10 +277,10 @@ public class KingController_AssemCube : MonoBehaviour {
 
     void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "AssembleCube_AI_test")
+        if (scene.name == GameConstants.SceneNames.OnlineVR)
         {
             Debug.Log("Setting king parent");
-            transform.SetParent(GameObject.Find("Wrapper").transform);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
         }
     }
 }

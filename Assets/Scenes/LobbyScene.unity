@@ -1356,7 +1356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18bef6d4bd480f4dbf920bd69d67c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAr: 1
+  IsAr: 0
   LobbyCanvas: {fileID: 1679852021}
   JoinGamePanel: {fileID: 1024046798}
   LaunchGamePanel: {fileID: 951483879}

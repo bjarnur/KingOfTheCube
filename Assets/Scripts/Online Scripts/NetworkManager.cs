@@ -37,7 +37,7 @@ public class NetworkManager : MonoBehaviour {
             bool AllPlayersInactive = true;
             foreach (PhotonPlayer Player in PhotonNetwork.playerList)
             {
-                bool PlayerReady = (bool)Player.CustomProperties["Inactive"];
+                bool PlayerReady = (bool)Player.CustomProperties[GameConstants.NetworkedProperties.Inactive];
                 AllPlayersInactive = AllPlayersInactive && PlayerReady;
             }
             if (AllPlayersInactive) ExitToLobby();
@@ -99,6 +99,6 @@ public class NetworkManager : MonoBehaviour {
     public void OnLeftRoom()
     {
         Debug.Log("Loading lobby scene");
-        PhotonNetwork.LoadLevel("LobbyScene");
+        PhotonNetwork.LoadLevel(GameConstants.SceneNames.Lobby);
     }
 }

@@ -14,8 +14,25 @@ public static class GameConstants  {
         stopped, running, jumping, falling, climbing, throwing
     };
 
-    internal static class PlayerAnimationNames {
-        
+    internal static class ObjecNames {
+        public const string Wrapper = "Wrapper";
+        public const string NetworkManager = "NetworkManager";
+        public const string WorldContainer = "WorldContainer";
+    }
+
+    internal static class SceneNames {
+        public const string OnlineVR = "AssembleCube_AI_test";
+        public const string OnlineAR = "AR_OnlineScene";
+        public const string Lobby = "LobbyScene";
+    }
+
+    internal static class NetworkedProperties {
+        public const string Ready = "Ready";
+        public const string Stamp = "Stamp";
+        public const string Inactive = "Inactive";
+    }
+
+    internal static class PlayerAnimationNames {        
         public const string jumpAnimation = "Jump";
         public const string fallAnimation = "Fall";
         public const string runAnimation = "Run";
@@ -45,6 +62,9 @@ public static class GameConstants  {
         public const string controller = "LevelBuilder";
         public const string king = "King";
         public const string worldContainer = "WorldContainer";
+        public const string roomNameText = "RoomNameText";
+        public const string playerNumText = "NumberOfPlayersText";
+        public const string playerListText = "PlayerList";
     }
 
     internal static class Materials {

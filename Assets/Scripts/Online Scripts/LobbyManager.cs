@@ -10,7 +10,7 @@ public class LobbyManager : MonoBehaviour
 
     string[] names = new string[]
     {
-        "Bjarni",
+        "Pooria",
         "Henrique",
         "Sonia",
         "Rafa",
@@ -39,9 +39,9 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("STARTING UP");       
 
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-        PropertyTable.Add("Ready", false);
-        PropertyTable.Add("Stamp", null);
-        PropertyTable.Add("Inactive", false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, null);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
 
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
         PhotonNetwork.autoJoinLobby = true;
@@ -60,10 +60,10 @@ public class LobbyManager : MonoBehaviour
             bool AllPlayersReady = true;
             foreach (PhotonPlayer Player in PhotonNetwork.playerList)
             {
-                object check = Player.CustomProperties["Ready"];
+                object check = Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
                 if (check == null) return;
 
-                bool PlayerReady = (bool) Player.CustomProperties["Ready"];
+                bool PlayerReady = (bool) Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
                 AllPlayersReady = AllPlayersReady && PlayerReady;
             }
             if(AllPlayersReady)
@@ -103,18 +103,18 @@ public class LobbyManager : MonoBehaviour
 
         ReadyMessage.GetComponent<Text>().text = "Ready, waiting for other players";
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-        PropertyTable.Add("Ready", true);
-        PropertyTable.Add("Stamp", PlayerID);
-        PropertyTable.Add("Inactive", false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Ready, true);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
     }
 
     void LaunchGame()
     {
         if(IsAr)
-            PhotonNetwork.LoadLevel("AR_OnlineScene");
+            PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineAR);
         else
-            PhotonNetwork.LoadLevel("AssembleCube_AI_test");
+            PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineVR);
     }
 
     Dictionary<long, PhotonPlayer> GetPlayerTimestampMap()
@@ -123,10 +123,10 @@ public class LobbyManager : MonoBehaviour
         foreach (PhotonPlayer Player in PhotonNetwork.playerList)
         {
             //Will be null if other player hasn't had time to start up
-            object check = Player.CustomProperties["Stamp"];
+            object check = Player.CustomProperties[GameConstants.NetworkedProperties.Stamp];
             if (check == null) return null;
 
-            long Stamp = (long)Player.CustomProperties["Stamp"];
+            long Stamp = (long)Player.CustomProperties[GameConstants.NetworkedProperties.Stamp];
             res.Add(Stamp, Player);
         }
         return res;
@@ -160,8 +160,8 @@ public class LobbyManager : MonoBehaviour
                 PlayerIndex++;
             }
 
-            GameObject.Find("PlayerList").GetComponent<Text>().text = PlayerNames;
-            GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
+            GameObject.Find(GameConstants.GameObjectsTags.playerListText).GetComponent<Text>().text = PlayerNames;
+            GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
             LastKnownPlayerCount = NumberOfPlayers;
         }
     }
@@ -181,12 +181,12 @@ public class LobbyManager : MonoBehaviour
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
         
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-        PropertyTable.Add("Ready", false);
-        PropertyTable.Add("Stamp", PlayerID);
-        PropertyTable.Add("Inactive", false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
+        PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
-        GameObject.FindGameObjectWithTag("RoomNameText").GetComponent<Text>().text = RoomName;
-        GameObject.FindGameObjectWithTag("NumberOfPlayersText").GetComponent<Text>().text = NumberOfPlayers.ToString();
+        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<Text>().text = RoomName;
+        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
     }   
 }

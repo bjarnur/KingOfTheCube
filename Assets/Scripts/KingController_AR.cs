@@ -33,9 +33,9 @@ public class KingController_AR : MonoBehaviour {
         if (!isMultiplayer) return;
 
         Scene scene = SceneManager.GetActiveScene();
-        if (scene.name == "AR_OnlineScene")
+        if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
-            transform.SetParent(GameObject.Find("WorldContainer").transform);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform);
         }
         else
         {
@@ -235,19 +235,15 @@ public class KingController_AR : MonoBehaviour {
             switch (side)
             {
                 case 0:
-                    Debug.Log("SOY EL 0");
                     transform.localEulerAngles = new Vector3(0f, 0f, 0f);
                     break;
                 case 1:
-                    Debug.Log("SOY EL 1");
                     transform.localEulerAngles = new Vector3(0f, 90f, 0f);
                     break;
                 case 2:
-                    Debug.Log("SOY EL 2");
                     transform.localEulerAngles = new Vector3(0f, 0f, 0f);
                     break;
                 case 3:
-                    Debug.Log("SOY EL 3");
                     transform.localEulerAngles = new Vector3(0f, 270f, 0f);
                     break;
             }
@@ -302,10 +298,10 @@ public class KingController_AR : MonoBehaviour {
 
     void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "AR_OnlineScene")
+        if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
             Debug.Log("Setting king parent");
-            transform.SetParent(GameObject.Find("WorldContainer").transform);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform);
         }
     }
 }

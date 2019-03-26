@@ -61,9 +61,9 @@ public class CharacterCtrl : MonoBehaviour {
     void Awake()
     {
         Scene scene = SceneManager.GetActiveScene();
-        if(scene.name == "AR_OnlineScene")
+        if(scene.name == GameConstants.SceneNames.OnlineAR)
         {
-            transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform, false);
         }
         else
         {
@@ -162,10 +162,10 @@ public class CharacterCtrl : MonoBehaviour {
 
     void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "AR_OnlineScene")
+        if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
             Debug.Log("Setting character parent");
-            transform.SetParent(GameObject.Find("WorldContainer").transform, false);
+            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform, false);
         }
     }
 
