@@ -43,7 +43,7 @@ public class KingController_AR : MonoBehaviour {
         }
         else
         {
-            SceneManager.sceneLoaded += OnSceneChangedCallback;
+            SceneManager.sceneLoaded += SetKingControllerOnSceneLoad;
         }
     }
 
@@ -319,12 +319,20 @@ public class KingController_AR : MonoBehaviour {
         throwing = false;
     }
 
-    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    void SetKingControllerOnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
             Debug.Log("Setting king parent");
-            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform);
+            try {
+                transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform);
+            }
+            catch (MissingReferenceException e) {
+                Debug.Log("Referenced king has been deleted!");
+            }
+            finally {
+                SceneManager.sceneLoaded -= SetKingControllerOnSceneLoad;
+            }
         }
     }
 }

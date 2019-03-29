@@ -18,6 +18,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
     public bool win = false;
     [HideInInspector]
     public bool dead = false;
+    [HideInInspector]
+    public bool gameOver = false;        
 
     Vector3 movement;
     Animator animator;
@@ -32,6 +34,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
    
     bool moving = false;
     bool goingRight = false;
+    bool HasWon = false;
 
     private float SecondsInactive = 0.0f;
     private NetworkManager networkManager;
@@ -47,7 +50,7 @@ public class PlayerController_AssemCube : MonoBehaviour {
         }
         else
         {
-            SceneManager.sceneLoaded += OnSceneChangedCallback;
+            SceneManager.sceneLoaded += SetPlayerControllerOnSceneLoad;
         }
     }
 
@@ -71,7 +74,22 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     private void Update()
     {
-        if(SecondsInactive > 30)
+        if (gameOver) return;
+
+        //Small hack to test winning condition
+        if (Input.GetKey(KeyCode.B))
+        {
+            HasWon = true;
+        }        
+
+        if (HasWon && isMultiplayer)
+        { 
+            GetComponent<PhotonView>().RPC("GameOver", PhotonTargets.OthersBuffered);
+            networkManager.GameWon();
+            gameOver = true;
+        }
+
+        if (SecondsInactive > 30)
         {
             networkManager.IsInactive = true;
             ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
@@ -89,6 +107,8 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        if (gameOver) return;
+
         float mov;
         //Don't move if it's dead
         mov = dead ? 0 : Input.GetAxisRaw("Horizontal");
@@ -271,59 +291,20 @@ public class PlayerController_AssemCube : MonoBehaviour {
 
     public IEnumerator Dying()
     {
-        yield return new WaitForSeconds(3); // Length of dying animation
+        // Length of dying animation
+        yield return new WaitForSeconds(3); 
+
         // Move player to initial position
         transform.position = new Vector3(16f, 2.5f, zBounds);
         transform.localEulerAngles = new Vector3(0f, angle, 0f);
         side = 0;
         dead = false;
     }
-
-
-    //void TriggerAnimations()
-    //{
-    //    if (grounded && !jumping)
-    //    {
-    //        //animator.SetBool("Fall", false);
-    //        animator.SetBool("Climb", false);
-    //        animator.SetBool("Jump", false);
-    //        //if (moving)
-    //        //{
-    //        //    animator.SetBool("Run", true);
-    //        //}
-    //        //else
-    //        //{
-    //        //    animator.SetBool("Run", false);
-    //        //}
-    //    }
-    //    else if (climbing)
-    //    {
-    //        animator.SetBool("Climb", true);
-    //        animator.SetBool("Jump", false);
-    //    }
-    //    else if (jumping)
-    //    {
-    //        animator.SetBool("Jump", true);
-    //    }
-    //    else if (!climbing)
-    //    {
-    //        //animator.SetBool("Fall", true);
-    //        animator.SetBool("Run", true);
-    //        animator.SetBool("Climb", false);
-    //    }
-    //}
+    
 
     void TriggerAnimations()
     {
         if (!isActiveAndEnabled) return;
-        if (goingRight)
-        {
-            //transform.localEulerAngles = new Vector3(0f, angle - 90, 0f);
-        }
-        else
-        {
-            //transform.localEulerAngles = new Vector3(0f, angle + 90, 0f);
-        }
 
         if (grounded && !jumping)
         {
@@ -357,14 +338,22 @@ public class PlayerController_AssemCube : MonoBehaviour {
             animator.SetBool("Fall", true);
             currentAnimation = GameConstants.AnimationTypes.falling;
         }
-    }
+    }    
 
-    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    void SetPlayerControllerOnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == GameConstants.SceneNames.OnlineVR)
         {
             Debug.Log("Setting character parent");
-            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
+            try {
+                transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
+            }
+            catch (MissingReferenceException e) {
+                Debug.Log("Referenced player has been deleted!");
+            }
+            finally { 
+                SceneManager.sceneLoaded -= SetPlayerControllerOnSceneLoad;
+            }
         }
     }
 }

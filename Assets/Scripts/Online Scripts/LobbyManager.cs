@@ -46,7 +46,6 @@ public class LobbyManager : MonoBehaviour
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
         PhotonNetwork.autoJoinLobby = true;
         PhotonNetwork.ConnectUsingSettings(VERSION);
-
     }
 
     void Update ()

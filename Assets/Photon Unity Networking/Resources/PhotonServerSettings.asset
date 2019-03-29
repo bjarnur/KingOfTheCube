@@ -49,4 +49,5 @@ MonoBehaviour:
   - PlantSmoke
   - PlantExplosion
   - LaunchGame
+  - GameOver
   DisableAutoOpenWizard: 1

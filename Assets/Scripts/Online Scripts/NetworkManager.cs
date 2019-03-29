@@ -3,9 +3,12 @@ using System.Collections.Generic;
 
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviour {
-        
+
+    public GameObject WinText;
+    public GameObject LoseText;
     public bool isAR;
 
     const string VERSION = "0.0.1";
@@ -88,7 +91,26 @@ public class NetworkManager : MonoBehaviour {
         playerRigidbody.useGravity = true;
     }
 
-    //TODO: Call from AR controller (or player) on game over
+    public void GameWon()
+    {
+        Debug.Log("Game Won!");
+        WinText.SetActive(true);
+        StartCoroutine(WaitForSecondsThenExit(4));
+    }
+
+    public void GameLost()
+    {
+        Debug.Log("Game Lost!");
+        LoseText.SetActive(true);
+        StartCoroutine(WaitForSecondsThenExit(4));
+    }
+
+    IEnumerator WaitForSecondsThenExit(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        ExitToLobby();
+    }
+
     void ExitToLobby()
     {
         Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);

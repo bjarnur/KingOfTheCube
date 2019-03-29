@@ -41,7 +41,7 @@ public class KingController_AssemCube : MonoBehaviour {
         }
         else
         {
-            SceneManager.sceneLoaded += OnSceneChangedCallback;
+            SceneManager.sceneLoaded += SetKingControllerOnSceneLoad;
         }
     }
 
@@ -275,12 +275,20 @@ public class KingController_AssemCube : MonoBehaviour {
         throwing = false;
     }
 
-    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    void SetKingControllerOnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == GameConstants.SceneNames.OnlineVR)
         {
             Debug.Log("Setting king parent");
-            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
+            try { 
+                transform.SetParent(GameObject.Find(GameConstants.ObjecNames.Wrapper).transform);
+            }
+            catch(MissingReferenceException e) {
+                Debug.Log("Referenced king has been deleted!");
+            }
+            finally { 
+                SceneManager.sceneLoaded -= SetKingControllerOnSceneLoad;
+            }
         }
     }
 }

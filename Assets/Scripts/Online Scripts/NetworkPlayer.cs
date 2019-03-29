@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Photon;
 
 public class NetworkPlayer : Photon.MonoBehaviour {
@@ -12,11 +13,14 @@ public class NetworkPlayer : Photon.MonoBehaviour {
     public GameConstants.AnimationTypes currentAnimation;
     public bool isAR = false;
 
+    private bool BufferedGameLost = false;
+    private NetworkManager networkManager;
 
     void Awake () {
-        if(photonView.isMine)
+
+        if (photonView.isMine)
         {            
-            gameObject.name = "Local Player";
+            gameObject.name = "Local Player";            
         }
         else
         {
@@ -26,6 +30,18 @@ public class NetworkPlayer : Photon.MonoBehaviour {
         }
 	}
 
+    void Start()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == GameConstants.SceneNames.OnlineAR || scene.name == GameConstants.SceneNames.OnlineVR)
+        {
+            networkManager = GameObject.Find(GameConstants.ObjecNames.NetworkManager).GetComponent<NetworkManager>();
+        }
+        else
+        {
+            SceneManager.sceneLoaded += SetNetworkManagerOnSceneLoad;
+        }
+    }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {     
         if (stream.isWriting){
@@ -122,16 +138,47 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
     }
 
-    /*
     [PunRPC]
-    void DropBomb()
+    void GameOver()
     {
-        GameObject parent = transform.parent.gameObject;
-        GameObject rockInstance = transform.GetChild(2).gameObject;
+        Debug.Log("game over rpc");
 
-        rockInstance.GetComponent<BombController>().enabled = true;
-        rockInstance.transform.position = parent.GetComponent<KingController_AR>().hand.transform.position;
-        rockInstance.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        rockInstance.SetActive(true);
-    }*/
+        if (isAR)
+        {
+            var Players = GameObject.FindGameObjectsWithTag(GameConstants.ARPLAYERTAG);
+            foreach(var Player in Players)
+            {
+                Player.GetComponent<CharacterCtrl>().gameOver = true;
+            }
+        }
+            
+        else
+        {
+            var Players = GameObject.FindGameObjectsWithTag(GameConstants.UNITYPLAYERTAG);
+            foreach(var Player in  Players)
+            {
+                Player.GetComponent<PlayerController_AssemCube>().gameOver = true;
+            }
+        }
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == GameConstants.SceneNames.OnlineAR || scene.name == GameConstants.SceneNames.OnlineVR)
+            //Winning player instantiates the RPC, hence all players that run this have lost
+            networkManager.GameLost();
+        else
+            BufferedGameLost = true;
+    }
+
+    void SetNetworkManagerOnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Network player scene callback");
+        if (scene.name == GameConstants.SceneNames.OnlineAR || scene.name == GameConstants.SceneNames.OnlineVR)
+        {
+            networkManager = GameObject.Find(GameConstants.ObjecNames.NetworkManager).GetComponent<NetworkManager>();
+            SceneManager.sceneLoaded -= SetNetworkManagerOnSceneLoad;
+
+            if (BufferedGameLost)
+                networkManager.GameLost();
+        }        
+    }
 }

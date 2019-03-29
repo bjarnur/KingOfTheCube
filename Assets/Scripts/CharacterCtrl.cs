@@ -32,6 +32,8 @@ public class CharacterCtrl : MonoBehaviour {
     public bool isMultiplayer = false;
     [HideInInspector]
     public bool dead = false;
+    [HideInInspector]
+    public bool gameOver = false;
 
     /*********************\
         Private fields
@@ -49,7 +51,8 @@ public class CharacterCtrl : MonoBehaviour {
     bool moving = false;
     bool goingRight = false;
     bool grounded = true;
-    bool jumping = false;    
+    bool jumping = false;
+    bool HasWon = false;
 
     float timeBetweenJumps = 0.3f;
     float groundedTime = 0.0f;
@@ -70,7 +73,7 @@ public class CharacterCtrl : MonoBehaviour {
         }
         else
         {
-            SceneManager.sceneLoaded += OnSceneChangedCallback;
+            SceneManager.sceneLoaded += SetPlayerControllerOnChangeScene;
         }
     }
 
@@ -81,6 +84,8 @@ public class CharacterCtrl : MonoBehaviour {
 	}	
 	
 	void Update () {
+
+        if (gameOver) return;
 
         if (SecondsInactive > 30)
         {
@@ -96,10 +101,7 @@ public class CharacterCtrl : MonoBehaviour {
             PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
             PhotonNetwork.player.SetCustomProperties(PropertyTable);
         }
-
-        if (win)
-            return;
-
+        
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
 
@@ -178,12 +180,20 @@ public class CharacterCtrl : MonoBehaviour {
         return Physics.Raycast(transform.position, -Vector3.up, distToGround);
     }
 
-    void OnSceneChangedCallback(Scene scene, LoadSceneMode mode)
+    void SetPlayerControllerOnChangeScene(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == GameConstants.SceneNames.OnlineAR)
         {
             Debug.Log("Setting character parent");
-            transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform, false);
+            try {
+                transform.SetParent(GameObject.Find(GameConstants.ObjecNames.WorldContainer).transform, false);
+            }
+            catch (MissingReferenceException e) {
+                Debug.Log("Referenced player has been deleted!");
+            }
+            finally {
+                SceneManager.sceneLoaded -= SetPlayerControllerOnChangeScene;
+            }
         }
     }
 
@@ -359,9 +369,11 @@ public class CharacterCtrl : MonoBehaviour {
                     //WIN!!
                     transform.localPosition = new Vector3(transform.localPosition.x, topCube, transform.localPosition.z);
                     animator.SetBool("Climb", false);
-                    //animator.SetTrigger("Win");
-                    win = true;
-                    winText.SetActive(true);
+                    
+                    HasWon = true;
+                    GetComponent<PhotonView>().RPC("GameOver", PhotonTargets.OthersBuffered);
+                    networkManager.GameWon();
+                    gameOver = true;
                     return;
                 }
             }
