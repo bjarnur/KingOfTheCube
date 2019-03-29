@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class LobbyManager : MonoBehaviour
     public GameObject CountdownTimer;
     public GameObject ReadyMessage;
 
+    [HideInInspector] public bool GameOver;
+
     const string VERSION = "0.0.1";
     private string RoomName = "PrivateRoom";
     private string PlayerName = "Player";
@@ -42,6 +45,7 @@ public class LobbyManager : MonoBehaviour
         PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
         PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, null);
         PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
+        PropertyTable.Add(GameConstants.NetworkedProperties.InGame, false);
 
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
         PhotonNetwork.autoJoinLobby = true;
@@ -51,6 +55,12 @@ public class LobbyManager : MonoBehaviour
     void Update ()
     {
         if (!HasJoinedRoom) return;
+
+        if (GameOver)
+        { 
+            ReloadLobby();
+            return;
+        }
 
         AssignPlayerIndices();
 
@@ -72,7 +82,7 @@ public class LobbyManager : MonoBehaviour
                 CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
             }
         }
-        else
+        else// Countdown timer active
         {
             CountdowntimerValue -= Time.deltaTime;
             CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
@@ -110,7 +120,11 @@ public class LobbyManager : MonoBehaviour
 
     void LaunchGame()
     {
-        if(IsAr)
+        ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+        PropertyTable.Add(GameConstants.NetworkedProperties.InGame, true);
+        PhotonNetwork.player.SetCustomProperties(PropertyTable);
+
+        if (IsAr)
             PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineAR);
         else
             PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineVR);
@@ -135,7 +149,7 @@ public class LobbyManager : MonoBehaviour
     {
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
 
-        if (NumberOfPlayers > LastKnownPlayerCount)
+        if (NumberOfPlayers != LastKnownPlayerCount)
         {
             Dictionary<long, PhotonPlayer> PlayerTimestampMap = GetPlayerTimestampMap();
             if (PlayerTimestampMap == null) return;
@@ -187,5 +201,24 @@ public class LobbyManager : MonoBehaviour
 
         GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<Text>().text = RoomName;
         GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
-    }   
+    }
+
+    public void ReloadLobby()
+    {
+        //Have to wait until all players have exited game
+        foreach(PhotonPlayer Player in PhotonNetwork.otherPlayers)
+        {
+            bool PlayerInGame = (bool)Player.CustomProperties[GameConstants.NetworkedProperties.InGame];
+            if (PlayerInGame) return;
+        }
+        Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
+        PhotonNetwork.LeaveRoom();
+    }    
+
+    public void OnLeftRoom()
+    {
+        Debug.Log("Loading lobby scene");
+        PhotonNetwork.LoadLevel(GameConstants.SceneNames.Lobby);
+    }
 }

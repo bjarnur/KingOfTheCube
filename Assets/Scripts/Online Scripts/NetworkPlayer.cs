@@ -15,6 +15,7 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
     private bool BufferedGameLost = false;
     private NetworkManager networkManager;
+    private LobbyManager lobbyManager;
 
     void Awake () {
 
@@ -163,8 +164,15 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
         Scene scene = SceneManager.GetActiveScene();
         if (scene.name == GameConstants.SceneNames.OnlineAR || scene.name == GameConstants.SceneNames.OnlineVR)
+        { 
             //Winning player instantiates the RPC, hence all players that run this have lost
             networkManager.GameLost();
+        }
+        else if(scene.name == GameConstants.SceneNames.Lobby)
+        {
+            lobbyManager = GameObject.Find(GameConstants.ObjecNames.LobbyManager).GetComponent<LobbyManager>();
+            lobbyManager.GameOver = true;
+        }
         else
             BufferedGameLost = true;
     }
