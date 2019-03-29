@@ -61,7 +61,7 @@ public class NetworkManager : MonoBehaviour {
         newPlayer.transform.localPosition = spawn;
 
         KingController_AssemCube controller = newPlayer.GetComponent<KingController_AssemCube>();
-        KingNetwork networkPlayer = newPlayer.GetComponent<KingNetwork>();
+        NetworkKing networkPlayer = newPlayer.GetComponent<NetworkKing>();
         Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
 
         controller.enabled = true;
