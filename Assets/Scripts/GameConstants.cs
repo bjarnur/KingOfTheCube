@@ -18,6 +18,7 @@ public static class GameConstants  {
         public const string Wrapper = "Wrapper";
         public const string NetworkManager = "NetworkManager";
         public const string WorldContainer = "WorldContainer";
+        public const string LobbyManager = "LobbyManagerObject";
     }
 
     internal static class SceneNames {
@@ -30,6 +31,7 @@ public static class GameConstants  {
         public const string Ready = "Ready";
         public const string Stamp = "Stamp";
         public const string Inactive = "Inactive";
+        public const string InGame = "InGame";
     }
 
     internal static class PlayerAnimationNames {        
