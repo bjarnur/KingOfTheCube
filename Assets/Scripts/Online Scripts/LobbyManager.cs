@@ -11,11 +11,11 @@ public class LobbyManager : MonoBehaviour
 
     string[] names = new string[]
     {
-        "Pooria",
-        "Henrique",
-        "Sonia",
-        "Rafa",
-        "Julien"
+        "King of the Cube",
+        "King Arthur",
+        "King Kong",
+        "Kingsley shacklebolt",
+        "King's Cross"
     };
 
     public bool IsAr = false;
@@ -24,6 +24,7 @@ public class LobbyManager : MonoBehaviour
     public GameObject LaunchGamePanel;
     public GameObject CountdownTimer;
     public GameObject ReadyMessage;
+    public Button ReadyButton;
 
     [HideInInspector] public bool GameOver;
 
@@ -32,10 +33,16 @@ public class LobbyManager : MonoBehaviour
     private string PlayerName = "Player";
     private bool HasJoinedRoom = false;
     private bool CountdownTimerActive = false;
+    private bool ReadyToStartGame = false;
+    private float SecondsInactive = 0.0f;
+    private float InactifityTimeThreshold = 15.0f;
     private byte MaxPlayerNumber = 5;
     private int LastKnownPlayerCount = -1;
     private float CountdowntimerValue = 10;
+    private float CountdowntimerLength = 10;
     private long PlayerID;
+   
+  
 
     void Start ()
     {
@@ -52,45 +59,33 @@ public class LobbyManager : MonoBehaviour
         PhotonNetwork.ConnectUsingSettings(VERSION);
     }
 
+    
+
     void Update ()
     {
         if (!HasJoinedRoom) return;
 
         if (GameOver)
         { 
+            //Game is over before player can join
             ReloadLobby();
             return;
         }
 
-        AssignPlayerIndices();
+        //Get info an all players in room
+        ListAndIndexPlayersInRoom();
 
+        //Monitor current player for inactivity
+        CheckForInactivity();       
+
+        //Start countdown to start of game when all players are ready
         if (!CountdownTimerActive)
-        { 
-            bool AllPlayersReady = true;
-            foreach (PhotonPlayer Player in PhotonNetwork.playerList)
-            {
-                object check = Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
-                if (check == null) return;
-
-                bool PlayerReady = (bool) Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
-                AllPlayersReady = AllPlayersReady && PlayerReady;
-            }
-            if(AllPlayersReady)
-            {
-                CountdowntimerValue = 10;
-                CountdownTimerActive = true;
-                CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
-            }
-        }
-        else// Countdown timer active
-        {
-            CountdowntimerValue -= Time.deltaTime;
-            CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
-            if (CountdowntimerValue < 0.0f)
-                LaunchGame();
-        }
+            CountdownTimerActive = InitiateGameCountdown();
+        else
+            CountdownTimerActive = IncrementGameCountdown();
     }
 
+    //Called from button in lobby
     public void JoinGame()
     {
         RoomOptions roomOptions = new RoomOptions() { IsVisible = false, MaxPlayers = MaxPlayerNumber };
@@ -104,18 +99,31 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Player joining game");
         JoinGamePanel.SetActive(false);
         LaunchGamePanel.SetActive(true);
+
+        ColorBlock cb = ReadyButton.colors;
+        cb.normalColor = Color.red;
+        cb.highlightedColor = Color.red;
+        ReadyButton.colors = cb;
     }
 
+    //Called from button in lobby
     public void PlayerReady()
     {
         if (LastKnownPlayerCount < 2) return;
 
         ReadyMessage.GetComponent<Text>().text = "Ready, waiting for other players";
+
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add(GameConstants.NetworkedProperties.Ready, true);
-        PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
-        PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
+
+        ColorBlock cb = ReadyButton.colors;
+        cb.normalColor = Color.green;
+        cb.highlightedColor = Color.green;
+        ReadyButton.colors = cb;
+
+        ReadyToStartGame = true;
+        SecondsInactive = 0.0f;
     }
 
     void LaunchGame()
@@ -128,6 +136,92 @@ public class LobbyManager : MonoBehaviour
             PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineAR);
         else
             PhotonNetwork.LoadLevel(GameConstants.SceneNames.OnlineVR);
+    }
+
+    void CheckForInactivity()
+    {
+        if (!ReadyToStartGame)
+            SecondsInactive += Time.deltaTime;
+
+        if (SecondsInactive > InactifityTimeThreshold)
+            ReloadLobby();
+    }
+
+    //Returns true if conditions are met so the game can start
+    bool InitiateGameCountdown()
+    {        
+        if (AreAllPlayersReady())
+        {
+            CountdowntimerValue = 10;
+            CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
+            return true;
+        }
+        return false;
+    }
+
+    //Ticks towards start of game, returns true while countdown is valid
+    bool IncrementGameCountdown()
+    {
+        //Too many players have left, cancel countdown
+        if (LastKnownPlayerCount < 2 || !AreAllPlayersReady())
+        {
+            CountdowntimerValue = CountdowntimerLength;
+            CountdownTimer.GetComponent<Text>().text = "";
+            ReadyMessage.GetComponent<Text>().text = "";
+
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+
+            ColorBlock cb = ReadyButton.colors;
+            cb.normalColor = Color.red;
+            cb.highlightedColor = Color.red;
+            ReadyButton.colors = cb;
+
+            ReadyToStartGame = false;
+
+            return false;
+        }
+
+        CountdowntimerValue -= Time.deltaTime;
+        CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
+        if (CountdowntimerValue < 0.0f)
+            LaunchGame();
+
+        return true;
+    }
+
+    bool AreAllPlayersReady()
+    {
+        bool AllPlayersReady = true;
+        foreach (PhotonPlayer Player in PhotonNetwork.playerList)
+        {
+            //For newly joined players this property can be null
+            object check = Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
+            if (check == null) return false;
+
+            bool PlayerReady = (bool)Player.CustomProperties[GameConstants.NetworkedProperties.Ready];
+            AllPlayersReady = AllPlayersReady && PlayerReady;
+        }
+        return AllPlayersReady;
+    }
+
+    public void ReloadLobby()
+    {
+        //Have to wait until all players have exited game
+        foreach (PhotonPlayer Player in PhotonNetwork.otherPlayers)
+        {
+            //For newly joined players this property can be null
+            object check = Player.CustomProperties[GameConstants.NetworkedProperties.InGame];
+            if (check == null) return;
+
+            bool PlayerInGame = (bool)Player.CustomProperties[GameConstants.NetworkedProperties.InGame];
+            if (PlayerInGame) return;
+        }
+
+        Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
+        PhotonNetwork.LeaveRoom();
     }
 
     Dictionary<long, PhotonPlayer> GetPlayerTimestampMap()
@@ -145,7 +239,7 @@ public class LobbyManager : MonoBehaviour
         return res;
     }
 
-    void AssignPlayerIndices()
+    void ListAndIndexPlayersInRoom()
     {
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
 
@@ -162,13 +256,15 @@ public class LobbyManager : MonoBehaviour
             foreach (long Key in MapKeys)
             {
                 PhotonPlayer Player = PlayerTimestampMap[Key];
+                String PlayerVisibleId = PlayerIndex.ToString();
                 if (Player.ID == PhotonNetwork.player.ID)
                 {
-                    //Static ID used to instantiate character in game scene
+                    //Static ID used to instantiate character in game scene, only set for local player
                     GameConstants.NetworkedPlayerID = PlayerIndex;
+                    PlayerVisibleId += "  <- This is you";
                 }
 
-                PlayerNames += names[Convert.ToInt32(PlayerIndex)] + PlayerIndex;
+                PlayerNames += names[Convert.ToInt32(PlayerIndex)] + " " + PlayerVisibleId;
                 PlayerNames += "\n";
                 PlayerIndex++;
             }
@@ -179,14 +275,16 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    //Photon callback
     void OnJoinedLobby()
     {
         Debug.Log("JOINED LOBBY");
     }
     
+    //Photon callback
 	void OnJoinedRoom()
     {
-        Debug.Log("JOINING ROOM");
+        Debug.Log("JOINED ROOM");
 
         HasJoinedRoom = true;
         PlayerID = DateTime.Now.Ticks;
@@ -194,28 +292,14 @@ public class LobbyManager : MonoBehaviour
         int NumberOfPlayers = PhotonNetwork.room.PlayerCount;
         
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-        PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
         PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
-        PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
         GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<Text>().text = RoomName;
         GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
     }
 
-    public void ReloadLobby()
-    {
-        //Have to wait until all players have exited game
-        foreach(PhotonPlayer Player in PhotonNetwork.otherPlayers)
-        {
-            bool PlayerInGame = (bool)Player.CustomProperties[GameConstants.NetworkedProperties.InGame];
-            if (PlayerInGame) return;
-        }
-        Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);
-        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
-        PhotonNetwork.LeaveRoom();
-    }    
-
+    //Photon callback
     public void OnLeftRoom()
     {
         Debug.Log("Loading lobby scene");
