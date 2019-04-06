@@ -1,14 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
-using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+using TMPro;
 
 public class NetworkManager : MonoBehaviour {
 
     public GameObject WinText;
     public GameObject LoseText;
+    public GameObject GameTimer;
+    public bool gameOver = false;
     public bool isAR;
 
     const string VERSION = "0.0.1";
@@ -16,7 +20,7 @@ public class NetworkManager : MonoBehaviour {
     [HideInInspector] public bool IsInactive = false;
 
     void Start()
-    {
+    {        
         if (!isAR)
         {
             int PlayerIndex = GameConstants.NetworkedPlayerID;
@@ -25,7 +29,7 @@ public class NetworkManager : MonoBehaviour {
                 spawnKing();
             else
                 spawnPretender(PlayerIndex);
-        }
+        }        
     }
 
     void Update()
@@ -93,16 +97,31 @@ public class NetworkManager : MonoBehaviour {
 
     public void GameWon()
     {
+        if (gameOver) return;
+
         Debug.Log("Game Won!");
+        gameOver = true;
         WinText.SetActive(true);
         StartCoroutine(WaitForSecondsThenExit(4));
     }
 
     public void GameLost()
     {
+        if (gameOver) return;
+
         Debug.Log("Game Lost!");
+        gameOver = true;
         LoseText.SetActive(true);
         StartCoroutine(WaitForSecondsThenExit(4));
+    }
+
+    public void UpdateTimer(int seconds)
+    {
+        if (gameOver) return;
+
+        string mins = (seconds / 60).ToString();
+        string secs = (seconds % 60).ToString();
+        GameTimer.GetComponent<TextMeshProUGUI>().SetText(mins + ":" + secs);
     }
 
     IEnumerator WaitForSecondsThenExit(int seconds)

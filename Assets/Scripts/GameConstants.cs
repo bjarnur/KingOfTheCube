@@ -9,6 +9,11 @@ public static class GameConstants  {
     public static string ARPLAYERNAME = "ARPlayer";
     public static string UNITYPLAYERNAME = "UnityPlayer";
 
+    public static string ARKINGTAG = "ARKing";
+    public static string UNITYKINGTAG = "King";
+    public static string ARKINGNAME = "UnityKing";
+    public static string UNITYKINGNAME = "King";
+
     public enum AnimationTypes
     {
         stopped, running, jumping, falling, climbing, throwing
