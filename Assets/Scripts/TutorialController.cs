@@ -32,15 +32,44 @@ public class TutorialController : MonoBehaviour {
 
     bool ended;
 
-    void Start () {
+    public void InitiateForPlayer () {
         ended = false;
         steps = new List<TutorialStep>();
 
-        AddStep(new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 0, Text = "Press the right half to move right" });
-        AddStep(new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 180, Text = "Press the left half to move left" });
+        AddStep(new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 0, Text = "Tryck och håll på höger sida av skärmen för att springa höger" });
+        /*AddStep(new List<TutorialTouch> {
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Tryck på vänster sida av skärmen när du springer till höger för att hoppa till höger" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 0, Text = "Tryck på vänster sida av skärmen när du springer till höger för att hoppa till höger" }
+        });*/
+        AddStep(new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 180, Text = "Tryck och håll på vänster sidan av skärmen för att springa vänster" });
+        /*AddStep(new List<TutorialTouch> {
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 180, Text = "Tryck på högersidan av skärmen när du springer till vänster för att hoppa till vänster" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "Tryck på högersidan av skärmen när du springer till vänster för att hoppa till vänster" }
+        });*/
         AddStep(new List<TutorialTouch> {
-            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Press both sides at the same" },
-            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "time to jump or go up" }
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Tryck båda sidor samtidigt för att hoppa upp eller klättra stege" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "Tryck båda sidor samtidigt för att hoppa upp eller klättra stege" }
+        });
+    }
+
+    public void InitiateForKing()
+    {
+        ended = false;
+        steps = new List<TutorialStep>();
+
+        AddStep(new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 0, Text = "Tryck och håll på höger sidan av skärmen för att springa höger" });
+        /*AddStep(new List<TutorialTouch> {
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Tryck på vänstersidan av skärmen när du springer till höger för att hopppa till höger" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 0, Text = "Tryck på vänstersidan av skärmen när du springer till höger för att hopppa till höger" }
+        });*/
+        AddStep(new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 180, Text = "Tryck och håll på vänster sidan av skärmen för att springa vänster" });
+        /*AddStep(new List<TutorialTouch> {
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 180, Text = "Tryck på högersidan av skärmen när du springer till vänster för att hopppa till vänster" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "Tryck på högersidan av skärmen när du springer till vänster för att hopppa till vänster" }
+        });*/
+        AddStep(new List<TutorialTouch> {
+            new TutorialTouch { Size = TouchSize.LeftHalf, Rotation = 90, Text = "Tryck båda sidor samtidigt för att droppa en bomb" },
+            new TutorialTouch { Size = TouchSize.RightHalf, Rotation = 90, Text = "Tryck båda sidor samtidigt för att droppa en bomb" }
         });
     }
 

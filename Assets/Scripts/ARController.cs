@@ -72,14 +72,21 @@ public class ARController : MonoBehaviour
                 { 
                     readyPlayerOne();
                     readyKing();
+                    tutorial.InitiateForPlayer();
                 }
                 else
                 {
                     int PlayerIndex = GameConstants.NetworkedPlayerID;
                     if (PlayerIndex == 0)
+                    { 
                         spawnKing();
+                        tutorial.InitiateForKing();
+                    }
                     else
+                    { 
                         spawnPretender(PlayerIndex);
+                        tutorial.InitiateForPlayer();
+                    }
                 }
                 tutorial.Begin();
             }
