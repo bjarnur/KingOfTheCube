@@ -219,6 +219,7 @@ public class LobbyManager : MonoBehaviour
             if (PlayerInGame) return;
         }
 
+        HasJoinedRoom = false;
         Debug.Log("Leaving room " + PhotonNetwork.countOfPlayers);
         PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
         PhotonNetwork.LeaveRoom();

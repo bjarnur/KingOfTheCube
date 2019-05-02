@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -70,7 +71,10 @@ public class NetworkKing : Photon.MonoBehaviour
             }
         }
 
-        networkManager.UpdateTimer((int) gameTimer);
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == GameConstants.SceneNames.OnlineAR || scene.name == GameConstants.SceneNames.OnlineVR)
+            networkManager.UpdateTimer((int) gameTimer);
+
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
