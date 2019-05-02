@@ -19,6 +19,8 @@ public class NetworkManager : MonoBehaviour {
     private string roomName = "myRoom";
     [HideInInspector] public bool IsInactive = false;
 
+    private float timeAlone = 0.0f;
+
     void Start()
     {        
         if (!isAR)
@@ -48,6 +50,17 @@ public class NetworkManager : MonoBehaviour {
                 AllPlayersInactive = AllPlayersInactive && PlayerReady;
             }
             if (AllPlayersInactive) ExitToLobby();
+        }
+
+        int ActivePlayers = PhotonNetwork.playerList.Length;
+        if(ActivePlayers == 1)
+        {
+            timeAlone += Time.deltaTime;
+            if (timeAlone > 5.0f) ExitToLobby();
+        }
+        else
+        {
+            timeAlone = 0.0f;
         }
     }
 

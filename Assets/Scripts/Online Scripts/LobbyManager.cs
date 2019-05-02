@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+using TMPro;
+
 public class LobbyManager : MonoBehaviour
 {
 
@@ -38,8 +40,8 @@ public class LobbyManager : MonoBehaviour
     private float InactifityTimeThreshold = 15.0f;
     private byte MaxPlayerNumber = 5;
     private int LastKnownPlayerCount = -1;
-    private float CountdowntimerValue = 10;
-    private float CountdowntimerLength = 10;
+    private float CountdowntimerValue = 5;
+    private float CountdowntimerLength = 5;
     private long PlayerID;
    
   
@@ -111,7 +113,7 @@ public class LobbyManager : MonoBehaviour
     {
         if (LastKnownPlayerCount < 2) return;
 
-        ReadyMessage.GetComponent<Text>().text = "Ready, waiting for other players";
+        ReadyMessage.GetComponent<TextMeshProUGUI>().text = "Väntar på andra";
 
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add(GameConstants.NetworkedProperties.Ready, true);
@@ -152,10 +154,13 @@ public class LobbyManager : MonoBehaviour
     {        
         if (AreAllPlayersReady())
         {
-            CountdowntimerValue = 10;
-            CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
+            ReadyMessage.GetComponent<TextMeshProUGUI>().text = "Spelet börjar snart";
+
+            CountdowntimerValue = 5;
+            CountdownTimer.GetComponent<TextMeshProUGUI>().text = "Börjar om " + ((int)Math.Round(CountdowntimerValue)).ToString();
             return true;
         }
+      
         return false;
     }
 
@@ -166,8 +171,8 @@ public class LobbyManager : MonoBehaviour
         if (LastKnownPlayerCount < 2 || !AreAllPlayersReady())
         {
             CountdowntimerValue = CountdowntimerLength;
-            CountdownTimer.GetComponent<Text>().text = "";
-            ReadyMessage.GetComponent<Text>().text = "";
+            CountdownTimer.GetComponent<TextMeshProUGUI>().text = "";
+            ReadyMessage.GetComponent<TextMeshProUGUI>().text = "";
 
             ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
             PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
@@ -184,7 +189,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         CountdowntimerValue -= Time.deltaTime;
-        CountdownTimer.GetComponent<Text>().text = "Starting in " + ((int)Math.Round(CountdowntimerValue)).ToString();
+        CountdownTimer.GetComponent<TextMeshProUGUI>().text = "Börjar om " + ((int)Math.Round(CountdowntimerValue)).ToString();
         if (CountdowntimerValue < 0.0f)
             LaunchGame();
 
@@ -262,7 +267,7 @@ public class LobbyManager : MonoBehaviour
                 {
                     //Static ID used to instantiate character in game scene, only set for local player
                     GameConstants.NetworkedPlayerID = PlayerIndex;
-                    PlayerVisibleId += "  <- This is you";
+                    PlayerVisibleId += "  <- Här är du";
                 }
 
                 PlayerNames += names[Convert.ToInt32(PlayerIndex)] + " " + PlayerVisibleId;
@@ -270,8 +275,8 @@ public class LobbyManager : MonoBehaviour
                 PlayerIndex++;
             }
 
-            GameObject.Find(GameConstants.GameObjectsTags.playerListText).GetComponent<Text>().text = PlayerNames;
-            GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
+            GameObject.Find(GameConstants.GameObjectsTags.playerListText).GetComponent<TextMeshProUGUI>().text = PlayerNames;
+            GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
             LastKnownPlayerCount = NumberOfPlayers;
         }
     }
@@ -296,8 +301,8 @@ public class LobbyManager : MonoBehaviour
         PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
-        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<Text>().text = RoomName;
-        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<Text>().text = NumberOfPlayers.ToString();
+        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<TextMeshProUGUI>().text = RoomName;
+        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
     }
 
     //Photon callback
