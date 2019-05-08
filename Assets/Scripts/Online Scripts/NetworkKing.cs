@@ -51,6 +51,8 @@ public class NetworkKing : Photon.MonoBehaviour
             gameObject.name = "NetworkKing";
             StartCoroutine("UpdateNetworked");
             DontDestroyOnLoad(this.gameObject);
+
+            Destroy(gameObject.transform.Find("Indicator").gameObject);
         }
     }
 

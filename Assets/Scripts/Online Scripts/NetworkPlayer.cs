@@ -21,13 +21,15 @@ public class NetworkPlayer : Photon.MonoBehaviour {
 
         if (photonView.isMine)
         {            
-            gameObject.name = "Local Player";            
+            gameObject.name = "Local Player";
         }
         else
         {
             gameObject.name = "Network Player";
             StartCoroutine("UpdateNetworked");
             DontDestroyOnLoad(this.gameObject);
+
+            Destroy(gameObject.transform.Find("Indicator").gameObject);
         }
 	}
 
