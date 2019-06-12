@@ -37,7 +37,7 @@ public class LobbyManager : MonoBehaviour
     private bool CountdownTimerActive = false;
     private bool ReadyToStartGame = false;
     private float SecondsInactive = 0.0f;
-    private float InactifityTimeThreshold = 15.0f;
+    private float InactifityTimeThreshold = 25.0f;
     private byte MaxPlayerNumber = 5;
     private int LastKnownPlayerCount = -1;
     private float CountdowntimerValue = 5;
@@ -95,6 +95,15 @@ public class LobbyManager : MonoBehaviour
         if(!success)
         {
             Debug.Log("Failed to join room");
+
+            //Hack to avoid lobby deadlock
+            object check = PhotonNetwork.player.CustomProperties[GameConstants.NetworkedProperties.Ready];
+            if (check != null)
+            {
+                Debug.Log("Reinitializing lobby scene");
+                Start();
+            }
+
             return;
         }
 
@@ -276,7 +285,7 @@ public class LobbyManager : MonoBehaviour
             }
 
             GameObject.Find(GameConstants.GameObjectsTags.playerListText).GetComponent<TextMeshProUGUI>().text = PlayerNames;
-            GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
+            //GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
             LastKnownPlayerCount = NumberOfPlayers;
         }
     }
@@ -301,8 +310,8 @@ public class LobbyManager : MonoBehaviour
         PropertyTable.Add(GameConstants.NetworkedProperties.Stamp, PlayerID);
         PhotonNetwork.player.SetCustomProperties(PropertyTable);
 
-        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<TextMeshProUGUI>().text = RoomName;
-        GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
+        //GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.roomNameText).GetComponent<TextMeshProUGUI>().text = RoomName;
+        //GameObject.FindGameObjectWithTag(GameConstants.GameObjectsTags.playerNumText).GetComponent<TextMeshProUGUI>().text = NumberOfPlayers.ToString();
     }
 
     //Photon callback

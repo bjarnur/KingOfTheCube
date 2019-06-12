@@ -991,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
-  gameTimer: 60
+  gameTimer: 240
   larpSmoothing: 10
 --- !u!114 &114600077889547934
 MonoBehaviour:

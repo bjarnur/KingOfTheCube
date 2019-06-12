@@ -12,7 +12,7 @@ public class NetworkKing : Photon.MonoBehaviour
     [HideInInspector] public Vector3 position;
     [HideInInspector] public Quaternion rotation = new Quaternion(0,0,0,0);
 
-    public float gameTimer = 60;
+    public float gameTimer = 240;
     public float larpSmoothing = 10f;
 
     private bool gameOver = false;

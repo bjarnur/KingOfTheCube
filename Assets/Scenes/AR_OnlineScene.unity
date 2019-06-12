@@ -450,6 +450,11 @@ Prefab:
       propertyPath: m_fontSizeBase
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 114715111666944646, guid: 3edaaaebbe8e4b04d917113be0a6ad4a,
+        type: 2}
+      propertyPath: m_text
+      value: Grattis! Du vann :)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3edaaaebbe8e4b04d917113be0a6ad4a, type: 2}
   m_IsPrefabAsset: 0
@@ -788,7 +793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &813763918
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1145,7 +1150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1360559293
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1374,7 +1379,7 @@ Prefab:
     - target: {fileID: 114715111666944646, guid: 3edaaaebbe8e4b04d917113be0a6ad4a,
         type: 2}
       propertyPath: m_text
-      value: You've lost
+      value: "Du f\xF6rlorade"
       objectReference: {fileID: 0}
     - target: {fileID: 114715111666944646, guid: 3edaaaebbe8e4b04d917113be0a6ad4a,
         type: 2}
