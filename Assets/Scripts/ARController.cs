@@ -25,6 +25,7 @@ public class ARController : MonoBehaviour
     private AugmentedImage KOTCImage = null;
     private Anchor KOTCAnchor = null;
     private GameObject playerInstance;
+    private bool playingKing = false;
 
     private const float xBoundsMin = -1.6f;
     private const float xBoundsMax = 1.6f;
@@ -72,7 +73,7 @@ public class ARController : MonoBehaviour
                 { 
                     readyPlayerOne();
                     readyKing();
-                    tutorial.InitiateForPlayer();
+                    //tutorial.InitiateForPlayer();
                 }
                 else
                 {
@@ -80,15 +81,15 @@ public class ARController : MonoBehaviour
                     if (PlayerIndex == 0)
                     { 
                         spawnKing();
-                        tutorial.InitiateForKing();
+                        //tutorial.InitiateForKing();
                     }
                     else
                     { 
                         spawnPretender(PlayerIndex);
-                        tutorial.InitiateForPlayer();
+                        //tutorial.InitiateForPlayer();
                     }
                 }
-                tutorial.Begin();
+                //tutorial.Begin();
             }
             else if (image.TrackingState == TrackingState.Stopped) {
                 Debug.Log("Tracking Stopped");
@@ -112,7 +113,138 @@ public class ARController : MonoBehaviour
 
     public void ShowInstructions()
     {
-        tutorial.Begin();
+        //tutorial.Begin();
+    }
+
+    public void ActivatePlayerLeft()
+    {
+        //Debug.Log("Activate Left");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        {
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.moveLeft = true;
+        }
+        else
+        {
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveLeft = true;
+        }
+    }
+    public void DeActivatePlayerLeft()
+    {
+        //Debug.Log("Deactivating Light");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        { 
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.moveLeft = false;
+        }
+        else
+        { 
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveLeft = false;
+        }
+    }
+
+    public void ActivatePlayerRight()
+    {
+        //Debug.Log("Activating Right");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        {
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.moveRight = true;
+        }
+        else
+        {
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveRight = true;
+        }
+    }
+
+    public void DeActivatePlayerRight()
+    {
+        //Debug.Log("Deactivating Right");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        {
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.moveRight = false;
+        }
+        else
+        {
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveRight = false;
+        }
+    }
+
+    public void ActivatePlayerUp()
+    {
+        //Debug.Log("Activating Up");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        {
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.dropBomb = true;
+        }
+        else
+        {
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveUp = true;
+        }
+    }
+
+    public void DeactivatePlayerUp()
+    {
+        //Debug.Log("Activating Up");
+
+        if (playerInstance == null)
+        {
+            //Debug.Log("Player instance null");
+            return;
+        }
+
+        if (playingKing)
+        {
+            KingController_AR controller = playerInstance.GetComponent<KingController_AR>();
+            controller.dropBomb = false;
+        }
+        else
+        {
+            CharacterCtrl controller = playerInstance.GetComponent<CharacterCtrl>();
+            controller.moveUp = false;
+        }
     }
 
     public void ToggleWorldLock() {
@@ -169,6 +301,8 @@ public class ARController : MonoBehaviour
         GameObject newPlayer = PhotonNetwork.Instantiate(GameConstants.PunNames.arKing, Vector3.zero, Quaternion.identity, 0, InstanceData);
         newPlayer.transform.SetParent(GameObject.FindWithTag(GameConstants.GameObjectsTags.worldContainer).transform, false);
         newPlayer.transform.localPosition = spawn;
+        playerInstance = newPlayer;
+        playingKing = true;
 
         KingController_AR controller = newPlayer.GetComponent<KingController_AR>();
         NetworkKing networkPlayer = newPlayer.GetComponent<NetworkKing>();
@@ -206,6 +340,7 @@ public class ARController : MonoBehaviour
         CharacterCtrl controller = newPlayer.GetComponent<CharacterCtrl>();
         NetworkPlayer networkPlayer = newPlayer.GetComponent<NetworkPlayer>();
         Rigidbody playerRigidbody = newPlayer.GetComponent<Rigidbody>();
+        playerInstance = newPlayer;
 
         networkPlayer.enabled = true;
         //networkPlayer.StopCoroutine("UpdateNetworked");

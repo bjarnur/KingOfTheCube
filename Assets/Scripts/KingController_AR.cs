@@ -31,6 +31,13 @@ public class KingController_AR : MonoBehaviour {
     private float SecondsInactive = 0.0f;
     private NetworkManager networkManager;
 
+    [HideInInspector]
+    public bool moveRight;
+    [HideInInspector]
+    public bool moveLeft;
+    [HideInInspector]
+    public bool dropBomb;
+
     void Awake()
     {
         if (!isMultiplayer) return;
@@ -97,7 +104,7 @@ public class KingController_AR : MonoBehaviour {
         }
         else
         {
-            float mov;
+            float mov = 0;
 
             // Move
             if (isAI)
@@ -109,7 +116,9 @@ public class KingController_AR : MonoBehaviour {
             {
                 // Don't move if it's throwing
                 //mov = throwing ? 0 : Input.GetAxisRaw("Horizontal");
-                mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+                //mov = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
+                if (moveRight) mov = 1;
+                if (moveLeft) mov = -1;
                 SecondsInactive = 0.0f;
             }
             else
@@ -132,7 +141,7 @@ public class KingController_AR : MonoBehaviour {
                 anim.SetBool("IsRunning", false);
             }            
 
-            if (Input.GetKeyDown(KeyCode.Space) || (Input.touchCount == 2 && groundedTime > 3))
+            if (Input.GetKeyDown(KeyCode.Space) || (dropBomb && groundedTime > 3))
             {
                 currentAnimation = GameConstants.AnimationTypes.throwing;
                 anim.SetTrigger("Throw");

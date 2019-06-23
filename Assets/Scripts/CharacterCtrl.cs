@@ -34,6 +34,12 @@ public class CharacterCtrl : MonoBehaviour {
     public bool dead = false;
     [HideInInspector]
     public bool gameOver = false;
+    [HideInInspector]
+    public bool moveLeft = false;
+    [HideInInspector]
+    public bool moveRight = false;
+    [HideInInspector]
+    public bool moveUp = false;
 
     /*********************\
         Private fields
@@ -311,8 +317,10 @@ public class CharacterCtrl : MonoBehaviour {
 
     void UpdateCharacterPosition()
     {
-        bool bothTouch = false;
-        bool movingVertically = Math.Abs(rb.velocity.y) > 0.001f;
+        bool movingVertically = moveLeft || moveRight;
+        goingRight = moveRight;
+
+        Debug.Log("Moving player + " + movingVertically);
 
         if(dead)
         {
@@ -327,40 +335,25 @@ public class CharacterCtrl : MonoBehaviour {
         }            
 
         // Only one touch, we go in that direction
-        if (Input.touchCount == 1)
+        if (movingVertically)
         {            
-            touchDir = Input.GetTouch(0).position.x < Screen.width / 2 ? -1f : 1f;
-            firstTouchFingerID = Input.GetTouch(0).fingerId;
-            oneFingerReleased = true;
             SecondsInactive = 0.0f;
         }
-        // Two touches, we keep the same direction but test if we have one touch on each side (for jumping/climbing)
-        else if (Input.touchCount == 2)
-        {            
-            foreach (Touch t in Input.touches)
-            {
-                if (t.fingerId != firstTouchFingerID && !ignoreBothTouch)
-                {
-                    float floatScreenWidth = (float)Screen.width;
-                    bothTouch = (t.position.x < floatScreenWidth / 2f ? -1f : 1f) != touchDir;
-                }
-            }
-            SecondsInactive = 0.0f;
-        }
+
+        
         // Anything else = Reset and do nothing
         else
         {
-            firstTouchFingerID = -1;
-            touchDir = 0f;
             SecondsInactive += Time.deltaTime;
         }
-
-        Vector3 yVelocity = world.up * rb.velocity.y;
-        float hAxis = Input.GetAxisRaw("Horizontal");
-        // Ignore xAxis if we touched the screen on mobile
-        hAxis = firstTouchFingerID != -1 ? touchDir : hAxis;
+        
+        float hAxis = 0;
+        if (moveRight)
+            hAxis = 1;
+        if (moveLeft)
+            hAxis = -1;
        
-        if (Input.GetKey(KeyCode.UpArrow) || bothTouch)
+        if (moveUp)
         {
             if (climbing) {
                 transform.position += transform.up * Time.deltaTime * speed;
@@ -378,19 +371,18 @@ public class CharacterCtrl : MonoBehaviour {
                 }
             }
 
-            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (oneFingerReleased && !movingVertically && IsGrounded())) {
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (!movingVertically && IsGrounded()))
+            {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
                 grounded = false;
                 groundedTime = 0.0f;
-                oneFingerReleased = false;
             }
         }
 
-        if (hAxis != 0f && (!climbing || !bothTouch))
+        if (movingVertically /*&& (!climbing || !bothTouch)*/)
         {
             moving = true;
-            goingRight = hAxis == 1f;
             transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;
         }
         else
