@@ -183,7 +183,19 @@ public class CharacterCtrl : MonoBehaviour {
     bool IsGrounded()
     {
         float distToGround = GetComponent<BoxCollider>().bounds.extents.y;
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround);
+
+        bool IntersectFound = Physics.Raycast(transform.position, -Vector3.up, distToGround);
+        if (IntersectFound)
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, -Vector2.up, out hit);
+            if(hit.collider.gameObject.tag == "Floor")
+            {
+                return true;
+            }
+        }
+        
+        return false;      
     }
 
     void SetPlayerControllerOnChangeScene(Scene scene, LoadSceneMode mode)
@@ -317,10 +329,10 @@ public class CharacterCtrl : MonoBehaviour {
 
     void UpdateCharacterPosition()
     {
-        bool movingVertically = moveLeft || moveRight;
+        bool movingSideways = moveLeft || moveRight;
         goingRight = moveRight;
 
-        Debug.Log("Moving player + " + movingVertically);
+        Debug.Log("Moving player + " + movingSideways);
 
         if(dead)
         {
@@ -335,7 +347,7 @@ public class CharacterCtrl : MonoBehaviour {
         }            
 
         // Only one touch, we go in that direction
-        if (movingVertically)
+        if (movingSideways)
         {            
             SecondsInactive = 0.0f;
         }
@@ -371,7 +383,7 @@ public class CharacterCtrl : MonoBehaviour {
                 }
             }
 
-            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (!movingVertically && IsGrounded()))
+            else if ((IsGrounded() && groundedTime > timeBetweenJumps) || (!movingSideways && IsGrounded()))
             {
                 rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
                 jumping = true;
@@ -380,7 +392,7 @@ public class CharacterCtrl : MonoBehaviour {
             }
         }
 
-        if (movingVertically /*&& (!climbing || !bothTouch)*/)
+        if (movingSideways /*&& (!climbing || !bothTouch)*/)
         {
             moving = true;
             transform.localPosition += hAxis * getDirection(true) * Time.deltaTime * speed;

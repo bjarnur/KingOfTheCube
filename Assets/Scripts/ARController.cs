@@ -16,6 +16,9 @@ public class ARController : MonoBehaviour
     public GameObject king;
     public GameObject playerOne;
     public GameObject smoke;
+    public GameObject Controls;
+    public GameObject UpButton;
+    public GameObject BombButton;
     public Transform world;
     public Transform unitCube;
     public bool isMultiplaer;
@@ -34,6 +37,7 @@ public class ARController : MonoBehaviour
 
     public void Start() {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        Controls.SetActive(false);
     }
 
     public void Update() {
@@ -68,6 +72,8 @@ public class ARController : MonoBehaviour
 
                 GetComponent<LevelInstatiator>().world = world;
                 GetComponent<LevelInstatiator>().buildLevel();
+
+                Controls.SetActive(true);
 
                 if (!isMultiplaer)
                 { 
@@ -312,6 +318,8 @@ public class ARController : MonoBehaviour
         controller.isAI = false;
         networkPlayer.enabled = true;
         playerRigidbody.useGravity = true;
+
+        UpButton.SetActive(false);
     }
 
     void spawnPretender(int playerNumber)
@@ -352,6 +360,8 @@ public class ARController : MonoBehaviour
 
         newPlayer.transform.SetParent(world, false);
         newPlayer.transform.localPosition = spawn;
+
+        BombButton.SetActive(false);
     }
 
    public void ResetPlayer()
