@@ -99,7 +99,7 @@ public class LevelInstatiator : MonoBehaviour{
         //buildLadder(CubeFaces.fourthFace, CubeLevel.fourth, 3, 25);
 
         buildPlatform(CubeFaces.fourthFace, CubeLevel.fifth, 15, 31);
-        buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, -1, 10);
+        buildPlatform(CubeFaces.thirdFace, CubeLevel.fifth, -1, 10);
 
         buildPlatform(CubeFaces.thirdFace, CubeLevel.seventh, 15, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.ninth, 20, 25);
@@ -120,12 +120,12 @@ public class LevelInstatiator : MonoBehaviour{
         buildPlatform(CubeFaces.fourthFace, CubeLevel.eleventh, 14, 20);
         buildPlatform(CubeFaces.thirdFace, CubeLevel.thirteenth, -1, 5);
 
-        buildLadder(CubeFaces.firstFace, CubeLevel.first, 18, 3);
-        buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 18, 2);
+        //buildLadder(CubeFaces.firstFace, CubeLevel.first, 18, 3);
+        //buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 18, 2);
         buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 6);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.first, 13, 5);
+        //buildLadder(CubeFaces.thirdFace, CubeLevel.first, 13, 5);
         buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 3);
-        buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 13, 1);
+        //buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 13, 1);
     }
 
     private void buildPlatform(CubeFaces inFace, float atLevel, int fromColumn, int toColumn)
@@ -173,13 +173,16 @@ public class LevelInstatiator : MonoBehaviour{
         copyVector.y = atLevel * scalingFactor;
         t.localRotation = rotation;
         t.localPosition += copyVector;
-
+        
         for (int i = 2; i <= numOfLadders; ++i) {
             var newLadder = Instantiate(ladder, world, false); 
             var newCopyVector = copyVector;
             newCopyVector.y += 2f  * scalingFactor * (i-1);
             newLadder.localPosition += newCopyVector;
             newLadder.localRotation = rotation;
+
+            //t.GetComponent<BoxCollider>().bounds.SetMinMax(t.GetComponent<BoxCollider>().bounds.min, newLadder.GetComponent<BoxCollider>().bounds.max);
+            //newLadder.GetComponent<BoxCollider>().enabled = false;
         }
     }
 

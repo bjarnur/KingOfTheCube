@@ -132,8 +132,20 @@ public class NetworkManager : MonoBehaviour {
     {
         if (gameOver) return;
 
-        string mins = (seconds / 60).ToString();
-        string secs = (seconds % 60).ToString();
+        int m = (seconds / 60);
+        int s = (seconds % 60);
+
+        string mins;
+        string secs;
+        if (m < 10)
+            mins = "0" + m.ToString();
+        else
+            mins = m.ToString();
+        if (s < 10)
+            secs = "0" + s.ToString();
+        else
+            secs = s.ToString();
+
         GameTimer.GetComponent<TextMeshProUGUI>().SetText(mins + ":" + secs);
     }
 
