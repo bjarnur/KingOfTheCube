@@ -48,7 +48,8 @@ public class LobbyManager : MonoBehaviour
 
     void Start ()
     {
-        Debug.Log("STARTING UP");       
+        Debug.Log("STARTING UP");
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
         PropertyTable.Add(GameConstants.NetworkedProperties.Ready, false);
