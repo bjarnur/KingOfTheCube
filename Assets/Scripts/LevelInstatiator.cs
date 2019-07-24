@@ -38,6 +38,8 @@ public class LevelInstatiator : MonoBehaviour{
     public Transform world;
     public Transform platformUnit;
     public Transform ladder;
+    public Transform ladderSmall;
+    public Transform ladderBig;
 
 
     /*********************\
@@ -122,9 +124,9 @@ public class LevelInstatiator : MonoBehaviour{
 
         //buildLadder(CubeFaces.firstFace, CubeLevel.first, 18, 3);
         //buildLadder(CubeFaces.firstFace, CubeLevel.seventh, 18, 2);
-        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 6);
+        buildLadder(CubeFaces.secondFace, CubeLevel.eleventh, 20, 6, ladderBig);
         //buildLadder(CubeFaces.thirdFace, CubeLevel.first, 13, 5);
-        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 3);
+        buildLadder(CubeFaces.thirdFace, CubeLevel.thirteenth, 4, 3, ladderSmall);
         //buildLadder(CubeFaces.fourthFace, CubeLevel.eleventh, 13, 1);
     }
 
@@ -137,9 +139,9 @@ public class LevelInstatiator : MonoBehaviour{
         }
     }
 
-    private void buildLadder(CubeFaces inFace, float atLevel, int column, float numOfLadders)
+    private void buildLadder(CubeFaces inFace, float atLevel, int column, float numOfLadders, Transform prefab)
     {
-        Transform t = Instantiate(ladder, world, false); 
+        Transform t = Instantiate(prefab, world, false); 
         Quaternion rotation = Quaternion.identity;
         Vector3 copyVector = new Vector3(0, 0, 0);
         switch(inFace)
@@ -173,7 +175,7 @@ public class LevelInstatiator : MonoBehaviour{
         copyVector.y = atLevel * scalingFactor;
         t.localRotation = rotation;
         t.localPosition += copyVector;
-        
+        /*
         for (int i = 2; i <= numOfLadders; ++i) {
             var newLadder = Instantiate(ladder, world, false); 
             var newCopyVector = copyVector;
@@ -184,6 +186,7 @@ public class LevelInstatiator : MonoBehaviour{
             //t.GetComponent<BoxCollider>().bounds.SetMinMax(t.GetComponent<BoxCollider>().bounds.min, newLadder.GetComponent<BoxCollider>().bounds.max);
             //newLadder.GetComponent<BoxCollider>().enabled = false;
         }
+        */
     }
 
 
