@@ -63,7 +63,6 @@ public class CharacterCtrl : MonoBehaviour {
     float timeBetweenJumps = 0.3f;
     float groundedTime = 0.0f;
     bool oneFingerReleased = false;
-    private float SecondsInactive = 0.0f;
 
     /*********************\
         Unity functions
@@ -92,21 +91,6 @@ public class CharacterCtrl : MonoBehaviour {
 	void Update () {
 
         if (gameOver) return;
-
-        if (SecondsInactive > 30)
-        {
-            networkManager.IsInactive = true;
-            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, true);
-            PhotonNetwork.player.SetCustomProperties(PropertyTable);
-        }
-        else
-        {
-            networkManager.IsInactive = false;
-            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
-            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
-            PhotonNetwork.player.SetCustomProperties(PropertyTable);
-        }
         
         //Ensure we only travel in the appropriate dimensions
         EnsureConsistentMovement();
@@ -349,14 +333,7 @@ public class CharacterCtrl : MonoBehaviour {
         // Only one touch, we go in that direction
         if (movingSideways)
         {            
-            SecondsInactive = 0.0f;
-        }
-
-        
-        // Anything else = Reset and do nothing
-        else
-        {
-            SecondsInactive += Time.deltaTime;
+            networkManager.SecondsInactive = 0.0f;
         }
         
         float hAxis = 0;

@@ -18,6 +18,7 @@ public class NetworkManager : MonoBehaviour {
     const string VERSION = "0.0.1";
     private string roomName = "myRoom";
     [HideInInspector] public bool IsInactive = false;
+    [HideInInspector] public float SecondsInactive = 0.0f;
 
     private float timeAlone = 0.0f;
 
@@ -36,6 +37,22 @@ public class NetworkManager : MonoBehaviour {
 
     void Update()
     {
+        SecondsInactive += Time.deltaTime;
+        if(SecondsInactive > 30.0f)
+        {
+            IsInactive = true;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, true);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+        else
+        {
+            IsInactive = false;
+            ExitGames.Client.Photon.Hashtable PropertyTable = new ExitGames.Client.Photon.Hashtable();
+            PropertyTable.Add(GameConstants.NetworkedProperties.Inactive, false);
+            PhotonNetwork.player.SetCustomProperties(PropertyTable);
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ExitToLobby();

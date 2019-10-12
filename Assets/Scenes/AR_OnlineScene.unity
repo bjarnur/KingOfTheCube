@@ -148,7 +148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 217, y: 115}
+  m_AnchoredPosition: {x: 217, y: 206}
   m_SizeDelta: {x: 165.4, y: 98.20001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &41955403
@@ -787,7 +787,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -121, y: 165}
+  m_AnchoredPosition: {x: -294, y: 221}
   m_SizeDelta: {x: 165.40002, y: 98.20001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &672789042
@@ -1317,7 +1317,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 630, y: 115}
+  m_AnchoredPosition: {x: 630, y: 206}
   m_SizeDelta: {x: 165.4, y: 98.20001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &825187969
@@ -2536,6 +2536,7 @@ MonoBehaviour:
   unitCube: {fileID: 4107635161414470, guid: 2e6fb3d70a41d3a4eb5a81cf4497ebd5, type: 2}
   isMultiplaer: 1
   tutorial: {fileID: 1003759653}
+  networkManagerObject: {fileID: 1011708843}
 --- !u!4 &1659006362
 Transform:
   m_ObjectHideFlags: 0
@@ -2603,7 +2604,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -121, y: 165}
+  m_AnchoredPosition: {x: -294, y: 221}
   m_SizeDelta: {x: 165.40002, y: 98.20001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1689387165
